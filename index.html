@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>방과후</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --paper:#F3F2EF; --surface:#FFFFFF; --ink:#1A1917; --muted:#6C6A64;
+  --line:#DBD8D1; --line-soft:#EAE8E2;
+  --active:#1750C4; --active-bg:#FFFFFF; --active-line:#1750C4;
+  --shadow:0 1px 2px rgba(26,25,23,.07), 0 10px 28px rgba(26,25,23,.05);
+  --serif:"Gowun Batang","Nanum Myeongjo",serif;
+  --sans:"Gothic A1",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#191816; --surface:#232220; --ink:#EFEDE7; --muted:#9C998F;
+    --line:#38352F; --line-soft:#2B2926;
+    --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191816; --surface:#232220; --ink:#EFEDE7; --muted:#9C998F;
+  --line:#38352F; --line-soft:#2B2926;
+  --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:680px;margin:0 auto;padding:64px 24px 96px}
+.mast{border-bottom:1px solid var(--line);padding-bottom:22px}
+.kicker{font-size:12px;font-weight:500;letter-spacing:.16em;color:var(--active);margin-bottom:12px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(30px,6vw,42px);
+  line-height:1.2;letter-spacing:-.01em;margin:0}
+.sub{color:var(--muted);font-size:15px;margin-top:13px;max-width:50ch;font-family:var(--serif)}
+.grp{margin-top:42px}
+.grp-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h2{font-family:var(--serif);font-weight:700;font-size:20px;margin:0}
+.grp-n{font-size:11.5px;font-weight:500;letter-spacing:.1em;color:var(--active);
+  border:1px solid var(--active-line);border-radius:2px;padding:2px 8px;white-space:nowrap}
+.cards{margin-top:14px;display:grid;gap:9px}
+a.card{display:flex;align-items:center;gap:15px;text-decoration:none;color:inherit;
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:16px 18px;box-shadow:var(--shadow);
+  transition:border-color .15s ease, transform .15s ease}
+a.card:hover{border-color:var(--active-line);transform:translateY(-1px)}
+a.card:focus-visible{outline:2px solid var(--active);outline-offset:2px}
+.ico{font-size:24px;line-height:1;flex:0 0 auto}
+.meta{min-width:0;flex:1}
+.nm{display:block;font-family:var(--serif);font-weight:700;font-size:17px}
+.ds{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.55}
+.note{margin-top:44px;border-top:1px solid var(--line);padding-top:20px;
+  font-size:13.5px;color:var(--muted);font-family:var(--serif);line-height:1.8}
+.note b{color:var(--ink);font-weight:700}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line-soft);
+  font-size:12px;color:var(--muted)}
+@media (max-width:600px){ .wrap{padding:36px 16px 64px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">2026학년도 2학기</div>
+  <h1>방과후</h1>
+  <p class="sub">자기가 듣는 강좌로 들어가세요. 수업 중에 열어서 직접 만지는 도구들입니다.</p>
+</header>
+
+<section class="grp">
+  <div class="cards">
+    <a class="card" href="cl1/">
+      <span class="ico">🩺</span>
+      <span class="meta"><span class="nm">Conditionals &amp; Loops 1</span>
+        <span class="ds">파이썬 조건문과 반복문 탐구 (Basic) · 2일 6차시</span></span></a>
+    <a class="card" href="crc/">
+      <span class="ico">🔍</span>
+      <span class="meta"><span class="nm">Code Reading Comprehension</span>
+        <span class="ds">파이썬 코드 문해력 키우기 · 2일 6차시</span></span></a>
+  </div>
+</section>
+
+<p class="note">학습지와 문제지는 <b>종이로</b> 받습니다. 여기 있는 것은 수업 중에 만지는 도구들입니다.</p>
+
+<footer>정보과</footer>
+
+</div>
+</body>
+</html>

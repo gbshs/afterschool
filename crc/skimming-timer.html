@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Skimming Timer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+
+<style>
+:root{
+  --paper:#F5F6F2; --card:#FFFFFF;
+  --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2;
+  --pine:#2C5A4B; --pine-soft:#E4EEE9; --pine-ink:#FFFFFF;
+  --mark:#D4E85C; --mark-a:rgba(212,232,92,.55);
+  --pane:#1B2420; --pane-ink:#DDE4DA; --pane-dim:#7C8A82;
+  --pane-key:#A8D98C; --pane-str:#E0C58A;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 10px 30px -14px rgba(23,32,28,.2);
+  --f-display:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Bricolage Grotesque",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --code-size:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413; --card:#171D1A;
+    --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+    --rule:#2B332E; --rule-2:#222925;
+    --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+    --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+    --pane:#080B0A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413; --card:#171D1A;
+  --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+  --rule:#2B332E; --rule-2:#222925;
+  --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+  --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+  --pane:#080B0A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--f-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 22px 72px}
+
+/* ---- top bar ---- */
+.bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.brand{min-width:0}
+.brand .eyebrow{font-family:var(--f-mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--pine)}
+.brand h1{font-family:var(--f-display);font-weight:800;font-size:26px;
+  letter-spacing:-.022em;margin:2px 0 0;line-height:1}
+.zoom{margin-left:auto;display:flex;align-items:center;gap:8px}
+.zoom span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3)}
+.zbtn{font-family:var(--f-mono);font-size:14px;font-weight:600;
+  width:34px;height:30px;border:1px solid var(--rule);background:var(--card);
+  color:var(--ink);border-radius:2px;cursor:pointer;line-height:1}
+.zbtn:hover{border-color:var(--pine);color:var(--pine)}
+.zbtn:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+
+/* ---- round tabs ---- */
+.tabs{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.tab{font-family:var(--f-mono);font-size:12px;font-weight:600;letter-spacing:.06em;
+  padding:8px 16px;border:1px solid var(--rule);background:var(--card);
+  color:var(--ink-2);border-radius:2px;cursor:pointer}
+.tab:hover{border-color:var(--pine);color:var(--pine)}
+.tab:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.tab[aria-selected="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+.tab .dot{display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--mark);margin-left:8px;vertical-align:middle;opacity:0}
+.tab.done .dot{opacity:1}
+
+/* ---- stage ---- */
+.stage{margin-top:20px;background:var(--card);border:1px solid var(--rule);
+  border-radius:3px;box-shadow:var(--shadow);overflow:hidden}
+.stage-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:16px 20px;border-bottom:1px solid var(--rule)}
+.stage-tag{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:-.01em}
+.stage-hint{font-size:13px;color:var(--ink-2)}
+.clock{margin-left:auto;display:flex;align-items:center;gap:10px}
+.clock-num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  font-weight:600;font-size:40px;line-height:1;letter-spacing:-.02em;color:var(--ink)}
+.clock-num.warn{color:var(--pine)}
+.clock-unit{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3)}
+.adj{display:flex;gap:5px}
+.adj button{font-family:var(--f-mono);font-size:11px;font-weight:600;
+  padding:5px 9px;border:1px solid var(--rule);background:transparent;
+  color:var(--ink-2);border-radius:2px;cursor:pointer;line-height:1}
+.adj button:hover{border-color:var(--pine);color:var(--pine)}
+.adj button:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.adj button:disabled{opacity:.35;cursor:default}
+
+.progress{height:3px;background:var(--rule-2)}
+.progress i{display:block;height:100%;width:100%;background:var(--mark);
+  transform-origin:left;transition:transform .25s linear}
+
+/* ---- code pane ---- */
+.paneWrap{position:relative;background:var(--pane)}
+.paneWrap pre{margin:0;padding:26px 28px;overflow-x:auto;
+  font-family:var(--f-mono);font-size:var(--code-size);line-height:1.75;
+  color:var(--pane-ink);tab-size:4;transition:filter .35s ease,opacity .35s ease}
+.k{color:var(--pane-key)} .s{color:var(--pane-str)}
+
+.cover{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;text-align:center;padding:24px;
+  background:rgba(11,15,14,.86)}
+.cover strong{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,34px);
+  color:var(--mark);letter-spacing:-.02em;line-height:1.1}
+.cover span{font-size:14px;color:#B6C1BA;max-width:46ch}
+.cover.pre{background:rgba(11,15,14,.94)}
+.cover.pre strong{color:#DDE4DA}
+
+.hidden-code pre{filter:blur(16px);opacity:.5;user-select:none}
+.hidden-code .cover{display:flex}
+
+/* ---- controls ---- */
+.ctrl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 20px;
+  border-top:1px solid var(--rule)}
+.btn{font-family:var(--f-body);font-size:14.5px;font-weight:600;
+  padding:11px 22px;border-radius:2px;cursor:pointer;border:1px solid transparent}
+.btn:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.btn-main{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.btn-main:hover{filter:brightness(1.12)}
+.btn-ghost{background:transparent;color:var(--ink-2);border-color:var(--rule)}
+.btn-ghost:hover{border-color:var(--pine);color:var(--pine)}
+.ctrl .tip{font-size:12.5px;color:var(--ink-3);margin-left:auto}
+
+/* ---- answers ---- */
+.ans{display:none;border-top:1px solid var(--rule);background:var(--pine-soft)}
+.ans.show{display:block}
+.ans-head{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--pine);padding:16px 20px 0}
+.ans-grid{display:grid;grid-template-columns:repeat(5,1fr);padding:12px 20px 0}
+.acell{padding:0 12px 14px 0}
+.acell .l{font-family:var(--f-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;color:var(--pine)}
+.acell .v{font-size:14px;font-weight:600;margin-top:4px;line-height:1.4}
+.acell .n{font-size:12px;color:var(--ink-2);margin-top:2px;line-height:1.4}
+.ans-sent{padding:4px 20px 20px;font-size:16px;line-height:1.75;max-width:70ch}
+.ans-sent b{background:linear-gradient(transparent 60%,var(--mark-a) 60%);font-weight:600}
+
+.foot{margin-top:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+
+@media (max-width:760px){
+  .wrap{padding:18px 14px 56px}
+  .ans-grid{grid-template-columns:repeat(2,1fr)}
+  .clock-num{font-size:32px}
+  .ctrl .tip{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="bar">
+    <div class="brand">
+      <div class="eyebrow">Code Reading Comprehension · Unit 1</div>
+      <h1>Skimming Timer</h1>
+    </div>
+    <div class="zoom">
+      <span>글자</span>
+      <button class="zbtn" id="zout" aria-label="코드 글자 작게">A−</button>
+      <button class="zbtn" id="zin" aria-label="코드 글자 크게">A+</button>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="라운드 선택">
+    <button class="tab" role="tab" data-r="0" aria-selected="true">ROUND 1<i class="dot"></i></button>
+    <button class="tab" role="tab" data-r="1" aria-selected="false">ROUND 2<i class="dot"></i></button>
+    <button class="tab" role="tab" data-r="2" aria-selected="false">ROUND 3<i class="dot"></i></button>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-tag" id="tag">Passage 1</div>
+      <div class="stage-hint" id="hint">다섯 곳만 봅니다 — NAME · IN · OUT · LOOP · DEPTH</div>
+      <div class="clock">
+        <div class="adj">
+          <button id="minus">−10초</button>
+          <button id="plus">+10초</button>
+        </div>
+        <div class="clock-num" id="clock">90</div>
+        <div class="clock-unit">sec</div>
+      </div>
+    </div>
+
+    <div class="progress"><i id="bar"></i></div>
+
+    <div class="paneWrap hidden-code" id="paneWrap">
+      <pre id="code"></pre>
+      <div class="cover pre" id="cover">
+        <strong id="coverTitle">시작을 누르면 보입니다</strong>
+        <span id="coverText">학습지를 펴 두세요. 시간이 끝나면 코드는 가려집니다.</span>
+      </div>
+    </div>
+
+    <div class="ctrl">
+      <button class="btn btn-main" id="main">시작</button>
+      <button class="btn btn-ghost" id="again" hidden>다시 하기</button>
+      <div class="tip" id="tip">코드를 보면서 쓰지 마세요. 덮인 뒤에 씁니다.</div>
+    </div>
+
+    <div class="ans" id="ans">
+      <div class="ans-head">Answer Key · 확인</div>
+      <div class="ans-grid" id="ansGrid"></div>
+      <div class="ans-sent" id="ansSent"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>파이썬 코드 문해력 키우기</span>
+    <span>Five-Point Scan</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var ROUNDS = [
+    {
+      tag: "Passage 1", sec: 90,
+      code:
+'<span class="k">def</span> is_safe(state):\n'+
+'    farmer, wolf, sheep, cabbage = state\n'+
+'    <span class="k">if</span> wolf == sheep <span class="k">and</span> farmer != sheep:\n'+
+'        <span class="k">return</span> <span class="k">False</span>\n'+
+'    <span class="k">if</span> sheep == cabbage <span class="k">and</span> farmer != sheep:\n'+
+'        <span class="k">return</span> <span class="k">False</span>\n'+
+'    <span class="k">return</span> <span class="k">True</span>',
+      key: [
+        ["NAME","is_safe","안전한지 판단한다고 주장"],
+        ["IN","1개","state — 네 값이 묶여 있음"],
+        ["OUT","3군데","False · False · True"],
+        ["LOOP","0개","반복이 없음"],
+        ["DEPTH","2겹","if 안에 return"]
+      ],
+      sent: '이 코드는 <b>state 하나</b>를 받아서 <b>반복 없이 두 가지를 검사</b>하며, <b>True 또는 False</b>를 내놓는다.'
+    },
+    {
+      tag: "Passage 2", sec: 60,
+      code:
+'<span class="k">def</span> validate(pw):\n'+
+'    <span class="k">if</span> len(pw) &lt; <span class="s">8</span>:\n'+
+'        <span class="k">return</span> <span class="k">False</span>, <span class="s">f\'8자 이상이어야 합니다 (지금 {len(pw)}자 입니다.)\'</span>\n'+
+'\n'+
+'    has_alpha = <span class="k">False</span>\n'+
+'    has_digit = <span class="k">False</span>\n'+
+'\n'+
+'    <span class="k">for</span> c <span class="k">in</span> pw:\n'+
+'        <span class="k">if</span> c.isalpha() <span class="k">and</span> c.isascii():\n'+
+'            has_alpha = <span class="k">True</span>\n'+
+'        <span class="k">if</span> c.isdigit():\n'+
+'            has_digit = <span class="k">True</span>\n'+
+'\n'+
+'    <span class="k">if</span> <span class="k">not</span> has_alpha:\n'+
+'        <span class="k">return</span> <span class="k">False</span>, <span class="s">\'영문자가 하나 이상 있어야 합니다\'</span>\n'+
+'\n'+
+'    <span class="k">return</span> <span class="k">True</span>, <span class="s">\'규칙을 모두 지켰습니다\'</span>',
+      key: [
+        ["NAME","validate","검사한다고 주장"],
+        ["IN","1개","pw — 비밀번호 하나"],
+        ["OUT","3군데","판정과 이유, 늘 두 개씩"],
+        ["LOOP","1개","for c in pw"],
+        ["DEPTH","3겹","for → if → 대입"]
+      ],
+      sent: '이 코드는 <b>비밀번호 하나</b>를 받아서 <b>글자를 하나씩 훑으며</b>, <b>통과 여부와 그 이유</b>를 함께 내놓는다.'
+    },
+    {
+      tag: "Passage 3", sec: 40,
+      code:
+'<span class="k">def</span> bfs(start, is_goal, next_states):\n'+
+'    came_from = {start: <span class="k">None</span>}\n'+
+'    q = deque([start])\n'+
+'\n'+
+'    <span class="k">while</span> q:\n'+
+'        state = q.popleft()\n'+
+'\n'+
+'        <span class="k">if</span> is_goal(state):\n'+
+'            path = []\n'+
+'            <span class="k">while</span> state <span class="k">is not</span> <span class="k">None</span>:\n'+
+'                path.append(state)\n'+
+'                state = came_from[state]\n'+
+'            <span class="k">return</span> path[::-<span class="s">1</span>]\n'+
+'\n'+
+'        <span class="k">for</span> nxt <span class="k">in</span> next_states(state):\n'+
+'            <span class="k">if</span> nxt <span class="k">not in</span> came_from:\n'+
+'                came_from[nxt] = state\n'+
+'                q.append(nxt)\n'+
+'\n'+
+'    <span class="k">return</span> <span class="k">None</span>',
+      key: [
+        ["NAME","bfs","무언가를 찾는다고 주장"],
+        ["IN","3개","시작 · 목표 판정법 · 다음 후보"],
+        ["OUT","2군데","길 또는 None"],
+        ["LOOP","3개","while · while · for"],
+        ["DEPTH","4겹","깊다 = 복잡하다"]
+      ],
+      sent: '이 코드는 <b>시작점과 판정 방법 두 가지</b>를 받아서 <b>목표에 닿을 때까지 계속 뒤지며</b>, <b>거기까지 간 길</b>을 내놓는다. 못 찾으면 <b>None</b>.'
+    }
+  ];
+
+  var idx = 0, left = 0, total = 0, tick = null, state = "ready";
+  var done = [false,false,false];
+  var codeSize = 16;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var paneWrap=$("paneWrap"), code=$("code"), clock=$("clock"), bar=$("bar"),
+      tag=$("tag"), main=$("main"), again=$("again"), tip=$("tip"),
+      cover=$("cover"), coverTitle=$("coverTitle"), coverText=$("coverText"),
+      ans=$("ans"), ansGrid=$("ansGrid"), ansSent=$("ansSent"),
+      minus=$("minus"), plus=$("plus");
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+
+  function fmt(n){ return String(Math.max(0,n)); }
+
+  function stopTick(){ if(tick){ clearInterval(tick); tick = null; } }
+
+  function render(){
+    var r = ROUNDS[idx];
+    tag.textContent = r.tag;
+    code.innerHTML = r.code;
+    clock.textContent = fmt(left);
+    clock.classList.toggle("warn", state === "running" && left <= 10);
+    bar.style.transform = "scaleX(" + (total ? Math.max(0,left)/total : 1) + ")";
+
+    var hide = (state === "ready" || state === "covered");
+    paneWrap.classList.toggle("hidden-code", hide);
+    cover.classList.toggle("pre", state === "ready");
+
+    if(state === "ready"){
+      coverTitle.textContent = "시작을 누르면 보입니다";
+      coverText.textContent = "학습지를 펴 두세요. 시간이 끝나면 코드는 가려집니다.";
+      main.textContent = "시작"; main.hidden = false;
+      again.hidden = true;
+      tip.textContent = "코드를 보면서 쓰지 마세요. 덮인 뒤에 씁니다.";
+    } else if(state === "running"){
+      main.textContent = "덮기"; main.hidden = false;
+      again.hidden = true;
+      tip.textContent = "첫 줄부터 읽지 마세요. 이름 · 인수 · return · 반복 · 겹수.";
+    } else if(state === "covered"){
+      coverTitle.textContent = "덮었습니다";
+      coverText.textContent = "학습지의 다섯 칸을 채우고, 한 문장을 완성하세요. 다 쓴 뒤에 확인을 누릅니다.";
+      main.textContent = "확인하기"; main.hidden = false;
+      again.hidden = false;
+      tip.textContent = "기억나지 않는 칸은 비워 두세요. 비운 칸이 다음에 볼 곳입니다.";
+    } else {
+      main.hidden = true;
+      again.hidden = false;
+      tip.textContent = "내가 쓴 것과 다른 칸에 ○를 치세요.";
+    }
+
+    ans.classList.toggle("show", state === "revealed");
+    minus.disabled = plus.disabled = (state !== "ready");
+
+    tabs.forEach(function(t,i){
+      t.setAttribute("aria-selected", i === idx ? "true" : "false");
+      t.classList.toggle("done", done[i]);
+    });
+  }
+
+  function fillAnswers(){
+    var r = ROUNDS[idx];
+    ansGrid.innerHTML = r.key.map(function(k){
+      return '<div class="acell"><div class="l">'+k[0]+'</div>'+
+             '<div class="v">'+k[1]+'</div><div class="n">'+k[2]+'</div></div>';
+    }).join("");
+    ansSent.innerHTML = r.sent;
+  }
+
+  function load(i){
+    stopTick();
+    idx = i;
+    state = "ready";
+    total = left = ROUNDS[idx].sec;
+    render();
+  }
+
+  function start(){
+    state = "running";
+    render();
+    stopTick();
+    tick = setInterval(function(){
+      left -= 1;
+      if(left <= 0){ left = 0; cover_(); }
+      else { render(); }
+    }, 1000);
+  }
+
+  function cover_(){
+    stopTick();
+    state = "covered";
+    done[idx] = true;
+    render();
+  }
+
+  function reveal(){
+    stopTick();
+    state = "revealed";
+    fillAnswers();
+    render();
+  }
+
+  main.addEventListener("click", function(){
+    if(state === "ready") start();
+    else if(state === "running") cover_();
+    else if(state === "covered") reveal();
+  });
+
+  again.addEventListener("click", function(){ load(idx); });
+
+  minus.addEventListener("click", function(){
+    if(state !== "ready") return;
+    total = left = Math.max(10, total - 10); render();
+  });
+  plus.addEventListener("click", function(){
+    if(state !== "ready") return;
+    total = left = Math.min(300, total + 10); render();
+  });
+
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){ load(parseInt(t.dataset.r,10)); });
+  });
+
+  function zoom(d){
+    codeSize = Math.min(34, Math.max(11, codeSize + d));
+    document.documentElement.style.setProperty("--code-size", codeSize + "px");
+  }
+  $("zin").addEventListener("click", function(){ zoom(2); });
+  $("zout").addEventListener("click", function(){ zoom(-2); });
+
+  document.addEventListener("keydown", function(e){
+    if(e.target && /^(INPUT|TEXTAREA|BUTTON)$/.test(e.target.tagName)) return;
+    if(e.key === " " || e.key === "Enter"){ e.preventDefault(); main.click(); }
+    if(e.key === "1") load(0);
+    if(e.key === "2") load(1);
+    if(e.key === "3") load(2);
+  });
+
+  load(0);
+})();
+</script>
+</body>
+</html>

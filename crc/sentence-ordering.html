@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Sentence Ordering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+
+<style>
+:root{
+  --paper:#F5F6F2; --card:#FFFFFF;
+  --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2;
+  --pine:#2C5A4B; --pine-soft:#E4EEE9; --pine-ink:#FFFFFF;
+  --mark:#D4E85C; --mark-a:rgba(212,232,92,.55);
+  --pane:#1B2420; --pane-ink:#DDE4DA; --pane-dim:#7C8A82;
+  --pane-key:#A8D98C; --pane-str:#E0C58A; --pane-line:#2C3A34;
+  --ok:#2F7D5C; --ok-bg:#E3F2E9;
+  --no:#A8452F; --no-bg:#F7E7E2;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 10px 30px -14px rgba(23,32,28,.2);
+  --f-display:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Bricolage Grotesque",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --step:28px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413; --card:#171D1A;
+    --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+    --rule:#2B332E; --rule-2:#222925;
+    --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+    --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+    --pane:#0B0F0E; --pane-line:#1E2A25;
+    --ok:#6FD3A4; --ok-bg:#163024;
+    --no:#E58B72; --no-bg:#33201B;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413; --card:#171D1A;
+  --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+  --rule:#2B332E; --rule-2:#222925;
+  --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+  --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+  --pane:#0B0F0E; --pane-line:#1E2A25;
+  --ok:#6FD3A4; --ok-bg:#163024;
+  --no:#E58B72; --no-bg:#33201B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--f-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:24px 22px 80px}
+
+/* ---- bar ---- */
+.bar{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;
+  padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--pine)}
+.bar h1{font-family:var(--f-display);font-weight:800;font-size:28px;
+  letter-spacing:-.024em;margin:2px 0 0;line-height:1}
+.bar .sub{font-size:13px;color:var(--ink-2);margin-top:6px;max-width:52ch}
+.stats{margin-left:auto;display:flex;gap:26px;text-align:right;padding-left:8px}
+.stat b{display:block;font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  font-size:22px;font-weight:600;line-height:1.1}
+.stat span{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3)}
+
+/* ---- tabs ---- */
+.tabs{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.tab{font-family:var(--f-mono);font-size:12px;font-weight:600;letter-spacing:.05em;
+  padding:8px 15px;border:1px solid var(--rule);background:var(--card);
+  color:var(--ink-2);border-radius:2px;cursor:pointer}
+.tab:hover{border-color:var(--pine);color:var(--pine)}
+.tab:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.tab[aria-selected="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+.tab .chk{opacity:0;margin-left:7px}
+.tab.solved .chk{opacity:1}
+
+/* ---- board ---- */
+.board{display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.35fr);
+  gap:16px;margin-top:18px;align-items:start}
+.col{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.col-head{display:flex;align-items:baseline;gap:10px;padding:13px 16px;
+  border-bottom:1px solid var(--rule)}
+.col-head h2{font-family:var(--f-display);font-weight:800;font-size:15px;
+  letter-spacing:-.01em;margin:0}
+.col-head em{font-style:normal;font-size:12px;color:var(--ink-3);
+  font-family:var(--f-mono);letter-spacing:.05em}
+.col-head .n{margin-left:auto;font-family:var(--f-mono);font-size:11px;
+  color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+.drop{min-height:260px;padding:14px;background:var(--pane);flex:1;
+  display:flex;flex-direction:column;gap:5px;position:relative}
+.drop.gutter{
+  background-image:repeating-linear-gradient(to right,
+    transparent 0 calc(var(--step) - 1px), var(--pane-line) calc(var(--step) - 1px) var(--step));
+  background-position:14px 0;background-repeat:repeat;
+}
+.drop.over{outline:2px dashed var(--mark);outline-offset:-6px}
+.empty{color:var(--pane-dim);font-size:13px;text-align:center;padding:34px 12px;
+  font-family:var(--f-body);pointer-events:none}
+
+.line{font-family:var(--f-mono);font-size:13.5px;line-height:1.5;
+  color:var(--pane-ink);background:#242F2A;border:1px solid #32403A;
+  border-radius:3px;padding:8px 12px;cursor:grab;
+  touch-action:none;user-select:none;-webkit-user-select:none;
+  white-space:pre;overflow-x:auto;transition:margin-left .12s ease,border-color .12s}
+:root[data-theme="dark"] .line,
+:root:not([data-theme="light"]) .line{background:#141C19;border-color:#26332E}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .line{background:#242F2A;border-color:#32403A}
+}
+.line:hover{border-color:var(--mark)}
+.line.sel{border-color:var(--mark);box-shadow:0 0 0 1px var(--mark)}
+.line.dragging{opacity:.25}
+.line.ghost{position:fixed;z-index:99;pointer-events:none;cursor:grabbing;
+  box-shadow:0 14px 30px -10px rgba(0,0,0,.6);opacity:.96;transform:rotate(-.4deg)}
+.line.ok{border-color:var(--ok);box-shadow:inset 3px 0 0 var(--ok)}
+.line.no{border-color:var(--no);box-shadow:inset 3px 0 0 var(--no)}
+.k{color:var(--pane-key)} .s{color:var(--pane-str)} .c{color:var(--pane-dim)}
+
+.slot{height:5px;border-radius:3px;background:var(--mark);opacity:.9}
+
+/* ---- controls ---- */
+.ctrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:13px 16px;border-top:1px solid var(--rule)}
+.btn{font-family:var(--f-body);font-size:13.5px;font-weight:600;
+  padding:9px 18px;border-radius:2px;cursor:pointer;border:1px solid transparent}
+.btn:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.btn-main{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.btn-main:hover{filter:brightness(1.12)}
+.btn-ghost{background:transparent;color:var(--ink-2);border-color:var(--rule)}
+.btn-ghost:hover{border-color:var(--pine);color:var(--pine)}
+.btn:disabled{opacity:.4;cursor:default;filter:none}
+.nudge{display:flex;gap:4px;margin-left:auto}
+.nudge button{font-family:var(--f-mono);font-size:13px;font-weight:600;
+  width:34px;height:32px;border:1px solid var(--rule);background:transparent;
+  color:var(--ink-2);border-radius:2px;cursor:pointer;line-height:1}
+.nudge button:hover{border-color:var(--pine);color:var(--pine)}
+.nudge button:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+
+/* ---- feedback ---- */
+.fb{margin-top:14px;border:1px solid var(--rule);border-radius:3px;
+  background:var(--card);padding:14px 16px;display:none;box-shadow:var(--shadow)}
+.fb.show{display:block}
+.fb .t{font-family:var(--f-display);font-weight:800;font-size:16px;letter-spacing:-.01em}
+.fb .d{font-size:13.5px;color:var(--ink-2);margin-top:5px;max-width:70ch}
+.fb.good{background:var(--ok-bg);border-color:var(--ok)}
+.fb.good .t{color:var(--ok)}
+.fb.bad{background:var(--no-bg);border-color:var(--no)}
+.fb.bad .t{color:var(--no)}
+
+.tips{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.tip{background:var(--card);padding:13px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.tip > b:first-child{display:block;color:var(--pine);font-family:var(--f-mono);
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.tip b{color:var(--ink);font-weight:600}
+kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:var(--pine);
+  border:1px solid var(--rule);border-radius:2px;padding:1px 5px}
+
+.foot{margin-top:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+
+@media (max-width:820px){
+  .board{grid-template-columns:1fr}
+  .wrap{padding:18px 14px 60px}
+  .stats{margin-left:0;width:100%;justify-content:flex-start;text-align:left}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="bar">
+    <div>
+      <div class="eyebrow">Code Reading Comprehension · Unit 2</div>
+      <h1>Sentence Ordering</h1>
+      <div class="sub">줄을 끌어서 순서를 맞추세요. <b>위아래</b>로 끌면 순서가, <b>좌우</b>로 끌면 들여쓰기가 바뀝니다.
+        쓰지 않아도 되는 줄이 섞여 있습니다.</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="tries">0</b><span>이 문제 시도</span></div>
+      <div class="stat"><b id="solved">0/3</b><span>해결</span></div>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="문제 선택">
+    <button class="tab" role="tab" data-p="0" aria-selected="true">PROBLEM 1<span class="chk">✓</span></button>
+    <button class="tab" role="tab" data-p="1" aria-selected="false">PROBLEM 2<span class="chk">✓</span></button>
+    <button class="tab" role="tab" data-p="2" aria-selected="false">PROBLEM 3<span class="chk">✓</span></button>
+  </div>
+
+  <div class="board">
+    <div class="col">
+      <div class="col-head">
+        <h2>Lines</h2><em>섞인 줄</em>
+        <span class="n" id="binN"></span>
+      </div>
+      <div class="drop" id="bin" data-zone="bin"></div>
+    </div>
+
+    <div class="col">
+      <div class="col-head">
+        <h2>Your Answer</h2><em id="probName"></em>
+        <span class="n" id="solN"></span>
+      </div>
+      <div class="drop gutter" id="sol" data-zone="sol"></div>
+      <div class="ctrl">
+        <button class="btn btn-main" id="check">채점하기</button>
+        <button class="btn btn-ghost" id="reset">처음부터</button>
+        <button class="btn btn-ghost" id="peek" disabled>정답 보기</button>
+        <div class="nudge">
+          <button id="out" title="들여쓰기 줄이기" aria-label="들여쓰기 줄이기">◀</button>
+          <button id="in" title="들여쓰기 늘리기" aria-label="들여쓰기 늘리기">▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fb" id="fb">
+    <div class="t" id="fbT"></div>
+    <div class="d" id="fbD"></div>
+  </div>
+
+  <div class="tips">
+    <div class="tip"><b>Drag</b>위아래로 끌면 <b>순서</b>, 좌우로 끌면 <b>들여쓰기</b>가 바뀝니다.</div>
+    <div class="tip"><b>Click</b>줄을 눌러 고른 뒤 <kbd>↑</kbd><kbd>↓</kbd> 순서, <kbd>←</kbd><kbd>→</kbd> 들여쓰기.</div>
+    <div class="tip"><b>Return</b>고른 줄을 <kbd>Backspace</kbd> 하면 왼쪽 더미로 되돌아갑니다.</div>
+    <div class="tip"><b>Distractor</b>쓰지 않아도 되는 줄이 있습니다. 왼쪽에 남겨 두세요.</div>
+  </div>
+
+  <div class="foot">
+    <span>파이썬 코드 문해력 키우기</span>
+    <span>Sentence Ordering</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STEP = 28;
+
+  var PROBLEMS = [
+    {
+      name: "is_safe",
+      hint: "농부가 없을 때 위험한 조합을 걸러내는 함수입니다.",
+      lines: [
+        {t:'<span class="k">def</span> is_safe(state):', i:0},
+        {t:'farmer, wolf, sheep, cabbage = state', i:1},
+        {t:'<span class="k">if</span> wolf == sheep <span class="k">and</span> farmer != sheep:', i:1},
+        {t:'<span class="k">return</span> <span class="k">False</span>', i:2},
+        {t:'<span class="k">if</span> sheep == cabbage <span class="k">and</span> farmer != sheep:', i:1},
+        {t:'<span class="k">return</span> <span class="k">False</span>', i:2},
+        {t:'<span class="k">return</span> <span class="k">True</span>', i:1}
+      ],
+      dist: [
+        '<span class="k">if</span> wolf == sheep <span class="k">or</span> farmer != sheep:'
+      ]
+    },
+    {
+      name: "is_palindrome",
+      hint: "양쪽 끝에서 하나씩 꺼내 맞대어 보는 함수입니다.",
+      lines: [
+        {t:'<span class="k">def</span> is_palindrome(s):', i:0},
+        {t:'d = deque(s)', i:1},
+        {t:'<span class="k">while</span> len(d) &gt; <span class="s">1</span>:', i:1},
+        {t:'left = d.popleft()', i:2},
+        {t:'right = d.pop()', i:2},
+        {t:'<span class="k">if</span> left != right:', i:2},
+        {t:'<span class="k">return</span> <span class="k">False</span>', i:3},
+        {t:'<span class="k">return</span> <span class="k">True</span>', i:1}
+      ],
+      dist: [
+        '<span class="k">if</span> left == right:',
+        '<span class="k">return</span> <span class="k">True</span>'
+      ]
+    },
+    {
+      name: "river_next",
+      hint: "갈 수 있는 다음 상태를 모아, 안전한 것만 골라 돌려주는 함수입니다.",
+      lines: [
+        {t:'<span class="k">def</span> river_next(state):', i:0},
+        {t:'farmer, wolf, sheep, cabbage = state', i:1},
+        {t:'moves = []', i:1},
+        {t:'moves.append((<span class="s">1</span> - farmer, wolf, sheep, cabbage))', i:1},
+        {t:'<span class="k">if</span> wolf == farmer:', i:1},
+        {t:'moves.append((<span class="s">1</span> - farmer, <span class="s">1</span> - wolf, sheep, cabbage))', i:2},
+        {t:'<span class="k">if</span> sheep == farmer:', i:1},
+        {t:'moves.append((<span class="s">1</span> - farmer, wolf, <span class="s">1</span> - sheep, cabbage))', i:2},
+        {t:'<span class="k">return</span> [s <span class="k">for</span> s <span class="k">in</span> moves <span class="k">if</span> is_safe(s)]', i:1}
+      ],
+      dist: [
+        'moves = moves + [state]',
+        '<span class="k">return</span> moves'
+      ]
+    }
+  ];
+
+  var $ = function(id){ return document.getElementById(id); };
+  var bin=$("bin"), sol=$("sol"), fb=$("fb"), fbT=$("fbT"), fbD=$("fbD"),
+      checkBtn=$("check"), resetBtn=$("reset"), peekBtn=$("peek"),
+      probName=$("probName"), binN=$("binN"), solN=$("solN"),
+      triesEl=$("tries"), solvedEl=$("solved");
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+
+  var pi = 0, items = [], selId = null, tries = [0,0,0], solved = [false,false,false];
+
+  function shuffle(a){
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  function build(){
+    var p = PROBLEMS[pi];
+    items = [];
+    p.lines.forEach(function(l,k){
+      items.push({id:"L"+k, html:l.t, want:k, wantIndent:l.i, zone:"bin", indent:0});
+    });
+    p.dist.forEach(function(t,k){
+      items.push({id:"D"+k, html:t, want:-1, wantIndent:-1, zone:"bin", indent:0});
+    });
+    shuffle(items);
+    selId = null;
+    fb.className = "fb";
+    probName.textContent = p.name + "()";
+    peekBtn.disabled = tries[pi] < 3;
+    render();
+  }
+
+  function inZone(z){ return items.filter(function(x){ return x.zone === z; }); }
+
+  function render(){
+    [bin,sol].forEach(function(z){ z.innerHTML = ""; });
+    var b = inZone("bin"), s = inZone("sol");
+
+    if(!b.length){ bin.innerHTML = '<div class="empty">모두 옮겼습니다</div>'; }
+    if(!s.length){ sol.innerHTML = '<div class="empty">여기로 줄을 끌어 오세요</div>'; }
+
+    b.forEach(function(it){ bin.appendChild(node(it,false)); });
+    s.forEach(function(it){ sol.appendChild(node(it,true)); });
+
+    binN.textContent = b.length + "줄";
+    solN.textContent = s.length + "줄";
+    solvedEl.textContent = solved.filter(Boolean).length + "/3";
+    triesEl.textContent = tries[pi];
+    tabs.forEach(function(t,i){
+      t.setAttribute("aria-selected", i===pi ? "true":"false");
+      t.classList.toggle("solved", solved[i]);
+    });
+  }
+
+  function node(it, indentable){
+    var el = document.createElement("div");
+    el.className = "line" + (it.id === selId ? " sel" : "") + (it.mark ? " " + it.mark : "");
+    el.dataset.id = it.id;
+    el.innerHTML = it.html;
+    if(indentable) el.style.marginLeft = (it.indent * STEP) + "px";
+    el.addEventListener("pointerdown", onDown);
+    el.addEventListener("click", function(e){
+      if(dragged) return;
+      selId = (selId === it.id) ? null : it.id;
+      render();
+    });
+    return el;
+  }
+
+  function find(id){ for(var i=0;i<items.length;i++) if(items[i].id===id) return items[i]; return null; }
+
+  function order(zone){
+    return Array.prototype.slice.call(document.querySelectorAll('[data-zone="'+zone+'"] .line'))
+      .map(function(e){ return e.dataset.id; });
+  }
+
+  function reorderModel(){
+    var b = order("bin"), s = order("sol");
+    var m = [];
+    b.forEach(function(id){ var it=find(id); it.zone="bin"; m.push(it); });
+    s.forEach(function(id){ var it=find(id); it.zone="sol"; m.push(it); });
+    items.forEach(function(it){ if(m.indexOf(it)<0) m.push(it); });
+    items = m;
+  }
+
+  /* ---------- drag ---------- */
+  var drag = null, dragged = false, ghost = null, slot = null;
+
+  function onDown(e){
+    if(e.button !== undefined && e.button !== 0) return;
+    var el = e.currentTarget;
+    drag = { el: el, id: el.dataset.id, x0: e.clientX, y0: e.clientY,
+             ox: e.clientX - el.getBoundingClientRect().left,
+             oy: e.clientY - el.getBoundingClientRect().top };
+    dragged = false;
+    el.setPointerCapture(e.pointerId);
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerup", onUp);
+    el.addEventListener("pointercancel", onUp);
+  }
+
+  function onMove(e){
+    if(!drag) return;
+    var dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    if(!dragged && Math.abs(dx) + Math.abs(dy) < 5) return;
+
+    if(!dragged){
+      dragged = true;
+      var r = drag.el.getBoundingClientRect();
+      ghost = drag.el.cloneNode(true);
+      ghost.classList.add("ghost");
+      ghost.style.width = r.width + "px";
+      ghost.style.marginLeft = "0";
+      document.body.appendChild(ghost);
+      drag.el.classList.add("dragging");
+      slot = document.createElement("div");
+      slot.className = "slot";
+    }
+
+    ghost.style.left = (e.clientX - drag.ox) + "px";
+    ghost.style.top  = (e.clientY - drag.oy) + "px";
+
+    var zone = zoneAt(e.clientX, e.clientY);
+    [bin,sol].forEach(function(z){ z.classList.toggle("over", z === zone); });
+    if(!zone) { if(slot.parentNode) slot.parentNode.removeChild(slot); return; }
+
+    var kids = Array.prototype.slice.call(zone.querySelectorAll(".line"))
+                 .filter(function(n){ return n !== drag.el; });
+    var before = null;
+    for(var i=0;i<kids.length;i++){
+      var kr = kids[i].getBoundingClientRect();
+      if(e.clientY < kr.top + kr.height/2){ before = kids[i]; break; }
+    }
+    var empt = zone.querySelector(".empty");
+    if(empt) empt.remove();
+    zone.insertBefore(slot, before);
+
+    if(zone === sol){
+      var base = sol.getBoundingClientRect().left + 14;
+      var ind = Math.round((e.clientX - drag.ox - base) / STEP);
+      drag.indent = Math.max(0, Math.min(6, ind));
+      slot.style.marginLeft = (drag.indent * STEP) + "px";
+    } else {
+      drag.indent = 0;
+      slot.style.marginLeft = "0";
+    }
+  }
+
+  function onUp(e){
+    if(!drag) return;
+    var el = drag.el;
+    el.removeEventListener("pointermove", onMove);
+    el.removeEventListener("pointerup", onUp);
+    el.removeEventListener("pointercancel", onUp);
+    try{ el.releasePointerCapture(e.pointerId); }catch(_){}
+
+    if(dragged){
+      if(slot && slot.parentNode){
+        slot.parentNode.insertBefore(el, slot);
+        var it = find(drag.id);
+        it.zone = slot.parentNode.id === "sol" ? "sol" : "bin";
+        it.indent = it.zone === "sol" ? (drag.indent || 0) : 0;
+        it.mark = null;
+        slot.parentNode.removeChild(slot);
+      }
+      if(ghost) ghost.remove();
+      el.classList.remove("dragging");
+      [bin,sol].forEach(function(z){ z.classList.remove("over"); });
+      reorderModel();
+      selId = drag.id;
+      fb.className = "fb";
+      render();
+      setTimeout(function(){ dragged = false; }, 0);
+    }
+    ghost = null; drag = null;
+  }
+
+  function zoneAt(x,y){
+    var rb = bin.getBoundingClientRect(), rs = sol.getBoundingClientRect();
+    if(x>=rs.left && x<=rs.right && y>=rs.top-40 && y<=rs.bottom+40) return sol;
+    if(x>=rb.left && x<=rb.right && y>=rb.top-40 && y<=rb.bottom+40) return bin;
+    return null;
+  }
+
+  /* ---------- keyboard ---------- */
+  function nudge(d){
+    if(!selId) return;
+    var it = find(selId);
+    if(it.zone !== "sol") return;
+    it.indent = Math.max(0, Math.min(6, it.indent + d));
+    it.mark = null; fb.className = "fb"; render();
+  }
+  function move(d){
+    if(!selId) return;
+    var it = find(selId);
+    if(it.zone !== "sol"){
+      if(d > 0){
+        it.zone = "sol"; it.indent = 0; it.mark = null;
+        items = items.filter(function(x){ return x !== it; }).concat([it]);
+        reflow();
+      }
+      return;
+    }
+    var s = inZone("sol");
+    var idx = s.indexOf(it), to = idx + d;
+    if(to < 0 || to >= s.length) return;
+    var arr = items.filter(function(x){ return x.zone !== "sol"; });
+    s.splice(idx,1); s.splice(to,0,it);
+    items = arr.concat(s);
+    it.mark = null; fb.className = "fb"; render();
+  }
+  function reflow(){ fb.className="fb"; render(); }
+
+  document.addEventListener("keydown", function(e){
+    if(e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+    if(!selId) return;
+    if(e.key === "ArrowLeft"){ e.preventDefault(); nudge(-1); }
+    if(e.key === "ArrowRight"){ e.preventDefault(); nudge(1); }
+    if(e.key === "ArrowUp"){ e.preventDefault(); move(-1); }
+    if(e.key === "ArrowDown"){ e.preventDefault(); move(1); }
+    if(e.key === "Backspace"){
+      e.preventDefault();
+      var it = find(selId);
+      it.zone = "bin"; it.indent = 0; it.mark = null;
+      var rest = items.filter(function(x){ return x !== it; });
+      items = [it].concat(rest);
+      reflow();
+    }
+  });
+
+  $("in").addEventListener("click", function(){ nudge(1); });
+  $("out").addEventListener("click", function(){ nudge(-1); });
+
+  /* ---------- check ---------- */
+  function check(){
+    var p = PROBLEMS[pi];
+    var s = inZone("sol");
+    tries[pi]++;
+    items.forEach(function(it){ it.mark = null; });
+
+    var hasDist = s.some(function(it){ return it.want < 0; });
+    var need = p.lines.length;
+
+    var firstBad = -1, indentOnly = false;
+    for(var i=0;i<Math.max(s.length,need);i++){
+      var it = s[i];
+      if(!it || it.want !== i || it.indent !== it.wantIndent){
+        firstBad = i;
+        if(it && it.want === i && it.indent !== it.wantIndent) indentOnly = true;
+        break;
+      }
+    }
+
+    if(firstBad < 0 && s.length === need){
+      s.forEach(function(it){ it.mark = "ok"; });
+      solved[pi] = true;
+      fb.className = "fb show good";
+      fbT.textContent = "맞았습니다";
+      fbD.textContent = p.hint + "  다음 문제로 넘어가세요.";
+      peekBtn.disabled = false;
+      render();
+      return;
+    }
+
+    for(var j=0;j<firstBad;j++){ s[j].mark = "ok"; }
+    if(s[firstBad]) s[firstBad].mark = "no";
+
+    fb.className = "fb show bad";
+    if(s.length === 0){
+      fbT.textContent = "아직 비어 있습니다";
+      fbD.textContent = "왼쪽 줄을 끌어다 놓거나, 줄을 누른 뒤 ↓ 를 눌러 옮기세요.";
+    } else if(indentOnly){
+      fbT.textContent = "순서는 맞는데 들여쓰기가 다릅니다";
+      fbD.textContent = "위에서 " + firstBad + "줄까지 맞았습니다. " + (firstBad+1) +
+        "번째 줄을 좌우로 옮겨 보세요. 파이썬에서 들여쓰기는 꾸밈이 아니라 문법입니다.";
+    } else if(hasDist && firstBad >= 0){
+      fbT.textContent = "위에서 " + firstBad + "줄까지 맞았습니다";
+      fbD.textContent = "쓰지 않아도 되는 줄이 답안에 섞여 있을 수 있습니다. 왼쪽 더미로 되돌릴 줄이 있는지 보세요.";
+    } else if(s.length < need){
+      fbT.textContent = "위에서 " + firstBad + "줄까지 맞았습니다";
+      fbD.textContent = "아직 옮기지 않은 줄이 남아 있습니다.";
+    } else {
+      fbT.textContent = "위에서 " + firstBad + "줄까지 맞았습니다";
+      fbD.textContent = (firstBad+1) + "번째 줄부터 다시 보세요. 어느 줄이 먼저 와야 할까요?";
+    }
+    peekBtn.disabled = tries[pi] < 3;
+    render();
+  }
+
+  function peek(){
+    var p = PROBLEMS[pi];
+    items.forEach(function(it){ it.zone = it.want < 0 ? "bin" : "sol"; it.mark = null;
+      if(it.want >= 0) it.indent = it.wantIndent; else it.indent = 0; });
+    items.sort(function(a,b){
+      if(a.zone !== b.zone) return a.zone === "bin" ? -1 : 1;
+      return (a.want < 0 ? 0 : a.want) - (b.want < 0 ? 0 : b.want);
+    });
+    fb.className = "fb show good";
+    fbT.textContent = "정답";
+    fbD.textContent = p.hint + "  왼쪽에 남은 줄이 쓰지 않아도 되는 줄입니다.";
+    selId = null;
+    render();
+  }
+
+  checkBtn.addEventListener("click", check);
+  resetBtn.addEventListener("click", function(){ build(); });
+  peekBtn.addEventListener("click", peek);
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){ pi = parseInt(t.dataset.p,10); build(); });
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>

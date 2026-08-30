@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Rx Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+
+<style>
+:root{
+  --paper:#F5F6F2; --card:#FFFFFF;
+  --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2;
+  --pine:#2C5A4B; --pine-soft:#E4EEE9; --pine-ink:#FFFFFF;
+  --mark:#D4E85C; --mark-a:rgba(212,232,92,.55);
+  --code-bg:#1B2420; --code-ink:#DDE4DA; --code-key:#A8D98C; --code-str:#E0C58A; --code-dim:#7C8A82;
+  --ok:#2F7D5C; --ok-bg:#E3F2E9;
+  --no:#A8452F; --no-bg:#F7E7E2;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 10px 30px -14px rgba(23,32,28,.2);
+  --f-display:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Bricolage Grotesque",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413; --card:#171D1A;
+    --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+    --rule:#2B332E; --rule-2:#222925;
+    --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+    --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+    --code-bg:#0B0F0E;
+    --ok:#6FD3A4; --ok-bg:#163024;
+    --no:#E58B72; --no-bg:#33201B;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413; --card:#171D1A;
+  --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+  --rule:#2B332E; --rule-2:#222925;
+  --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+  --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+  --code-bg:#0B0F0E;
+  --ok:#6FD3A4; --ok-bg:#163024;
+  --no:#E58B72; --no-bg:#33201B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:22px 20px 80px}
+
+.bar{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;
+  padding-bottom:13px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--pine)}
+.bar h1{font-family:var(--f-display);font-weight:800;font-size:26px;
+  letter-spacing:-.024em;margin:2px 0 0;line-height:1}
+.bar .sub{font-size:12.5px;color:var(--ink-2);margin-top:5px}
+.switch{margin-left:auto;display:flex;gap:6px}
+.sw{font-family:var(--f-mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;
+  padding:7px 14px;border:1px solid var(--rule);background:var(--card);
+  color:var(--ink-2);border-radius:2px;cursor:pointer}
+.sw:hover{border-color:var(--pine);color:var(--pine)}
+.sw:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.sw[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+
+.modes{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.mode{font-family:var(--f-mono);font-size:12px;font-weight:600;letter-spacing:.05em;
+  padding:8px 16px;border:1px solid var(--rule);background:var(--card);
+  color:var(--ink-2);border-radius:2px;cursor:pointer}
+.mode:hover{border-color:var(--pine);color:var(--pine)}
+.mode:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.mode[aria-selected="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+
+.hint{margin-top:14px;font-size:13px;color:var(--ink-2);border-left:3px solid var(--mark);
+  padding:3px 0 3px 13px;max-width:70ch}
+.hint b{color:var(--ink);font-weight:600}
+
+/* ---------- TRIAGE ---------- */
+.qlist{margin-top:18px;display:grid;gap:11px}
+.qc{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:var(--shadow);overflow:hidden}
+.qc-h{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--rule-2)}
+.qc-n{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--pine)}
+.qc-t{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--ink-3);margin-left:auto}
+.qc-b{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:stretch}
+.qc-b .txt{padding:14px 16px;font-size:14px}
+pre{margin:0;font-family:var(--f-mono);font-size:12.5px;line-height:1.65;
+  color:var(--code-ink);background:var(--code-bg);padding:14px 16px;overflow-x:auto;tab-size:4}
+.k{color:var(--code-key)} .s{color:var(--code-str)} .c{color:var(--code-dim)}
+.qc-a{padding:12px 16px;border-left:1px solid var(--rule-2);display:flex;
+  flex-direction:column;justify-content:center;gap:7px}
+.qc-a label{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+input[type=text]{font-family:var(--f-mono);font-size:14px;padding:8px 10px;
+  border:1px solid var(--rule);border-radius:2px;background:var(--paper);color:var(--ink);width:100%}
+input[type=text]:focus{outline:2px solid var(--pine);outline-offset:1px;border-color:var(--pine)}
+.qc.ok{border-color:var(--ok)} .qc.ok .qc-a{background:var(--ok-bg)}
+.qc.no{border-color:var(--no)} .qc.no .qc-a{background:var(--no-bg)}
+.verdict{font-size:12.5px;font-weight:600;margin-top:2px}
+.verdict.y{color:var(--ok)} .verdict.n{color:var(--no)}
+.verdict small{display:block;font-weight:400;color:var(--ink-2);font-family:var(--f-mono);font-size:11.5px}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.btn{font-family:var(--f-body);font-size:14px;font-weight:600;padding:10px 20px;
+  border-radius:2px;cursor:pointer;border:1px solid transparent}
+.btn:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.btn-main{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.btn-main:hover{filter:brightness(1.12)}
+.btn-ghost{background:transparent;color:var(--ink-2);border-color:var(--rule)}
+.btn-ghost:hover{border-color:var(--pine);color:var(--pine)}
+.btn:disabled{opacity:.4;cursor:default;filter:none}
+
+.rx{margin-top:20px;background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:var(--shadow);overflow:hidden;display:none}
+.rx.show{display:block}
+.rx-h{padding:15px 18px 0;font-family:var(--f-mono);font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--pine)}
+.rx-score{padding:6px 18px 14px;font-family:var(--f-display);font-weight:800;
+  font-size:30px;letter-spacing:-.02em}
+.rx-score small{font-family:var(--f-body);font-size:14px;font-weight:500;color:var(--ink-2);margin-left:8px}
+.rx-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.rx-tbl th{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);text-align:left;font-weight:600;padding:8px 18px;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule-2)}
+.rx-tbl td{padding:11px 18px;border-bottom:1px solid var(--rule-2);vertical-align:middle}
+.rx-tbl tr.weak{background:var(--pine-soft)}
+.rx-tbl tr.weak td{font-weight:600}
+.bars{display:flex;gap:3px}
+.bars i{width:16px;height:9px;border-radius:1px;background:var(--rule);display:block}
+.bars i.miss{background:var(--no)}
+.rx-note{padding:15px 18px;border-top:1px solid var(--rule);background:var(--pine-soft);
+  font-size:14px;line-height:1.7}
+.rx-note b{font-weight:700}
+
+/* ---------- DRILL ---------- */
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+.chip{font-family:var(--f-mono);font-size:11.5px;font-weight:600;padding:7px 13px;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink-2);
+  border-radius:100px;cursor:pointer}
+.chip:hover{border-color:var(--pine);color:var(--pine)}
+.chip:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.chip[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+
+.stage{margin-top:16px;background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:var(--shadow);overflow:hidden}
+.st-h{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px;
+  border-bottom:1px solid var(--rule)}
+.st-h .lab{font-family:var(--f-display);font-weight:800;font-size:15px}
+.st-h .prog{font-family:var(--f-mono);font-size:12px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums}
+.streak{margin-left:auto;font-family:var(--f-mono);font-size:12px;font-weight:600;
+  color:var(--pine);border:1px solid var(--pine);border-radius:100px;padding:3px 12px}
+.pbar{height:3px;background:var(--rule-2)}
+.pbar i{display:block;height:100%;background:var(--mark);transition:width .25s ease}
+.st-q{padding:0}
+.st-prompt{padding:16px 18px 0;font-size:15px;font-weight:500}
+.st-in{display:flex;gap:10px;padding:16px 18px;border-top:1px solid var(--rule-2);flex-wrap:wrap}
+.st-in input{flex:1;min-width:180px;font-size:16px}
+.st-fb{padding:14px 18px;border-top:1px solid var(--rule);display:none;font-size:14.5px}
+.st-fb.show{display:block}
+.st-fb.y{background:var(--ok-bg);color:var(--ok);font-weight:600}
+.st-fb.n{background:var(--no-bg);color:var(--no);font-weight:600}
+.st-fb .ans{display:block;font-family:var(--f-mono);font-size:13.5px;color:var(--ink);
+  font-weight:500;margin-top:4px}
+.done{padding:26px 18px;text-align:center}
+.done .big{font-family:var(--f-display);font-weight:800;font-size:34px;letter-spacing:-.02em}
+.done p{margin:6px 0 16px;color:var(--ink-2);font-size:14px}
+
+.hide{display:none !important}
+@media (max-width:760px){
+  .wrap{padding:16px 13px 60px}
+  .qc-b{grid-template-columns:1fr}
+  .qc-a{border-left:0;border-top:1px solid var(--rule-2)}
+  .switch{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="bar">
+    <div>
+      <div class="eyebrow">Conditionals &amp; Loops 1</div>
+      <h1>Rx Console</h1>
+      <div class="sub">진단하고 처방받고, 유형별로 빠르게 반복합니다</div>
+    </div>
+    <div class="switch">
+      <button class="sw" id="swCond" aria-pressed="true">조건문</button>
+      <button class="sw" id="swLoop" aria-pressed="false">반복문</button>
+    </div>
+  </div>
+
+  <div class="modes" role="tablist">
+    <button class="mode" role="tab" id="mTriage" aria-selected="true">진단 &amp; 처방</button>
+    <button class="mode" role="tab" id="mDrill" aria-selected="false">빠른 드릴</button>
+  </div>
+
+  <!-- ===== TRIAGE ===== -->
+  <section id="triage">
+    <div class="hint" id="tHint"></div>
+    <div class="qlist" id="qlist"></div>
+    <div class="actions">
+      <button class="btn btn-main" id="grade">채점하고 처방받기</button>
+      <button class="btn btn-ghost" id="clear">다시 하기</button>
+    </div>
+    <div class="rx" id="rx">
+      <div class="rx-h">Prescription · 처방</div>
+      <div class="rx-score" id="rxScore"></div>
+      <table class="rx-tbl">
+        <thead><tr><th>함정</th><th>틀린 문항</th><th>먼저 할 유형</th></tr></thead>
+        <tbody id="rxBody"></tbody>
+      </table>
+      <div class="rx-note" id="rxNote"></div>
+    </div>
+  </section>
+
+  <!-- ===== DRILL ===== -->
+  <section id="drill" class="hide">
+    <div class="hint">코드를 보고 <b>답만</b> 입력하세요. <kbd>Enter</kbd> 로 제출하고 다음으로 넘어갑니다.
+      <b>틀린 문제는 끝에 다시 나옵니다.</b></div>
+    <div class="chips" id="chips"></div>
+    <div class="stage" id="stage">
+      <div class="st-h">
+        <span class="lab" id="dLab"></span>
+        <span class="prog" id="dProg"></span>
+        <span class="streak" id="dStreak">연속 0</span>
+      </div>
+      <div class="pbar"><i id="dBar" style="width:0%"></i></div>
+      <div class="st-q" id="dQ"></div>
+      <div class="st-in">
+        <input type="text" id="dIn" placeholder="답을 입력하고 Enter" autocomplete="off" spellcheck="false">
+        <button class="btn btn-main" id="dGo">확인</button>
+      </div>
+      <div class="st-fb" id="dFb"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 정규화 ---------- */
+  function norm(s){
+    var t = String(s == null ? "" : s)
+      .replace(/[''"`]/g, "")
+      .replace(/[,，]/g, "")
+      .replace(/\s+/g, "")
+      .toLowerCase();
+    if (t === "" || t === "-" || t === "없음" || t === "출력없음" || t === "x" || t === "무출력") return "∅";
+    if (t === "true" || t === "t" || t === "참" || t === "o" || t === "ㅇ") return "t";
+    if (t === "false" || t === "f" || t === "거짓") return "f";
+    return t;
+  }
+  function match(input, answers){
+    var a = norm(input);
+    for (var i = 0; i < answers.length; i++) if (norm(answers[i]) === a) return true;
+    return false;
+  }
+
+  /* ---------- 데이터 ---------- */
+  var COND = {
+    key: "cond", label: "조건문",
+    traps: [
+      { n:"① 경계", rx:"유형 2 경계값 → 유형 6" },
+      { n:"② 조합", rx:"유형 4 and/or/not → 유형 5 → 6" },
+      { n:"③ 순서", rx:"유형 3 elif 순서 → 유형 9" },
+      { n:"④ 누락", rx:"유형 10 중첩 → 유형 11" }
+    ],
+    triage: [
+      {t:0, code:'age = <span class="s">19</span>\n<span class="k">if</span> age &gt; <span class="s">19</span>: print(<span class="s">\'입장\'</span>)\n<span class="k">else</span>: print(<span class="s">\'불가\'</span>)', a:["불가"]},
+      {t:0, code:'s = <span class="s">60</span>\n<span class="k">if</span> s &lt; <span class="s">60</span>: print(<span class="s">\'불합격\'</span>)\n<span class="k">else</span>: print(<span class="s">\'합격\'</span>)', a:["합격"]},
+      {t:0, expr:true, txt:'"나이가 <b>19세 이상</b>이다" 를 조건식으로', a:["age>=19","19<=age"]},
+      {t:1, code:'x = <span class="s">10</span>\n<span class="k">if</span> x &gt; <span class="s">5</span> <span class="k">and</span> x &lt; <span class="s">8</span>: print(<span class="s">\'A\'</span>)\n<span class="k">else</span>: print(<span class="s">\'B\'</span>)', a:["B"]},
+      {t:1, code:'x = <span class="s">10</span>\n<span class="k">if</span> x &gt; <span class="s">5</span> <span class="k">or</span> x &lt; <span class="s">8</span>: print(<span class="s">\'A\'</span>)\n<span class="k">else</span>: print(<span class="s">\'B\'</span>)', a:["A"]},
+      {t:1, expr:true, txt:'"x가 <b>3의 배수이고 5의 배수는 아니다</b>" 를 조건식으로',
+        a:["x%3==0andx%5!=0","x%3==0andnot(x%5==0)","x%3==0andnotx%5==0","x%5!=0andx%3==0"]},
+      {t:2, code:'s = <span class="s">85</span>\n<span class="k">if</span> s &gt;= <span class="s">70</span>: print(<span class="s">\'C\'</span>)\n<span class="k">elif</span> s &gt;= <span class="s">80</span>: print(<span class="s">\'B\'</span>)\n<span class="k">elif</span> s &gt;= <span class="s">90</span>: print(<span class="s">\'A\'</span>)', a:["C"]},
+      {t:2, code:'s = <span class="s">85</span>\n<span class="k">if</span> s &gt;= <span class="s">90</span>: print(<span class="s">\'A\'</span>)\n<span class="k">if</span> s &gt;= <span class="s">80</span>: print(<span class="s">\'B\'</span>)\n<span class="k">if</span> s &gt;= <span class="s">70</span>: print(<span class="s">\'C\'</span>)', a:["B C","BC"]},
+      {t:2, code:'s = <span class="s">95</span>\n<span class="k">if</span> s &gt;= <span class="s">60</span>: print(<span class="s">\'D\'</span>)\n<span class="k">elif</span> s &gt;= <span class="s">90</span>: print(<span class="s">\'A\'</span>)', a:["D"]},
+      {t:3, code:'n = <span class="s">7</span>\n<span class="k">if</span> n % <span class="s">2</span> == <span class="s">0</span>: print(<span class="s">\'짝\'</span>)', a:["없음"]},
+      {t:3, code:'a = b = <span class="s">\'바위\'</span>\n<span class="k">if</span> a==<span class="s">\'가위\'</span> <span class="k">and</span> b==<span class="s">\'보\'</span>: print(<span class="s">\'1번 승\'</span>)\n<span class="k">elif</span> a==<span class="s">\'바위\'</span> <span class="k">and</span> b==<span class="s">\'가위\'</span>: print(<span class="s">\'1번 승\'</span>)\n<span class="k">else</span>: print(<span class="s">\'2번 승\'</span>)', a:["2번 승"]},
+      {t:3, code:'x = <span class="s">5</span>\n<span class="k">if</span> x &gt; <span class="s">0</span>:\n    <span class="k">if</span> x &gt; <span class="s">10</span>:\n        print(<span class="s">\'큼\'</span>)\n<span class="k">else</span>:\n    print(<span class="s">\'음수\'</span>)', a:["없음"]}
+    ],
+    drills: [
+      { name:"출력 예측", items:[
+        {c:'x = <span class="s">7</span>\n<span class="k">if</span> x &gt; <span class="s">5</span>: print(<span class="s">\'큼\'</span>)\n<span class="k">else</span>: print(<span class="s">\'작음\'</span>)', a:["큼"]},
+        {c:'x = <span class="s">3</span>\n<span class="k">if</span> x &gt; <span class="s">5</span>: print(<span class="s">\'큼\'</span>)\n<span class="k">else</span>: print(<span class="s">\'작음\'</span>)', a:["작음"]},
+        {c:'x = <span class="s">1</span>\n<span class="k">if</span> x &gt; <span class="s">5</span>:\n    print(<span class="s">\'큼\'</span>)\n    print(<span class="s">\'끝\'</span>)', a:["없음"]},
+        {c:'x = <span class="s">1</span>\n<span class="k">if</span> x &gt; <span class="s">5</span>:\n    print(<span class="s">\'큼\'</span>)\nprint(<span class="s">\'끝\'</span>)', a:["끝"]},
+        {c:'s = <span class="s">\'python\'</span>\n<span class="k">if</span> s == <span class="s">\'Python\'</span>: print(<span class="s">\'같다\'</span>)\n<span class="k">else</span>: print(<span class="s">\'다르다\'</span>)', a:["다르다"]},
+        {c:'x = <span class="s">\'5\'</span>\n<span class="k">if</span> x == <span class="s">5</span>: print(<span class="s">\'같다\'</span>)\n<span class="k">else</span>: print(<span class="s">\'다르다\'</span>)', a:["다르다"]},
+        {c:'n = <span class="s">0</span>\n<span class="k">if</span> n % <span class="s">2</span> == <span class="s">0</span>: print(<span class="s">\'짝\'</span>)\n<span class="k">else</span>: print(<span class="s">\'홀\'</span>)', a:["짝"]}
+      ]},
+      { name:"경계값", items:[
+        {c:'age = <span class="s">19</span>\n<span class="k">if</span> age &gt;= <span class="s">19</span>: print(<span class="s">\'입장\'</span>)\n<span class="k">else</span>: print(<span class="s">\'불가\'</span>)', a:["입장"]},
+        {c:'age = <span class="s">19</span>\n<span class="k">if</span> age &gt; <span class="s">19</span>: print(<span class="s">\'입장\'</span>)\n<span class="k">else</span>: print(<span class="s">\'불가\'</span>)', a:["불가"]},
+        {c:'t = <span class="s">100</span>\n<span class="k">if</span> t &gt;= <span class="s">100</span>: print(<span class="s">\'끓는다\'</span>)\n<span class="k">else</span>: print(<span class="s">\'아직\'</span>)', a:["끓는다"]},
+        {c:'n = <span class="s">30</span>\n<span class="k">if</span> n &lt; <span class="s">30</span>: print(<span class="s">\'입장\'</span>)\n<span class="k">else</span>: print(<span class="s">\'정원 초과\'</span>)', a:["정원 초과"]},
+        {c:'x = <span class="s">20</span>\n<span class="k">if</span> <span class="s">10</span> &lt; x &lt; <span class="s">20</span>: print(<span class="s">\'안\'</span>)\n<span class="k">else</span>: print(<span class="s">\'밖\'</span>)', a:["밖"]},
+        {c:'s = <span class="s">60</span>\n<span class="k">if</span> s &lt; <span class="s">60</span>: print(<span class="s">\'불합격\'</span>)\n<span class="k">else</span>: print(<span class="s">\'합격\'</span>)', a:["합격"]}
+      ]},
+      { name:"elif 순서", items:[
+        {c:'s = <span class="s">85</span>\n<span class="k">if</span> s &gt;= <span class="s">90</span>: print(<span class="s">\'A\'</span>)\n<span class="k">elif</span> s &gt;= <span class="s">80</span>: print(<span class="s">\'B\'</span>)\n<span class="k">elif</span> s &gt;= <span class="s">70</span>: print(<span class="s">\'C\'</span>)\n<span class="k">else</span>: print(<span class="s">\'D\'</span>)', a:["B"]},
+        {c:'s = <span class="s">85</span>\n<span class="k">if</span> s &gt;= <span class="s">90</span>: print(<span class="s">\'A\'</span>)\n<span class="k">if</span> s &gt;= <span class="s">80</span>: print(<span class="s">\'B\'</span>)\n<span class="k">if</span> s &gt;= <span class="s">70</span>: print(<span class="s">\'C\'</span>)', a:["B C","BC"]},
+        {c:'x = <span class="s">7</span>\n<span class="k">if</span> x &gt; <span class="s">10</span>: print(<span class="s">\'A\'</span>)\n<span class="k">elif</span> x &gt; <span class="s">5</span>: print(<span class="s">\'B\'</span>)\n<span class="k">elif</span> x &gt; <span class="s">3</span>: print(<span class="s">\'C\'</span>)\n<span class="k">else</span>: print(<span class="s">\'D\'</span>)', a:["B"]},
+        {c:'x = <span class="s">7</span>\n<span class="k">if</span> x &gt; <span class="s">3</span>: print(<span class="s">\'C\'</span>)\n<span class="k">elif</span> x &gt; <span class="s">5</span>: print(<span class="s">\'B\'</span>)\n<span class="k">elif</span> x &gt; <span class="s">10</span>: print(<span class="s">\'A\'</span>)\n<span class="k">else</span>: print(<span class="s">\'D\'</span>)', a:["C"]},
+        {c:'n = <span class="s">15</span>\n<span class="k">if</span> n % <span class="s">3</span> == <span class="s">0</span>: print(<span class="s">\'3의 배수\'</span>)\n<span class="k">if</span> n % <span class="s">5</span> == <span class="s">0</span>: print(<span class="s">\'5의 배수\'</span>)', a:["3의 배수 5의 배수"]},
+        {c:'n = <span class="s">15</span>\n<span class="k">if</span> n % <span class="s">3</span> == <span class="s">0</span>: print(<span class="s">\'3의 배수\'</span>)\n<span class="k">elif</span> n % <span class="s">5</span> == <span class="s">0</span>: print(<span class="s">\'5의 배수\'</span>)', a:["3의 배수"]}
+      ]},
+      { name:"and / or / not", items:[
+        {c:'x = <span class="s">10</span>\n<span class="k">if</span> x &gt; <span class="s">5</span> <span class="k">and</span> x &lt; <span class="s">8</span>: print(<span class="s">\'A\'</span>)\n<span class="k">else</span>: print(<span class="s">\'B\'</span>)', a:["B"]},
+        {c:'x = <span class="s">10</span>\n<span class="k">if</span> x &gt; <span class="s">5</span> <span class="k">or</span> x &lt; <span class="s">8</span>: print(<span class="s">\'A\'</span>)\n<span class="k">else</span>: print(<span class="s">\'B\'</span>)', a:["A"]},
+        {c:'a, b = <span class="k">True</span>, <span class="k">False</span>\n<span class="k">if</span> a <span class="k">and</span> b: print(<span class="s">\'둘 다\'</span>)\n<span class="k">elif</span> a <span class="k">or</span> b: print(<span class="s">\'하나\'</span>)\n<span class="k">else</span>: print(<span class="s">\'없음\'</span>)', a:["하나"]},
+        {c:'t, h = <span class="s">25</span>, <span class="s">80</span>\n<span class="k">if</span> t &gt; <span class="s">30</span> <span class="k">and</span> h &gt; <span class="s">70</span>: print(<span class="s">\'불쾌\'</span>)\n<span class="k">elif</span> t &gt; <span class="s">30</span> <span class="k">or</span> h &gt; <span class="s">70</span>: print(<span class="s">\'주의\'</span>)\n<span class="k">else</span>: print(<span class="s">\'쾌적\'</span>)', a:["주의"]},
+        {c:'x = <span class="s">4</span>\n<span class="k">if</span> <span class="k">not</span> (x &gt; <span class="s">5</span>): print(<span class="s">\'A\'</span>)\n<span class="k">else</span>: print(<span class="s">\'B\'</span>)', a:["A"]},
+        {c:'n = <span class="s">6</span>\n<span class="k">if</span> n%<span class="s">2</span>==<span class="s">0</span> <span class="k">and</span> n%<span class="s">3</span>==<span class="s">0</span>: print(<span class="s">\'둘 다\'</span>)\n<span class="k">else</span>: print(<span class="s">\'아님\'</span>)', a:["둘 다"]},
+        {c:'n = <span class="s">4</span>\n<span class="k">if</span> n%<span class="s">2</span>==<span class="s">0</span> <span class="k">and</span> n%<span class="s">3</span>==<span class="s">0</span>: print(<span class="s">\'둘 다\'</span>)\n<span class="k">else</span>: print(<span class="s">\'아님\'</span>)', a:["아님"]},
+        {c:'n = <span class="s">4</span>\n<span class="k">if</span> n%<span class="s">2</span>==<span class="s">0</span> <span class="k">or</span> n%<span class="s">3</span>==<span class="s">0</span>: print(<span class="s">\'둘 다\'</span>)\n<span class="k">else</span>: print(<span class="s">\'아님\'</span>)', a:["둘 다"]}
+      ]},
+      { name:"참 · 거짓", note:"x = 7, y = 3 일 때. T 또는 F", items:[
+        {c:'x &gt; y', a:["T"]}, {c:'x &gt;= <span class="s">7</span>', a:["T"]},
+        {c:'x != <span class="s">7</span>', a:["F"]}, {c:'x % <span class="s">2</span> == <span class="s">0</span>', a:["F"]},
+        {c:'x % <span class="s">2</span> == <span class="s">1</span>', a:["T"]}, {c:'x % <span class="s">2</span> != <span class="s">0</span>', a:["T"]},
+        {c:'x &gt; <span class="s">5</span> <span class="k">and</span> y &gt; <span class="s">5</span>', a:["F"]},
+        {c:'x &gt; <span class="s">5</span> <span class="k">or</span> y &gt; <span class="s">5</span>', a:["T"]},
+        {c:'<span class="k">not</span> (x &gt; <span class="s">5</span>)', a:["F"]},
+        {c:'<span class="k">not</span> (x == y)', a:["T"]},
+        {c:'<span class="s">0</span> &lt;= y &lt;= <span class="s">5</span>', a:["T"]},
+        {c:'x &gt; y &gt; <span class="s">0</span>', a:["T"]},
+        {c:'x + y == <span class="s">10</span>', a:["T"]},
+        {c:'x - y == <span class="s">4</span>', a:["T"]},
+        {c:'x * y &gt; <span class="s">20</span>', a:["T"]},
+        {c:'x % y == <span class="s">1</span>', a:["T"]}
+      ]}
+    ]
+  };
+
+  var LOOP = {
+    key: "loop", label: "반복문",
+    traps: [
+      { n:"① 횟수", rx:"유형 1 몇 번 도는가" },
+      { n:"② 범위", rx:"유형 3 반복의 범위" },
+      { n:"③ 누적", rx:"유형 4 누적" },
+      { n:"④ 종료", rx:"유형 6 while → 유형 7" }
+    ],
+    triage: [
+      {t:0, expr:true, txt:'<code>range(1, 5)</code> 는 <b>몇 번</b> 도는가?', a:["4","4번"]},
+      {t:0, expr:true, txt:'<code>range(0, 10, 2)</code> 는 <b>몇 번</b> 도는가?', a:["5","5번"]},
+      {t:0, expr:true, txt:'<code>range(5, 5)</code> 는 <b>몇 번</b> 도는가?', a:["0","0번"]},
+      {t:1, code:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">3</span>):\n    print(i, end=<span class="s">\' \'</span>)\nprint(<span class="s">\'끝\'</span>)', a:["0 1 2 끝"]},
+      {t:1, code:'total = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">6</span>):\n    total += i\nprint(total)', a:["15"]},
+      {t:1, code:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">6</span>):\n    total = <span class="s">0</span>\n    total += i\nprint(total)', a:["5"]},
+      {t:2, code:'total = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">11</span>):\n    total += i\nprint(total)', a:["55"]},
+      {t:2, code:'c = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">21</span>):\n    <span class="k">if</span> i % <span class="s">3</span> == <span class="s">0</span>:\n        c += <span class="s">1</span>\nprint(c)', a:["6"]},
+      {t:2, code:'total = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">6</span>):\n    total = i\nprint(total)', a:["5"]},
+      {t:3, code:'n = <span class="s">1</span>\n<span class="k">while</span> n &lt;= <span class="s">5</span>:\n    print(n, end=<span class="s">\' \'</span>)\n    n += <span class="s">1</span>', a:["1 2 3 4 5"]},
+      {t:3, code:'n = <span class="s">1</span>\n<span class="k">while</span> n &lt; <span class="s">100</span>:\n    n *= <span class="s">2</span>\nprint(n)', a:["128"]},
+      {t:3, expr:true, txt:'<code>n = 10</code> 일 때 <code>while n != 0: n -= 3</code> 는 <b>멈추는가?</b><br><span style="color:var(--ink-3)">멈추면 멈추는 값을, 아니면 "안 멈춤"</span>', a:["안 멈춤","무한","무한루프","멈추지 않음","안멈춰요"]}
+    ],
+    drills: [
+      { name:"몇 번 도는가", note:"횟수만 숫자로", items:[
+        {c:'range(<span class="s">5</span>)', a:["5"]}, {c:'range(<span class="s">1</span>, <span class="s">5</span>)', a:["4"]},
+        {c:'range(<span class="s">1</span>, <span class="s">6</span>)', a:["5"]}, {c:'range(<span class="s">0</span>, <span class="s">10</span>, <span class="s">2</span>)', a:["5"]},
+        {c:'range(<span class="s">2</span>, <span class="s">10</span>, <span class="s">3</span>)', a:["3"]}, {c:'range(<span class="s">1</span>, <span class="s">10</span>, <span class="s">4</span>)', a:["3"]},
+        {c:'range(<span class="s">10</span>, <span class="s">0</span>, <span class="s">-1</span>)', a:["10"]}, {c:'range(<span class="s">5</span>, <span class="s">5</span>)', a:["0"]},
+        {c:'range(<span class="s">3</span>, <span class="s">0</span>)', a:["0"]}
+      ]},
+      { name:"출력 예측", items:[
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">4</span>):\n    print(i, end=<span class="s">\' \'</span>)', a:["1 2 3"]},
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">3</span>):\n    print(<span class="s">\'*\'</span>, end=<span class="s">\'\'</span>)', a:["***"]},
+        {c:'<span class="k">for</span> c <span class="k">in</span> <span class="s">\'abc\'</span>:\n    print(c, end=<span class="s">\' \'</span>)', a:["a b c"]},
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">3</span>,<span class="s">0</span>,<span class="s">-1</span>):\n    print(i, end=<span class="s">\' \'</span>)', a:["3 2 1"]},
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">3</span>):\n    print(i, end=<span class="s">\' \'</span>)\nprint(<span class="s">\'끝\'</span>)', a:["0 1 2 끝"]},
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">11</span>):\n    <span class="k">if</span> i % <span class="s">3</span> == <span class="s">0</span>:\n        print(i, end=<span class="s">\' \'</span>)', a:["3 6 9"]},
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">11</span>):\n    <span class="k">if</span> i % <span class="s">2</span> == <span class="s">0</span>:\n        <span class="k">continue</span>\n    print(i, end=<span class="s">\' \'</span>)', a:["1 3 5 7 9"]},
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">11</span>):\n    <span class="k">if</span> i &gt; <span class="s">5</span>:\n        <span class="k">break</span>\n    print(i, end=<span class="s">\' \'</span>)', a:["1 2 3 4 5"]}
+      ]},
+      { name:"누적", items:[
+        {c:'total = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">6</span>):\n    total += i\nprint(total)', a:["15"]},
+        {c:'<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">6</span>):\n    total = <span class="s">0</span>\n    total += i\nprint(total)', a:["5"]},
+        {c:'total = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">6</span>):\n    total = i\nprint(total)', a:["5"]},
+        {c:'total = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">11</span>):\n    total += i\nprint(total)', a:["55"]},
+        {c:'c = <span class="s">0</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">21</span>):\n    <span class="k">if</span> i % <span class="s">3</span> == <span class="s">0</span>:\n        c += <span class="s">1</span>\nprint(c)', a:["6"]},
+        {c:'p = <span class="s">1</span>\n<span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">6</span>):\n    p *= i\nprint(p)', a:["120"]},
+        {c:'lst = [<span class="s">3</span>,<span class="s">9</span>,<span class="s">1</span>,<span class="s">7</span>,<span class="s">5</span>]\nbest = lst[<span class="s">0</span>]\n<span class="k">for</span> x <span class="k">in</span> lst:\n    <span class="k">if</span> x &gt; best: best = x\nprint(best)', a:["9"]}
+      ]},
+      { name:"while 과 종료", items:[
+        {c:'n = <span class="s">1</span>\n<span class="k">while</span> n &lt;= <span class="s">5</span>:\n    print(n, end=<span class="s">\' \'</span>)\n    n += <span class="s">1</span>', a:["1 2 3 4 5"]},
+        {c:'n = <span class="s">5</span>\n<span class="k">while</span> n &gt; <span class="s">0</span>:\n    print(n, end=<span class="s">\' \'</span>)\n    n -= <span class="s">1</span>', a:["5 4 3 2 1"]},
+        {c:'n = <span class="s">1</span>\n<span class="k">while</span> n &lt; <span class="s">100</span>:\n    n *= <span class="s">2</span>\nprint(n)', a:["128"]},
+        {c:'n = <span class="s">10</span>\n<span class="k">while</span> n &gt; <span class="s">0</span>:\n    n -= <span class="s">3</span>\nprint(n)', a:["-2"]},
+        {c:'t = <span class="s">0</span>\nn = <span class="s">1</span>\n<span class="k">while</span> n &lt;= <span class="s">10</span>:\n    t += n\n    n += <span class="s">1</span>\nprint(t)', a:["55"]}
+      ]}
+    ]
+  };
+
+  var SUB = { cond: COND, loop: LOOP };
+
+  /* ---------- 상태 ---------- */
+  var cur = "cond", mode = "triage";
+  var di = 0, dq = [], dpos = 0, dstreak = 0, dbest = 0, dwrong = [];
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------- TRIAGE ---------- */
+  function renderTriage(){
+    var S = SUB[cur];
+    $("tHint").innerHTML = '<b>' + S.label + ' 진단 12문항.</b> 코드를 보고 <b>출력을 예측</b>해서 쓰세요. ' +
+      '출력이 없으면 <b>"없음"</b>이라고 쓰면 됩니다. 모르면 비워 두세요 — 비운 칸이 오늘 할 일입니다.';
+    $("qlist").innerHTML = S.triage.map(function(q, i){
+      var body = q.expr
+        ? '<div class="txt">' + q.txt + '</div>'
+        : '<pre>' + q.code + '</pre>';
+      return '<div class="qc" id="qc' + i + '">' +
+        '<div class="qc-h"><span class="qc-n">' + (cur === "cond" ? "D" : "L") + (i+1) + '</span>' +
+        '<span class="qc-t">' + S.traps[q.t].n + '</span></div>' +
+        '<div class="qc-b">' + body +
+        '<div class="qc-a"><label for="in'+i+'">답</label>' +
+        '<input type="text" id="in'+i+'" autocomplete="off" spellcheck="false">' +
+        '<div class="verdict" id="v'+i+'"></div></div></div></div>';
+    }).join("");
+    $("rx").className = "rx";
+  }
+
+  function grade(){
+    var S = SUB[cur], miss = [0,0,0,0], right = 0;
+    S.triage.forEach(function(q, i){
+      var val = $("in"+i).value;
+      var ok = match(val, q.a);
+      var card = $("qc"+i), v = $("v"+i);
+      card.className = "qc " + (ok ? "ok" : "no");
+      if (ok){ right++; v.className = "verdict y"; v.textContent = "맞았습니다"; }
+      else {
+        miss[q.t]++;
+        v.className = "verdict n";
+        v.innerHTML = "틀렸습니다<small>정답 " + q.a[0] + "</small>" +
+          (q.expr && q.a.length > 1 ? '<small style="color:var(--ink-3)">다른 형태도 정답일 수 있어요</small>' : "");
+      }
+    });
+
+    var maxMiss = Math.max.apply(null, miss);
+    $("rxScore").innerHTML = right + " / 12 <small>맞았습니다</small>";
+    $("rxBody").innerHTML = S.traps.map(function(t, k){
+      var bars = "";
+      for (var b = 0; b < 3; b++) bars += '<i class="' + (b < miss[k] ? "miss" : "") + '"></i>';
+      var weak = (miss[k] === maxMiss && maxMiss > 0);
+      return '<tr class="' + (weak ? "weak" : "") + '"><td>' + t.n + '</td>' +
+        '<td><div class="bars">' + bars + '</div></td><td>' + t.rx + '</td></tr>';
+    }).join("");
+
+    var note;
+    if (maxMiss === 0) note = '<b>전부 맞았습니다.</b> 유형 11 완성 문제부터 시작하세요. 그다음은 Challenge.';
+    else {
+      var weakest = S.traps.filter(function(t,k){ return miss[k] === maxMiss; }).map(function(t){ return t.n; });
+      note = '가장 약한 곳은 <b>' + weakest.join(" · ") + '</b> 입니다. ' +
+        '학습지에서 <b>' + S.traps[miss.indexOf(maxMiss)].rx + '</b> 부터 시작하세요.';
+    }
+    $("rxNote").innerHTML = note;
+    $("rx").className = "rx show";
+    $("rx").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /* ---------- DRILL ---------- */
+  function renderChips(){
+    var S = SUB[cur];
+    $("chips").innerHTML = S.drills.map(function(d, i){
+      return '<button class="chip" data-i="'+i+'" aria-pressed="'+(i===di)+'">' +
+        d.name + ' <span style="opacity:.6">'+d.items.length+'</span></button>';
+    }).join("");
+    Array.prototype.forEach.call($("chips").children, function(c){
+      c.addEventListener("click", function(){ di = +c.dataset.i; startDrill(); });
+    });
+  }
+
+  function shuffle(a){
+    for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; }
+    return a;
+  }
+
+  function startDrill(){
+    var S = SUB[cur], set = S.drills[di];
+    dq = shuffle(set.items.slice());
+    dpos = 0; dstreak = 0; dbest = 0; dwrong = [];
+    renderChips();
+    showQ();
+  }
+
+  function showQ(){
+    var S = SUB[cur], set = S.drills[di];
+    $("dLab").textContent = set.name;
+    if (dpos >= dq.length){
+      $("dQ").innerHTML = '<div class="done"><div class="big">' +
+        (dwrong.length ? "다시 한 번" : "끝!") + '</div><p>' +
+        (dwrong.length ? '틀린 ' + dwrong.length + '문제를 다시 풀어 봅시다.'
+                       : '최고 연속 ' + dbest + '문제. 다른 유형으로 넘어가세요.') +
+        '</p><button class="btn btn-main" id="dAgain">' +
+        (dwrong.length ? "틀린 것만 다시" : "처음부터 다시") + '</button></div>';
+      $("dProg").textContent = dq.length + " / " + dq.length;
+      $("dBar").style.width = "100%";
+      document.querySelector(".st-in").classList.add("hide");
+      $("dFb").className = "st-fb";
+      $("dAgain").addEventListener("click", function(){
+        if (dwrong.length){ dq = shuffle(dwrong.slice()); dwrong = []; }
+        else { dq = shuffle(SUB[cur].drills[di].items.slice()); }
+        dpos = 0; dstreak = 0; showQ();
+      });
+      return;
+    }
+    document.querySelector(".st-in").classList.remove("hide");
+    var q = dq[dpos];
+    $("dQ").innerHTML = (set.note ? '<div class="st-prompt">' + set.note + '</div>' : '') +
+      '<pre>' + q.c + '</pre>';
+    $("dProg").textContent = (dpos+1) + " / " + dq.length;
+    $("dBar").style.width = (dpos / dq.length * 100) + "%";
+    $("dStreak").textContent = "연속 " + dstreak;
+    $("dFb").className = "st-fb";
+    $("dIn").value = "";
+    $("dIn").focus();
+  }
+
+  function submit(){
+    if (dpos >= dq.length) return;
+    var q = dq[dpos], val = $("dIn").value;
+    if (norm(val) === "∅" && val.trim() === "") { $("dIn").focus(); return; }
+    var ok = match(val, q.a);
+    var fb = $("dFb");
+    if (ok){
+      dstreak++; if (dstreak > dbest) dbest = dstreak;
+      fb.className = "st-fb show y"; fb.innerHTML = "맞았습니다";
+    } else {
+      dstreak = 0; dwrong.push(q);
+      fb.className = "st-fb show n";
+      fb.innerHTML = '틀렸습니다<span class="ans">정답 &nbsp;' + q.a[0] + '</span>';
+    }
+    $("dStreak").textContent = "연속 " + dstreak;
+    dpos++;
+    setTimeout(function(){ showQ(); }, ok ? 550 : 1600);
+  }
+
+  /* ---------- 전환 ---------- */
+  function setMode(m){
+    mode = m;
+    $("mTriage").setAttribute("aria-selected", m === "triage");
+    $("mDrill").setAttribute("aria-selected", m === "drill");
+    $("triage").classList.toggle("hide", m !== "triage");
+    $("drill").classList.toggle("hide", m !== "drill");
+    if (m === "drill") startDrill();
+  }
+  function setSub(s){
+    cur = s; di = 0;
+    $("swCond").setAttribute("aria-pressed", s === "cond");
+    $("swLoop").setAttribute("aria-pressed", s === "loop");
+    renderTriage();
+    if (mode === "drill") startDrill(); else renderChips();
+  }
+
+  $("swCond").addEventListener("click", function(){ setSub("cond"); });
+  $("swLoop").addEventListener("click", function(){ setSub("loop"); });
+  $("mTriage").addEventListener("click", function(){ setMode("triage"); });
+  $("mDrill").addEventListener("click", function(){ setMode("drill"); });
+  $("grade").addEventListener("click", grade);
+  $("clear").addEventListener("click", function(){ renderTriage(); });
+  $("dGo").addEventListener("click", submit);
+  $("dIn").addEventListener("keydown", function(e){ if (e.key === "Enter") submit(); });
+
+  setSub("cond");
+  setMode("triage");
+})();
+</script>
+</body>
+</html>
