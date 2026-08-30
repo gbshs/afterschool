@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Trap 1 · 경계</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+
+<style>
+:root{
+  --paper:#F5F6F2; --card:#FFFFFF;
+  --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2;
+  --pine:#2C5A4B; --pine-soft:#E4EEE9; --pine-ink:#FFF;
+  --mark:#D4E85C; --mark-a:rgba(212,232,92,.55);
+  --trap:#A8452F; --trap-bg:#F9EDE9;
+  --code-bg:#1B2420; --code-ink:#DDE4DA; --code-key:#A8D98C; --code-str:#E0C58A; --code-dim:#7C8A82;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 8px 24px -14px rgba(23,32,28,.18);
+  --f-display:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Bricolage Grotesque",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413; --card:#171D1A;
+    --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+    --rule:#2B332E; --rule-2:#222925;
+    --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+    --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+    --trap:#E58B72; --trap-bg:#2C1C18;
+    --code-bg:#0B0F0E;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.65);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413; --card:#171D1A;
+  --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+  --rule:#2B332E; --rule-2:#222925;
+  --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+  --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+  --trap:#E58B72; --trap-bg:#2C1C18;
+  --code-bg:#0B0F0E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.65);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+.app{max-width:1000px;margin:0 auto;padding:44px 22px 90px}
+
+/* 머리 */
+header{border-bottom:2px solid var(--ink);padding-bottom:18px}
+.kicker{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pine);font-weight:600}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.5vw,44px);
+  line-height:1.05;letter-spacing:-.02em;margin:8px 0 0}
+.sub{color:var(--ink-2);font-size:14.5px;margin:10px 0 0;max-width:56ch}
+
+/* 탭 */
+.tabs{margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tab{appearance:none;background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  padding:11px 8px 12px;cursor:pointer;text-align:left;color:var(--ink);font-family:inherit;
+  transition:border-color .14s ease, background .14s ease}
+.tab:hover{border-color:var(--pine)}
+.tab[aria-selected="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+.tab .tn{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;opacity:.75}
+.tab .tl{display:block;font-weight:700;font-size:16px;margin-top:2px;letter-spacing:-.01em}
+.tab .td{display:block;font-size:11.5px;opacity:.72;margin-top:1px;line-height:1.4}
+.tab .ck{float:right;font-size:14px;line-height:1}
+
+/* 실험실 */
+.lab{margin-top:24px;background:var(--card);border:1px solid var(--rule);border-radius:5px;
+  box-shadow:var(--shadow);overflow:hidden}
+.lab.hide{display:none}
+.lab-h{padding:16px 20px 14px;border-bottom:1px solid var(--rule-2)}
+.lab-h h2{font-family:var(--f-display);font-weight:700;font-size:20px;margin:0;letter-spacing:-.01em}
+.lab-h p{margin:5px 0 0;font-size:13.5px;color:var(--ink-2)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+.pane{padding:18px 20px 20px}
+.pane+.pane{border-left:1px solid var(--rule-2)}
+
+/* 코드 */
+.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--f-mono);
+  font-size:14.5px;line-height:1.85;padding:14px 12px;border-radius:4px;margin:0;overflow-x:auto}
+.code .ln{display:block;padding:0 8px;border-radius:2px;transition:background .12s ease,opacity .12s ease}
+.code .ln.on{background:rgba(212,232,92,.2)}
+.code .ln.dim{opacity:.34}
+.k{color:var(--code-key)} .s{color:var(--code-str)} .c{color:var(--code-dim)}
+.hot{background:var(--mark);color:#17201C;border-radius:2px;padding:0 3px;font-weight:600}
+
+/* 출력 */
+.out{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.out-l{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3)}
+.out-v{font-family:var(--f-mono);font-size:19px;font-weight:600;background:var(--pine-soft);
+  color:var(--pine);padding:5px 14px;border-radius:3px;min-width:96px;text-align:center}
+.out-v.none{background:var(--trap-bg);color:var(--trap);font-size:14px}
+
+/* 컨트롤 */
+.ctl{margin:0 0 16px}
+.ctl-l{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:7px}
+.slide{display:flex;align-items:center;gap:12px}
+.slide input[type=range]{flex:1;accent-color:var(--pine);height:24px}
+.val{font-family:var(--f-mono);font-size:22px;font-weight:600;min-width:2.6em;text-align:right}
+.segs{display:flex;gap:6px;flex-wrap:wrap}
+.seg{appearance:none;font-family:var(--f-mono);font-size:15px;font-weight:600;
+  background:var(--card);border:1px solid var(--rule);color:var(--ink);
+  padding:7px 15px;border-radius:3px;cursor:pointer}
+.seg:hover{border-color:var(--pine)}
+.seg[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+.sw{appearance:none;display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:10px 13px;
+  cursor:pointer;color:var(--ink);font-family:inherit;font-size:14.5px;margin-bottom:8px}
+.sw:hover{border-color:var(--pine)}
+.knob{width:44px;height:24px;border-radius:12px;background:var(--rule);position:relative;
+  flex:0 0 auto;transition:background .16s ease}
+.knob::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
+  background:var(--card);transition:left .16s ease;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw[aria-pressed="true"] .knob{background:var(--pine)}
+.sw[aria-pressed="true"] .knob::after{left:23px}
+.sw .nm{font-weight:600;flex:1}
+.sw .bo{font-family:var(--f-mono);font-size:13px;color:var(--ink-3)}
+.sw[aria-pressed="true"] .bo{color:var(--pine)}
+
+/* 수직선 */
+.line{display:flex;gap:1px;margin-top:4px;padding-bottom:22px}
+.line i{flex:1;height:30px;background:var(--rule-2);border-radius:1px;position:relative}
+.line i.t{background:var(--pine)}
+.line i.t2{background:var(--mark)}
+.line i.gap{background:var(--trap-bg);box-shadow:inset 0 0 0 1px var(--trap)}
+.line i.cur{outline:2.5px solid var(--ink);outline-offset:1px;z-index:2}
+.line i[data-lab]::after{content:attr(data-lab);position:absolute;top:34px;left:50%;
+  transform:translateX(-50%);font-family:var(--f-mono);font-size:10px;color:var(--ink-3)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-2);margin-top:2px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend b{width:12px;height:12px;border-radius:2px;display:inline-block}
+
+/* 진리표 */
+.truth{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:14px;margin-top:2px}
+.truth th{font-family:var(--f-body);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--rule);text-align:center}
+.truth td{padding:8px 4px;text-align:center;border-bottom:1px solid var(--rule-2)}
+.truth tr.cur td{background:var(--mark-a)}
+.truth tr.split td:first-child{position:relative}
+.truth tr.split td:first-child::before{content:"◆";position:absolute;left:-2px;color:var(--trap);font-size:9px}
+.truth .yes{color:var(--pine);font-weight:600}
+.truth .no{color:var(--ink-3)}
+.truth .seen{opacity:1}
+
+/* 카드 덱 */
+.deck{position:relative;margin-top:2px}
+.dcard{position:absolute;left:0;right:0;height:52px;background:var(--code-bg);color:var(--code-ink);
+  border-radius:4px;display:flex;align-items:center;gap:8px;padding:0 8px 0 14px;
+  font-family:var(--f-mono);font-size:14.5px;cursor:grab;touch-action:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  transition:top .16s ease, box-shadow .16s ease;user-select:none}
+.dcard.drag{cursor:grabbing;box-shadow:0 8px 22px -6px rgba(0,0,0,.45);transition:none;z-index:5}
+.dcard .txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mv{appearance:none;background:rgba(255,255,255,.09);border:0;color:var(--code-ink);
+  width:26px;height:26px;border-radius:3px;cursor:pointer;font-size:11px;line-height:1;flex:0 0 auto}
+.mv:hover{background:rgba(255,255,255,.2)}
+.mv:disabled{opacity:.25;cursor:default}
+.hnd{color:var(--code-dim);flex:0 0 auto;font-size:13px}
+
+/* 검사표 */
+.tests{width:100%;border-collapse:collapse;font-size:14px;margin-top:14px}
+.tests th{font-family:var(--f-body);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;padding:6px 6px;border-bottom:1px solid var(--rule);text-align:left}
+.tests td{padding:8px 6px;border-bottom:1px solid var(--rule-2);font-family:var(--f-mono)}
+.tests td.ok{color:var(--pine);font-weight:600}
+.tests td.bad{color:var(--trap);font-weight:600}
+
+/* 미션 */
+.mis{margin:0 0 14px;background:var(--mark-a);border:1px solid var(--ink);
+  border-left-width:4px;padding:12px 16px 13px;border-radius:0 4px 4px 0;font-size:15px;
+  line-height:1.7}
+.mis b.t{display:block;width:fit-content;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;background:var(--ink);color:var(--paper);
+  padding:2px 9px 3px;border-radius:2px;margin-bottom:8px}
+.mis.done{background:var(--pine-soft);border-color:var(--pine)}
+.mis.done b.t{background:var(--pine)}
+.mis b.t2{display:block;width:fit-content;font-family:var(--f-mono);font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;background:var(--pine);color:var(--paper);
+  padding:2px 9px 3px;border-radius:2px;margin-bottom:7px}
+.mis .said{margin-top:12px;padding-top:11px;border-top:1px dashed var(--rule);
+  display:none;font-size:13.5px}
+.mis.done .said{display:block}
+
+code{font-family:var(--f-mono);font-size:.92em;background:var(--rule-2);
+  padding:1px 5px;border-radius:2px;color:var(--ink)}
+.mis code{background:rgba(23,32,28,.09)}
+.mis.done code{background:rgba(44,90,75,.13)}
+.btn{appearance:none;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+  background:var(--pine);color:var(--pine-ink);border:1px solid var(--pine);
+  padding:8px 16px;border-radius:3px}
+.btn.ghost{background:transparent;color:var(--ink-2);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--pine);color:var(--pine)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+
+/* 마무리 */
+.wrapup{margin-top:30px;border-top:1px solid var(--rule);padding-top:20px}
+.wrapup h3{font-family:var(--f-display);font-size:17px;margin:0 0 12px;font-weight:700}
+.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.fc{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:12px 14px}
+.fc b{display:block;font-size:14px;margin-bottom:3px}
+.fc span{font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.fc em{display:block;margin-top:6px;font-style:normal;font-family:var(--f-mono);
+  font-size:11px;color:var(--pine)}
+
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr}
+  .pane+.pane{border-left:0;border-top:1px solid var(--rule-2)}
+  .tabs{grid-template-columns:repeat(2,1fr)}
+  .app{padding:30px 14px 70px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="kicker">Conditionals &amp; Loops 1 · 화면 도구</div>
+  <h1>Trap 1 &middot; 경계</h1>
+  <p class="sub">조건문에서 틀리는 <b>1번째 자리</b>입니다.
+    직접 움직여 보면서 출력이 어떻게 바뀌는지 봅니다.</p>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button class="tab" role="tab" aria-selected="true" data-lab="1">
+    <span class="ck" id="ck1"></span>
+    <span class="tn">TRAP 1</span><span class="tl">경계</span>
+    <span class="td">딱 걸치는 값</span></button>
+  <button class="tab" role="tab" aria-selected="false" data-lab="2">
+    <span class="ck" id="ck2"></span>
+    <span class="tn">TRAP 2</span><span class="tl">조합</span>
+    <span class="td">and 와 or</span></button>
+  <button class="tab" role="tab" aria-selected="false" data-lab="3">
+    <span class="ck" id="ck3"></span>
+    <span class="tn">TRAP 3</span><span class="tl">순서</span>
+    <span class="td">elif 는 체다</span></button>
+  <button class="tab" role="tab" aria-selected="false" data-lab="4">
+    <span class="ck" id="ck4"></span>
+    <span class="tn">TRAP 4</span><span class="tl">누락</span>
+    <span class="td">빠진 구간</span></button>
+</nav>
+
+<!-- ===== 실험실 1 : 경계 ===== -->
+<section class="lab" id="lab1">
+  <div class="lab-h">
+    <h2>실험실 1 · 경계</h2>
+    <p>&ldquo;19세 이상 입장&rdquo; 을 코드로 옮겼습니다. 부등호 하나가 누구를 들여보내고 누구를 막을까요.</p>
+  </div>
+  <div class="grid">
+    <div class="pane">
+      <div class="mis" id="m1">
+        <b class="t">해 보기</b>
+        슬라이더를 왼쪽부터 천천히 밀면서, <b>&lsquo;안 됨&rsquo; 이 &lsquo;입장&rsquo; 으로 바뀌는 순간</b>에 멈춰 봅시다.
+        그 다음 <code>&gt;=</code> 를 <code>&gt;</code> 로 바꿔, 똑같이 바뀌는 순간에 멈춰 봅시다.
+        <div class="said"><b class="t2">알게 된 것</b><b>19 하나뿐입니다.</b> 20 이상에서는 둘 다 입장, 18 이하에서는 둘 다 안 됨.
+          <code>&gt;=</code> 와 <code>&gt;</code> 의 차이는 오직 <b>경계값 그 자리 한 칸</b>입니다.
+          그래서 문제에 <b>이상·이하·초과·미만</b>이 보이면 딱 걸치는 값부터 넣어 봐야 합니다.</div>
+      </div>
+      <pre class="code" id="c1"></pre>
+      <div class="out"><span class="out-l">출력</span><span class="out-v" id="o1"></span></div>
+    </div>
+    <div class="pane">
+      <div class="ctl">
+        <div class="ctl-l">age 를 움직여 보세요</div>
+        <div class="slide">
+          <input type="range" id="s1" min="0" max="30" value="25" aria-label="age 값">
+          <span class="val" id="v1">25</span>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-l">비교 연산자를 바꿔 보세요</div>
+        <div class="segs" id="ops1">
+          <button class="seg" data-op="&gt;=" aria-pressed="true">&gt;=</button>
+          <button class="seg" data-op="&gt;" aria-pressed="false">&gt;</button>
+          <button class="seg" data-op="&lt;=" aria-pressed="false">&lt;=</button>
+          <button class="seg" data-op="&lt;" aria-pressed="false">&lt;</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-l">조건이 참인 구간</div>
+        <div class="line" id="ln1"></div>
+        <div class="legend">
+          <span><b style="background:var(--pine)"></b>참 · 입장</span>
+          <span><b style="background:var(--rule-2)"></b>거짓 · 안 됨</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 실험실 2 : 조합 ===== -->
+<section class="lab hide" id="lab2">
+  <div class="lab-h">
+    <h2>실험실 2 · 조합</h2>
+    <p>일상어 &ldquo;비 오고 추우면&rdquo; 과 &ldquo;비 오거나 추우면&rdquo; 은 얼마나 다를까요.</p>
+  </div>
+  <div class="grid">
+    <div class="pane">
+      <div class="mis" id="m2">
+        <b class="t">해 보기</b>
+        스위치를 켜고 꺼 가며 네 경우를 모두 만들어 봅시다.
+        각 경우마다 <code>and</code> 를 <code>or</code> 로 바꿔 보고, <b>출력이 갈리는 순간</b>에 멈춰 봅시다.
+        <span id="m2p" style="display:block;margin-top:8px;font-family:var(--f-mono);font-size:12px"></span>
+        <div class="said"><b class="t2">알게 된 것</b><b>하나만 참일 때</b>입니다. 둘 다 참이거나 둘 다 거짓이면 <code>and</code> 와
+          <code>or</code> 는 같은 답을 냅니다. 그러니까 문제에서 연산자 하나만 바뀌어도
+          <b>네 경우 중 두 경우</b>에서 답이 갈립니다. 조건이 세 개면 갈리는 경우는 더 늘어납니다.</div>
+      </div>
+      <pre class="code" id="c2"></pre>
+      <div class="out"><span class="out-l">출력</span><span class="out-v" id="o2"></span></div>
+      <div class="ctl" style="margin-top:16px">
+        <div class="ctl-l">스위치를 켜고 꺼 보세요</div>
+        <button class="sw" id="sw-rain" aria-pressed="false">
+          <span class="knob"></span><span class="nm">rain · 비가 온다</span><span class="bo">False</span></button>
+        <button class="sw" id="sw-cold" aria-pressed="false">
+          <span class="knob"></span><span class="nm">cold · 춥다</span><span class="bo">False</span></button>
+      </div>
+    </div>
+    <div class="pane">
+      <div class="ctl">
+        <div class="ctl-l">연산자</div>
+        <div class="segs" id="ops2">
+          <button class="seg" data-op="and" aria-pressed="true">and</button>
+          <button class="seg" data-op="or" aria-pressed="false">or</button>
+        </div>
+        <div class="row"><button class="seg" id="notBtn" aria-pressed="false">not 씌우기</button></div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-l">네 가지 경우 전부</div>
+        <table class="truth"><thead><tr>
+          <th>rain</th><th>cold</th><th>and</th><th>or</th></tr></thead>
+          <tbody id="ttb"></tbody></table>
+        <div class="legend" style="margin-top:8px">
+          <span style="color:var(--trap)">◆ 표시 = and 와 or 의 답이 갈리는 줄</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 실험실 3 : 순서 ===== -->
+<section class="lab hide" id="lab3">
+  <div class="lab-h">
+    <h2>실험실 3 · 순서</h2>
+    <p>줄은 그대로이고 <b>순서만</b> 다릅니다. 그래도 성적은 제대로 매겨질까요.</p>
+  </div>
+  <div class="grid">
+    <div class="pane">
+      <div class="mis" id="m3">
+        <b class="t">해 보기</b>
+        카드를 끌어(▲▼ 도 됩니다) 순서를 바꿔 봅시다.
+        <b>같은 점수의 등급이 바뀌는 순간</b>, 어느 카드를 옮겼는지 봅시다.
+        <div class="said"><b class="t2">알게 된 것</b><b>좁은 조건부터 위로.</b> 90 → 80 → 70 → 60 순입니다.
+          <code>s &gt;= 60</code> 을 맨 위에 두면 60 이상은 전부 거기서 걸려 버리고,
+          아래 <code>elif</code> 들은 <b>영원히 실행되지 않습니다</b>.
+          첫 줄이 참이면 나머지는 쳐다보지도 않는다는 것 — 이게 <code>elif</code> 의 전부입니다.</div>
+      </div>
+      <div class="ctl-l">끌어서 순서를 바꾸세요 · ▲▼ 도 됩니다</div>
+      <div class="deck" id="deck"></div>
+      <div class="row"><button class="btn ghost" id="shuf">섞기</button></div>
+    </div>
+    <div class="pane">
+      <div class="ctl-l">지금 이 순서로 돌리면</div>
+      <table class="tests"><thead><tr>
+        <th>점수</th><th>지금 출력</th><th>나와야 할 것</th></tr></thead>
+        <tbody id="tb3"></tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 실험실 4 : 누락 ===== -->
+<section class="lab hide" id="lab4">
+  <div class="lab-h">
+    <h2>실험실 4 · 누락</h2>
+    <p>빠진 경우는 화면에 아무것도 안 뜨기 때문에, 눈으로는 잘 안 보입니다.</p>
+  </div>
+  <div class="grid">
+    <div class="pane">
+      <div class="mis" id="m4">
+        <b class="t">해 보기</b>
+        슬라이더를 왼쪽 끝에서 오른쪽 끝까지 밀면서,
+        <b>출력이 사라지는 순간</b>과 <b>다시 나타나는 순간</b>에 멈춰 봅시다.
+        <div class="said"><b class="t2">알게 된 것</b><b>10 부터 20 까지, 열한 개입니다.</b>
+          <code>x &lt; 10</code> 이라 10은 빠지고, <code>x &gt; 20</code> 이라 20도 빠집니다.
+          경계 함정과 누락 함정이 같이 붙어 있는 자리입니다.
+          <code>else</code> 를 붙이면 이 구간이 통째로 메워집니다 — 눌러서 확인해 보세요.</div>
+      </div>
+      <pre class="code" id="c4"></pre>
+      <div class="out"><span class="out-l">출력</span><span class="out-v" id="o4"></span></div>
+    </div>
+    <div class="pane">
+      <div class="ctl">
+        <div class="ctl-l">x 를 움직여 보세요</div>
+        <div class="slide">
+          <input type="range" id="s4" min="0" max="30" value="3" aria-label="x 값">
+          <span class="val" id="v4">3</span>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-l">어느 값이 어디로 가는가</div>
+        <div class="line" id="ln4"></div>
+        <div class="legend">
+          <span><b style="background:var(--pine)"></b>낮음</span>
+          <span><b style="background:var(--mark)"></b>높음</span>
+          <span><b style="background:var(--trap-bg);box-shadow:inset 0 0 0 1px var(--trap)"></b>아무것도 안 나옴</span>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="addElse">else 붙이기</button>
+        <span style="font-size:12.5px;color:var(--ink-2)" id="elseNote">지금은 <code>else</code> 가 없습니다</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrapup">
+  <h3>네 함정, 한 줄씩</h3>
+  <div class="four">
+    <div class="fc"><b>① 경계</b><span>연산자 하나가 딱 한 값에서 답을 뒤집는다.
+      <em>학습지 유형 2 · 6</em></span></div>
+    <div class="fc"><b>② 조합</b><span>하나만 참일 때 and 와 or 가 갈린다.
+      <em>학습지 유형 4 · 5</em></span></div>
+    <div class="fc"><b>③ 순서</b><span>넓은 조건을 위에 두면 아래는 죽는다.
+      <em>학습지 유형 3 · 9</em></span></div>
+    <div class="fc"><b>④ 누락</b><span>빠진 경우는 아무 말도 하지 않는다.
+      <em>학습지 유형 7 · 8</em></span></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* ---------- 탭 ---------- */
+var tabs = $("tabs").querySelectorAll(".tab");
+for (var i=0;i<tabs.length;i++){
+  (function(btn){
+    btn.addEventListener("click", function(){
+      for (var j=0;j<tabs.length;j++){
+        var n = tabs[j].getAttribute("data-lab");
+        var on = tabs[j] === btn;
+        tabs[j].setAttribute("aria-selected", on ? "true" : "false");
+        $("lab"+n).classList.toggle("hide", !on);
+      }
+    });
+  })(tabs[i]);
+}
+function mark(n){ $("ck"+n).textContent = "✓"; }
+
+/* ---------- 공통 : 수직선 ---------- */
+function buildLine(el, max){
+  el.innerHTML = "";
+  for (var v=0; v<=max; v++){
+    var c = document.createElement("i");
+    if (v % 5 === 0) c.setAttribute("data-lab", v);
+    el.appendChild(c);
+  }
+}
+
+/* ================= 1. 경계 ================= */
+var L1 = { age:25, op:">=", found:false };
+buildLine($("ln1"), 30);
+
+function test1(age, op){
+  if (op === ">=") return age >= 19;
+  if (op === ">")  return age > 19;
+  if (op === "<=") return age <= 19;
+  return age < 19;
+}
+function draw1(){
+  var pass = test1(L1.age, L1.op);
+  $("c1").innerHTML =
+    '<span class="ln">age = <span class="hot">' + L1.age + '</span></span>' +
+    '<span class="ln"><span class="k">if</span> age <span class="hot">' + esc(L1.op) + '</span> 19:</span>' +
+    '<span class="ln' + (pass ? " on" : " dim") + '">    print(<span class="s">\'입장\'</span>)</span>' +
+    '<span class="ln"><span class="k">else</span>:</span>' +
+    '<span class="ln' + (pass ? " dim" : " on") + '">    print(<span class="s">\'안 됨\'</span>)</span>';
+  $("o1").textContent = pass ? "입장" : "안 됨";
+  $("v1").textContent = L1.age;
+  var cells = $("ln1").children;
+  for (var v=0; v<cells.length; v++){
+    cells[v].className = test1(v, L1.op) ? "t" : "";
+    if (v === L1.age) cells[v].className += " cur";
+  }
+  if (!L1.found && test1(L1.age, ">=") !== test1(L1.age, ">")){
+    L1.found = true; $("m1").classList.add("done"); mark(1);
+  }
+}
+$("s1").addEventListener("input", function(){ L1.age = +this.value; draw1(); });
+var ops1 = $("ops1").querySelectorAll(".seg");
+for (var a=0;a<ops1.length;a++){
+  (function(b){
+    b.addEventListener("click", function(){
+      for (var j=0;j<ops1.length;j++) ops1[j].setAttribute("aria-pressed", ops1[j]===b ? "true":"false");
+      L1.op = b.getAttribute("data-op"); draw1();
+    });
+  })(ops1[a]);
+}
+draw1();
+
+/* ================= 2. 조합 ================= */
+var L2 = { rain:false, cold:false, op:"and", not:false, seen:{} };
+function test2(r, c, op, not){
+  var v = (op === "and") ? (r && c) : (r || c);
+  return not ? !v : v;
+}
+function py(b){ return b ? "True" : "False"; }
+function draw2(){
+  var res = test2(L2.rain, L2.cold, L2.op, L2.not);
+  var cond = "rain " + L2.op + " cold";
+  if (L2.not) cond = "not (" + cond + ")";
+  $("c2").innerHTML =
+    '<span class="ln">rain = <span class="hot">' + py(L2.rain) + '</span></span>' +
+    '<span class="ln">cold = <span class="hot">' + py(L2.cold) + '</span></span>' +
+    '<span class="ln"><span class="k">if</span> ' + esc(cond) + ':</span>' +
+    '<span class="ln' + (res ? " on" : " dim") + '">    print(<span class="s">\'두꺼운 옷\'</span>)</span>' +
+    '<span class="ln"><span class="k">else</span>:</span>' +
+    '<span class="ln' + (res ? " dim" : " on") + '">    print(<span class="s">\'그냥 나감\'</span>)</span>';
+  $("o2").textContent = res ? "두꺼운 옷" : "그냥 나감";
+  $("sw-rain").setAttribute("aria-pressed", L2.rain ? "true":"false");
+  $("sw-cold").setAttribute("aria-pressed", L2.cold ? "true":"false");
+  $("sw-rain").querySelector(".bo").textContent = py(L2.rain);
+  $("sw-cold").querySelector(".bo").textContent = py(L2.cold);
+  $("notBtn").setAttribute("aria-pressed", L2.not ? "true":"false");
+
+  var rows = [[true,true],[true,false],[false,true],[false,false]];
+  var html = "";
+  for (var i=0;i<rows.length;i++){
+    var r = rows[i][0], c = rows[i][1];
+    var av = test2(r,c,"and",L2.not), ov = test2(r,c,"or",L2.not);
+    var split = (av !== ov);
+    var cur = (r === L2.rain && c === L2.cold);
+    html += '<tr class="' + (cur?"cur ":"") + (split?"split":"") + '">' +
+      '<td>' + py(r) + '</td><td>' + py(c) + '</td>' +
+      '<td class="' + (av?"yes":"no") + '">' + py(av) + '</td>' +
+      '<td class="' + (ov?"yes":"no") + '">' + py(ov) + '</td></tr>';
+  }
+  $("ttb").innerHTML = html;
+
+  if (test2(L2.rain,L2.cold,"and",L2.not) !== test2(L2.rain,L2.cold,"or",L2.not)){
+    L2.seen[py(L2.rain) + py(L2.cold)] = true;
+  }
+  var n = 0; for (var k in L2.seen) if (L2.seen.hasOwnProperty(k)) n++;
+  $("m2p").textContent = "and · or 가 갈리는 경우 " + n + " / 2 확인";
+  if (n >= 2){ $("m2").classList.add("done"); mark(2); }
+}
+$("sw-rain").addEventListener("click", function(){ L2.rain = !L2.rain; draw2(); });
+$("sw-cold").addEventListener("click", function(){ L2.cold = !L2.cold; draw2(); });
+$("notBtn").addEventListener("click", function(){ L2.not = !L2.not; draw2(); });
+var ops2 = $("ops2").querySelectorAll(".seg");
+for (var b2=0;b2<ops2.length;b2++){
+  (function(b){
+    b.addEventListener("click", function(){
+      for (var j=0;j<ops2.length;j++) ops2[j].setAttribute("aria-pressed", ops2[j]===b ? "true":"false");
+      L2.op = b.getAttribute("data-op"); draw2();
+    });
+  })(ops2[b2]);
+}
+draw2();
+
+/* ================= 3. 순서 ================= */
+var RULES = [
+  { th:60, g:"D" }, { th:90, g:"A" }, { th:80, g:"B" }, { th:70, g:"C" }
+];
+var order = RULES.slice();
+var TESTS = [ {s:95,e:"A"}, {s:85,e:"B"}, {s:75,e:"C"}, {s:65,e:"D"} ];
+var STEP = 60, deck = $("deck"), dragging = null;
+
+function run3(s){
+  for (var i=0;i<order.length;i++) if (s >= order[i].th) return order[i].g;
+  return "없음";
+}
+function makeCard(r){
+  var el = document.createElement("div");
+  el.className = "dcard";
+  el.innerHTML = '<span class="hnd">⠿</span><span class="txt"></span>' +
+    '<button class="mv up" aria-label="위로">▲</button>' +
+    '<button class="mv dn" aria-label="아래로">▼</button>';
+  el.querySelector(".up").addEventListener("click", function(e){ e.stopPropagation(); shift(r,-1); });
+  el.querySelector(".dn").addEventListener("click", function(e){ e.stopPropagation(); shift(r, 1); });
+  el.addEventListener("pointerdown", function(e){
+    if (e.target.closest(".mv")) return;
+    dragging = { r:r, el:el, y0:e.clientY, top0:order.indexOf(r)*STEP };
+    el.setPointerCapture(e.pointerId); el.classList.add("drag");
+  });
+  el.addEventListener("pointermove", function(e){
+    if (!dragging || dragging.r !== r) return;
+    var y = dragging.top0 + (e.clientY - dragging.y0);
+    el.style.top = y + "px";
+    var ni = Math.round(y / STEP);
+    if (ni < 0) ni = 0; if (ni > order.length-1) ni = order.length-1;
+    var oi = order.indexOf(r);
+    if (ni !== oi){ order.splice(oi,1); order.splice(ni,0,r); draw3(); }
+  });
+  function end(){ if (!dragging) return; dragging.el.classList.remove("drag"); dragging = null; draw3(); }
+  el.addEventListener("pointerup", end);
+  el.addEventListener("pointercancel", end);
+  r.el = el;
+  deck.appendChild(el);
+}
+function shift(r, d){
+  var i = order.indexOf(r), j = i + d;
+  if (j < 0 || j >= order.length) return;
+  order.splice(i,1); order.splice(j,0,r); draw3();
+}
+function draw3(){
+  deck.style.height = (order.length*STEP - 8) + "px";
+  var allOk = true, rows = "";
+  for (var i=0;i<order.length;i++){
+    var r = order[i];
+    var kw = (i === 0) ? "if" : "elif";
+    r.el.querySelector(".txt").innerHTML =
+      '<span class="k">' + kw + '</span> s &gt;= ' + r.th + ': print(<span class="s">\'' + r.g + '\'</span>)';
+    if (!dragging || dragging.r !== r) r.el.style.top = (i*STEP) + "px";
+    r.el.querySelector(".up").disabled = (i === 0);
+    r.el.querySelector(".dn").disabled = (i === order.length-1);
+  }
+  for (var t=0;t<TESTS.length;t++){
+    var got = run3(TESTS[t].s), ok = (got === TESTS[t].e);
+    if (!ok) allOk = false;
+    rows += '<tr><td>s = ' + TESTS[t].s + '</td>' +
+      '<td class="' + (ok?"ok":"bad") + '">' + got + (ok ? " ✓" : " ✗") + '</td>' +
+      '<td>' + TESTS[t].e + '</td></tr>';
+  }
+  $("tb3").innerHTML = rows;
+  if (!dragging){
+    for (var d=0; d<order.length; d++) deck.appendChild(order[d].el);
+  }
+  if (allOk){ $("m3").classList.add("done"); mark(3); }
+  else { $("m3").classList.remove("done"); }
+}
+for (var r3=0;r3<RULES.length;r3++) makeCard(RULES[r3]);
+draw3();
+$("shuf").addEventListener("click", function(){
+  for (var i=order.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t = order[i]; order[i] = order[j]; order[j] = t;
+  }
+  draw3();
+});
+
+/* ================= 4. 누락 ================= */
+var L4 = { x:3, hasElse:false, found:false };
+buildLine($("ln4"), 30);
+function run4(x, hasElse){
+  if (x < 10) return "낮음";
+  if (x > 20) return "높음";
+  return hasElse ? "보통" : null;
+}
+function draw4(){
+  var out = run4(L4.x, L4.hasElse);
+  var low = (L4.x < 10), high = (L4.x > 20), mid = (!low && !high);
+  var html =
+    '<span class="ln">x = <span class="hot">' + L4.x + '</span></span>' +
+    '<span class="ln"><span class="k">if</span> x &lt; 10:</span>' +
+    '<span class="ln' + (low ? " on" : " dim") + '">    print(<span class="s">\'낮음\'</span>)</span>' +
+    '<span class="ln"><span class="k">elif</span> x &gt; 20:</span>' +
+    '<span class="ln' + (high ? " on" : " dim") + '">    print(<span class="s">\'높음\'</span>)</span>';
+  if (L4.hasElse){
+    html += '<span class="ln"><span class="k">else</span>:</span>' +
+      '<span class="ln' + (mid ? " on" : " dim") + '">    print(<span class="s">\'보통\'</span>)</span>';
+  } else {
+    html += '<span class="ln c">    # else 가 없다</span>';
+  }
+  $("c4").innerHTML = html;
+  var o = $("o4");
+  o.textContent = (out === null) ? "( 아무것도 안 나옴 )" : out;
+  o.className = "out-v" + (out === null ? " none" : "");
+  $("v4").textContent = L4.x;
+  var cells = $("ln4").children;
+  for (var v=0; v<cells.length; v++){
+    var res = run4(v, L4.hasElse);
+    cells[v].className = (res === "낮음") ? "t" : (res === "높음") ? "t2" : (res === null) ? "gap" : "t";
+    if (v === L4.x) cells[v].className += " cur";
+  }
+  if (!L4.found && out === null){ L4.found = true; $("m4").classList.add("done"); mark(4); }
+  $("elseNote").innerHTML = L4.hasElse
+    ? "이제 빈 구간이 없습니다"
+    : "지금은 <code>else</code> 가 없습니다";
+  $("addElse").textContent = L4.hasElse ? "else 떼기" : "else 붙이기";
+}
+$("s4").addEventListener("input", function(){ L4.x = +this.value; draw4(); });
+$("addElse").addEventListener("click", function(){ L4.hasElse = !L4.hasElse; draw4(); });
+draw4();
+
+})();
+</script>
+
+<script>
+(function(){
+  var n = 1;
+  var t = document.getElementById("tabs"); if (t) t.style.display = "none";
+  for (var i = 1; i <= 4; i++) {
+    var el = document.getElementById("lab" + i);
+    if (el) el.classList.toggle("hide", i !== n);
+  }
+  var w = document.querySelector(".wrapup"); if (w) w.style.display = "none";
+})();
+</script>
+</body>
+</html>
