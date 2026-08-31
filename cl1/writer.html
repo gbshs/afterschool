@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>완성 문제</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+:root{--paper:#F5F6F2;--card:#fff;--ink:#17201C;--ink-2:#5D6862;--ink-3:#8A938D;
+ --rule:#D5D9D0;--rule-2:#E6E9E2;--pine:#2C5A4B;--pine-soft:#E4EEE9;
+ --ok:#2C5A4B;--ok-bg:#E4EEE9;--no:#A8452F;--no-bg:#F9EDE9;
+ --code-bg:#1B2420;--code-ink:#DDE4DA;
+ --f-d:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+ --f-b:"IBM Plex Sans KR",system-ui,sans-serif;--f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --paper:#121714;--card:#1A211D;--ink:#E8EDE8;--ink-2:#A6B0A9;--ink-3:#79837C;
+ --rule:#2E3833;--rule-2:#232C28;--pine:#8FCBB2;--pine-soft:#1E2C26;
+ --ok:#8FCBB2;--ok-bg:#1E2C26;--no:#E3937D;--no-bg:#2C1E1A;}}
+:root[data-theme="dark"]{--paper:#121714;--card:#1A211D;--ink:#E8EDE8;--ink-2:#A6B0A9;--ink-3:#79837C;
+ --rule:#2E3833;--rule-2:#232C28;--pine:#8FCBB2;--pine-soft:#1E2C26;
+ --ok:#8FCBB2;--ok-bg:#1E2C26;--no:#E3937D;--no-bg:#2C1E1A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-b);font-size:14px;line-height:1.6}
+.wrap{max-width:1000px;margin:0 auto;padding:22px 18px 90px}
+.mast{border-bottom:2px solid var(--ink);padding-bottom:12px}
+.kick{font-family:var(--f-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--pine);font-weight:600}
+h1{font-family:var(--f-d);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em;margin:6px 0 0}
+.sub{color:var(--ink-2);font-size:12.5px;margin:5px 0 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px}
+.tab{border:1px solid var(--rule);background:var(--card);color:var(--ink-2);border-radius:999px;
+ padding:6px 12px;font-size:12px;cursor:pointer;font-family:var(--f-b);white-space:nowrap}
+.tab:hover{border-color:var(--pine);color:var(--ink)}
+.tab.on{background:var(--pine);border-color:var(--pine);color:#fff;font-weight:600}
+.tab .dot{display:inline-block;width:6px;height:6px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.tab .dot.g{background:var(--ok)}.tab .dot.r{background:var(--no)}
+.head2{margin:20px 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.head2 h2{font-family:var(--f-d);font-size:21px;margin:0}
+.head2 .n{font-family:var(--f-m);font-size:11px;color:var(--pine);font-weight:600}
+.desc{font-size:13.5px;margin:6px 0 4px}
+.given{background:var(--pine-soft);border-radius:6px;padding:8px 11px;font-size:12.5px;margin:8px 0 10px}
+.given b{font-family:var(--f-m)}
+.step{background:var(--card);border:1px solid var(--rule-2);border-radius:8px;padding:10px 12px;margin:10px 0}
+.step .lab{font-family:var(--f-m);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+ color:var(--ink-3);font-weight:600;display:block;margin-bottom:6px}
+.kbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.kbox input{width:90px;font-family:var(--f-m);font-size:14px;padding:5px 8px;border:1px solid var(--rule);
+ border-radius:5px;background:var(--paper);color:var(--ink);text-align:center}
+.kbox span{font-size:12px;color:var(--ink-3)}
+textarea{width:100%;min-height:190px;font-family:var(--f-m);font-size:13.5px;line-height:1.6;
+ background:var(--code-bg);color:var(--code-ink);border:1px solid var(--rule);border-radius:7px;
+ padding:11px 12px;resize:vertical;tab-size:4;white-space:pre;overflow-wrap:normal;overflow-x:auto}
+textarea:focus{outline:2px solid var(--pine);outline-offset:-1px}
+.bar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:10px}
+button{font-family:var(--f-b);font-size:13px;font-weight:600;padding:8px 16px;border-radius:7px;
+ border:1px solid var(--pine);background:var(--pine);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--pine)}
+button:hover{filter:brightness(1.08)}
+.res{margin-top:10px}
+.line{display:grid;grid-template-columns:1fr 1fr 1fr 22px;gap:8px;align-items:center;
+ font-family:var(--f-m);font-size:12.5px;padding:5px 8px;border-radius:5px;border:1px solid transparent}
+.line.h{color:var(--ink-3);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:0;padding-bottom:0}
+.line.ok{background:var(--ok-bg);border-color:var(--ok)}
+.line.no{background:var(--no-bg);border-color:var(--no)}
+.line i{font-style:normal;text-align:center;font-weight:700}
+.line.ok i{color:var(--ok)}.line.no i{color:var(--no)}
+.err{background:var(--no-bg);border-left:3px solid var(--no);padding:9px 12px;border-radius:0 6px 6px 0;
+ font-size:12.5px;margin-top:10px;font-family:var(--f-m)}
+.done{background:var(--ok-bg);border-left:3px solid var(--ok);padding:9px 12px;border-radius:0 6px 6px 0;
+ font-size:13px;margin-top:10px}
+.note{color:var(--ink-3);font-size:11.5px;margin-top:10px}
+.help{background:var(--card);border:1px solid var(--rule-2);border-radius:8px;padding:11px 13px;
+ margin:14px 0 0;font-size:12.5px;color:var(--ink-2)}
+.help b{color:var(--ink)}
+.help code{font-family:var(--f-m);background:var(--rule-2);padding:1px 5px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="mast">
+  <div class="kick">Conditionals &amp; Loops 1 · Practice 유형 11</div>
+  <h1>완성 문제</h1>
+  <p class="sub">코드를 직접 씁니다. 이 화면에서 바로 실행되고 자동으로 채점됩니다.</p>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div id="pane"></div>
+
+<div class="help">
+  <b>이 화면에서 쓸 수 있는 것</b> — 변수 대입, <code>if</code> / <code>elif</code> / <code>else</code>,
+  <code>print()</code>, 사칙연산과 <code>%</code> <code>//</code>, 비교와 <code>and</code> <code>or</code> <code>not</code>.<br>
+  <b>못 쓰는 것</b> — <code>for</code> · <code>while</code> · 함수 정의 · 리스트.
+  조건문 연습용이라 일부러 막아 두었습니다. <code>abs()</code> <code>max()</code> 도 막혀 있습니다 — 직접 조건문으로 쓰세요.<br>
+  <b>입력값은 이미 변수에 들어 있습니다.</b> <code>input()</code> 을 쓰지 말고 그 변수를 바로 쓰면 됩니다.
+</div>
+</div>
+
+<script>
+/* 조건문 연습용 파이썬 아주 작은 해석기.
+   지원 — 변수 대입(다중 대입 포함), if / elif / else, print,
+          숫자 · 문자열 · True/False/None, + - * / // % **, 단항 -,
+          비교(연쇄 비교 포함), and / or / not, 괄호, int() str() len(),
+          input() 은 미리 정해 둔 값에서 순서대로 꺼내 쓴다.
+   못 하는 것 — for, while, 함수 정의, 리스트, import. 만나면 친절히 알려 준다. */
+(function (root) {
+  "use strict";
+
+  function PyErr(msg, line) { this.msg = msg; this.line = line; }
+  PyErr.prototype.toString = function () {
+    return (this.line ? this.line + "번 줄 — " : "") + this.msg;
+  };
+
+  /* ── 토큰 ─────────────────────────────────────────── */
+  var KW = ["if", "elif", "else", "and", "or", "not", "in", "is",
+            "True", "False", "None", "pass"];
+  var BAN = { "for": "for 반복문은", "while": "while 반복문은", "def": "함수 정의는",
+              "import": "import 는", "class": "클래스는", "return": "return 은",
+              "try": "try 는", "lambda": "lambda 는", "with": "with 은", "global": "global 은" };
+
+  function tokenize(src, line) {
+    var t = [], i = 0, n = src.length;
+    var OPS = ["**", "//", "==", "!=", "<=", ">=", "+", "-", "*", "/", "%",
+               "<", ">", "(", ")", ",", ":", "="];
+    while (i < n) {
+      var c = src[i];
+      if (c === " " || c === "\t") { i++; continue; }
+      if (c === "#") break;
+      if (c === "'" || c === '"') {
+        var q = c, s = "", j = i + 1;
+        while (j < n && src[j] !== q) {
+          if (src[j] === "\\" && j + 1 < n) {
+            var e = src[j + 1];
+            s += (e === "n" ? "\n" : e === "t" ? "\t" : e);
+            j += 2; continue;
+          }
+          s += src[j]; j++;
+        }
+        if (j >= n) throw new PyErr("따옴표가 닫히지 않았습니다", line);
+        t.push({ k: "str", v: s }); i = j + 1; continue;
+      }
+      if (c >= "0" && c <= "9") {
+        var num = "";
+        while (i < n && ((src[i] >= "0" && src[i] <= "9") || src[i] === ".")) { num += src[i]; i++; }
+        t.push({ k: "num", v: parseFloat(num), isInt: num.indexOf(".") < 0 }); continue;
+      }
+      if (/[A-Za-z_\uAC00-\uD7A3]/.test(c)) {
+        var w = "";
+        while (i < n && /[A-Za-z0-9_\uAC00-\uD7A3]/.test(src[i])) { w += src[i]; i++; }
+        if (BAN[w]) throw new PyErr("이 도구는 조건문 연습용이라 " + BAN[w] + " 쓸 수 없습니다", line);
+        t.push({ k: KW.indexOf(w) >= 0 ? "kw" : "name", v: w }); continue;
+      }
+      var got = null;
+      for (var o = 0; o < OPS.length; o++) {
+        if (src.substr(i, OPS[o].length) === OPS[o]) { got = OPS[o]; break; }
+      }
+      if (!got) throw new PyErr("모르는 기호 " + c, line);
+      t.push({ k: "op", v: got }); i += got.length;
+    }
+    return t;
+  }
+
+  /* ── 식 파서 (재귀 하향) ───────────────────────────── */
+  function Parser(toks, line) { this.t = toks; this.i = 0; this.line = line; }
+  Parser.prototype.peek = function () { return this.t[this.i]; };
+  Parser.prototype.at = function (k, v) {
+    var x = this.t[this.i];
+    return !!x && x.k === k && (v === undefined || x.v === v);
+  };
+  Parser.prototype.eat = function (k, v) {
+    if (!this.at(k, v)) throw new PyErr("여기에 " + (v || k) + " 가 있어야 합니다", this.line);
+    return this.t[this.i++];
+  };
+  Parser.prototype.expr = function () { return this.orExpr(); };
+  Parser.prototype.orExpr = function () {
+    var l = this.andExpr();
+    while (this.at("kw", "or")) { this.i++; l = { n: "or", l: l, r: this.andExpr() }; }
+    return l;
+  };
+  Parser.prototype.andExpr = function () {
+    var l = this.notExpr();
+    while (this.at("kw", "and")) { this.i++; l = { n: "and", l: l, r: this.notExpr() }; }
+    return l;
+  };
+  Parser.prototype.notExpr = function () {
+    if (this.at("kw", "not")) { this.i++; return { n: "not", e: this.notExpr() }; }
+    return this.cmp();
+  };
+  var CMPOPS = ["==", "!=", "<", ">", "<=", ">="];
+  Parser.prototype.cmp = function () {
+    var first = this.arith(), ops = [], rest = [];
+    while (this.at("op") && CMPOPS.indexOf(this.peek().v) >= 0) {
+      ops.push(this.t[this.i++].v); rest.push(this.arith());
+    }
+    if (!ops.length) return first;
+    return { n: "cmp", first: first, ops: ops, rest: rest };
+  };
+  Parser.prototype.arith = function () {
+    var l = this.term();
+    while (this.at("op", "+") || this.at("op", "-")) {
+      var o = this.t[this.i++].v; l = { n: "bin", o: o, l: l, r: this.term() };
+    }
+    return l;
+  };
+  Parser.prototype.term = function () {
+    var l = this.unary();
+    while (this.at("op", "*") || this.at("op", "/") || this.at("op", "//") || this.at("op", "%")) {
+      var o = this.t[this.i++].v; l = { n: "bin", o: o, l: l, r: this.unary() };
+    }
+    return l;
+  };
+  Parser.prototype.unary = function () {
+    if (this.at("op", "-")) { this.i++; return { n: "neg", e: this.unary() }; }
+    if (this.at("op", "+")) { this.i++; return this.unary(); }
+    return this.power();
+  };
+  Parser.prototype.power = function () {
+    var b = this.atom();
+    if (this.at("op", "**")) { this.i++; return { n: "bin", o: "**", l: b, r: this.unary() }; }
+    return b;
+  };
+  Parser.prototype.atom = function () {
+    var x = this.peek();
+    if (!x) throw new PyErr("식이 덜 끝났습니다", this.line);
+    if (x.k === "num") { this.i++; return { n: "num", v: x.v, isInt: x.isInt }; }
+    if (x.k === "str") { this.i++; return { n: "str", v: x.v }; }
+    if (x.k === "kw" && (x.v === "True" || x.v === "False" || x.v === "None")) {
+      this.i++; return { n: "lit", v: x.v === "True" ? true : x.v === "False" ? false : null };
+    }
+    if (x.k === "op" && x.v === "(") {
+      this.i++; var e = this.expr(); this.eat("op", ")"); return e;
+    }
+    if (x.k === "name") {
+      this.i++;
+      if (this.at("op", "(")) {
+        this.i++;
+        var args = [];
+        if (!this.at("op", ")")) {
+          args.push(this.expr());
+          while (this.at("op", ",")) { this.i++; if (this.at("op", ")")) break; args.push(this.expr()); }
+        }
+        this.eat("op", ")");
+        return { n: "call", f: x.v, args: args };
+      }
+      return { n: "name", v: x.v };
+    }
+    throw new PyErr("여기서 " + (x.v) + " 는 쓸 수 없습니다", this.line);
+  };
+
+  /* ── 줄 → 구문 ────────────────────────────────────── */
+  function indentOf(s) {
+    var n = 0;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i] === " ") n++;
+      else if (s[i] === "\t") n += 4;
+      else break;
+    }
+    return n;
+  }
+
+  function parseBlock(lines, start, level) {
+    var body = [], i = start;
+    while (i < lines.length) {
+      var L = lines[i];
+      if (L.blank) { i++; continue; }
+      if (L.ind < level) break;
+      if (L.ind > level) throw new PyErr("들여쓰기가 맞지 않습니다", L.no);
+      var toks = tokenize(L.text, L.no);
+      if (!toks.length) { i++; continue; }
+      if (toks[0].k === "kw" && (toks[0].v === "elif" || toks[0].v === "else")) break;
+
+      if (toks[0].k === "kw" && toks[0].v === "if") {
+        var r = parseIf(lines, i, level);
+        body.push(r.node); i = r.next; continue;
+      }
+      if (toks[0].k === "kw" && toks[0].v === "pass") { i++; continue; }
+      body.push(parseSimple(toks, L.no)); i++;
+    }
+    return { body: body, next: i };
+  }
+
+  function headExpr(toks, kw, no) {
+    var p = new Parser(toks, no);
+    p.eat("kw", kw);
+    var cond = p.expr();
+    p.eat("op", ":");
+    return { cond: cond, rest: p.t.slice(p.i), p: p };
+  }
+
+  function parseIf(lines, i, level) {
+    var L = lines[i], toks = tokenize(L.text, L.no);
+    var h = headExpr(toks, "if", L.no);
+    var node = { n: "if", cond: h.cond, then: [], elifs: [], els: null };
+    if (h.rest.length) { node.then = [parseSimple(h.rest, L.no)]; i++; }
+    else {
+      var b = parseBlock(lines, i + 1, nextIndent(lines, i + 1, level, L.no));
+      node.then = b.body; i = b.next;
+    }
+    while (i < lines.length) {
+      var M = lines[i];
+      if (M.blank) { i++; continue; }
+      if (M.ind !== level) break;
+      var tk = tokenize(M.text, M.no);
+      if (!tk.length) { i++; continue; }
+      if (tk[0].k === "kw" && tk[0].v === "elif") {
+        var he = headExpr(tk, "elif", M.no), blk;
+        if (he.rest.length) { blk = [parseSimple(he.rest, M.no)]; i++; }
+        else { var b2 = parseBlock(lines, i + 1, nextIndent(lines, i + 1, level, M.no)); blk = b2.body; i = b2.next; }
+        node.elifs.push({ cond: he.cond, body: blk });
+        continue;
+      }
+      if (tk[0].k === "kw" && tk[0].v === "else") {
+        var p = new Parser(tk, M.no); p.eat("kw", "else"); p.eat("op", ":");
+        var restE = p.t.slice(p.i);
+        if (restE.length) { node.els = [parseSimple(restE, M.no)]; i++; }
+        else { var b3 = parseBlock(lines, i + 1, nextIndent(lines, i + 1, level, M.no)); node.els = b3.body; i = b3.next; }
+        break;
+      }
+      break;
+    }
+    return { node: node, next: i };
+  }
+
+  function nextIndent(lines, i, level, no) {
+    while (i < lines.length && lines[i].blank) i++;
+    if (i >= lines.length || lines[i].ind <= level)
+      throw new PyErr("여기 아래는 들여쓰기가 필요합니다", no);
+    return lines[i].ind;
+  }
+
+  function parseSimple(toks, no) {
+    // print(...)
+    if (toks[0].k === "name" && toks[0].v === "print") {
+      var p = new Parser(toks, no);
+      var e = p.expr();
+      if (p.i < p.t.length) throw new PyErr("줄 끝에 남는 것이 있습니다", no);
+      if (e.n !== "call" || e.f !== "print") throw new PyErr("print 를 이렇게 쓸 수 없습니다", no);
+      return { n: "print", args: e.args, no: no };
+    }
+    // 대입 — 첫 '=' 를 찾되 ==, <=, >=, != 는 제외
+    var eq = -1;
+    for (var k = 0; k < toks.length; k++) {
+      if (toks[k].k === "op" && toks[k].v === "=") { eq = k; break; }
+    }
+    if (eq > 0) {
+      var targets = [], j = 0;
+      while (j < eq) {
+        if (toks[j].k !== "name") throw new PyErr("= 왼쪽에는 변수 이름만 올 수 있습니다", no);
+        targets.push(toks[j].v); j++;
+        if (j < eq) {
+          if (!(toks[j].k === "op" && toks[j].v === ",")) throw new PyErr("= 왼쪽이 이상합니다", no);
+          j++;
+        }
+      }
+      var rp = new Parser(toks.slice(eq + 1), no);
+      var vals = [rp.expr()];
+      while (rp.at("op", ",")) { rp.i++; vals.push(rp.expr()); }
+      if (rp.i < rp.t.length) throw new PyErr("줄 끝에 남는 것이 있습니다", no);
+      return { n: "assign", targets: targets, vals: vals, no: no };
+    }
+    var pe = new Parser(toks, no), ex = pe.expr();
+    if (pe.i < pe.t.length) throw new PyErr("줄 끝에 남는 것이 있습니다", no);
+    return { n: "expr", e: ex, no: no };
+  }
+
+  /* ── 실행 ─────────────────────────────────────────── */
+  function truthy(v) {
+    if (v === null || v === false) return false;
+    if (v === true) return true;
+    if (typeof v === "number") return v !== 0;
+    if (typeof v === "string") return v.length > 0;
+    return true;
+  }
+  function repr(v) {
+    if (v === null) return "None";
+    if (v === true) return "True";
+    if (v === false) return "False";
+    if (typeof v === "number") {
+      if (Number.isInteger(v)) return String(v);
+      return String(v);
+    }
+    return String(v);
+  }
+
+  function Env(inputs, out) {
+    this.v = {}; this.inputs = inputs || []; this.ip = 0; this.out = out; this.steps = 0;
+  }
+
+  function evalNode(e, env, no) {
+    switch (e.n) {
+      case "num": return e.v;
+      case "str": return e.v;
+      case "lit": return e.v;
+      case "name":
+        if (!(e.v in env.v)) throw new PyErr("변수 " + e.v + " 에 아직 값이 없습니다", no);
+        return env.v[e.v];
+      case "neg": return -num(evalNode(e.e, env, no), no);
+      case "not": return !truthy(evalNode(e.e, env, no));
+      case "and": return truthy(evalNode(e.l, env, no)) ? evalNode(e.r, env, no) : evalNode(e.l, env, no);
+      case "or": return truthy(evalNode(e.l, env, no)) ? evalNode(e.l, env, no) : evalNode(e.r, env, no);
+      case "cmp": {
+        var left = evalNode(e.first, env, no);
+        for (var i = 0; i < e.ops.length; i++) {
+          var right = evalNode(e.rest[i], env, no);
+          if (!cmp2(left, e.ops[i], right, no)) return false;
+          left = right;
+        }
+        return true;
+      }
+      case "bin": {
+        var a = evalNode(e.l, env, no), b = evalNode(e.r, env, no);
+        if (e.o === "+" && typeof a === "string" && typeof b === "string") return a + b;
+        if (e.o === "*" && typeof a === "string" && typeof b === "number") return a.repeat(Math.max(0, b | 0));
+        var x = num(a, no), y = num(b, no);
+        switch (e.o) {
+          case "+": return x + y;
+          case "-": return x - y;
+          case "*": return x * y;
+          case "/": if (y === 0) throw new PyErr("0 으로 나눌 수 없습니다", no); return x / y;
+          case "//": if (y === 0) throw new PyErr("0 으로 나눌 수 없습니다", no); return Math.floor(x / y);
+          case "%": if (y === 0) throw new PyErr("0 으로 나눌 수 없습니다", no);
+            return x - Math.floor(x / y) * y;
+          case "**": return Math.pow(x, y);
+        }
+        break;
+      }
+      case "call": {
+        var f = e.f, A = e.args.map(function (a) { return evalNode(a, env, no); });
+        if (f === "int") {
+          if (typeof A[0] === "string") {
+            var t = A[0].trim();
+            if (!/^-?\d+$/.test(t)) throw new PyErr("int() 안의 값이 정수가 아닙니다", no);
+            return parseInt(t, 10);
+          }
+          return Math.trunc(num(A[0], no));
+        }
+        if (f === "str") return repr(A[0]);
+        if (f === "float") return typeof A[0] === "string" ? parseFloat(A[0]) : num(A[0], no);
+        if (f === "len") return String(A[0]).length;
+        if (f === "input") {
+          if (env.ip >= env.inputs.length) throw new PyErr("입력값이 모자랍니다", no);
+          return String(env.inputs[env.ip++]);
+        }
+        if (f === "abs" || f === "max" || f === "min" || f === "sum" || f === "sorted")
+          throw new PyErr(f + "() 는 이 문제에서 쓰지 않습니다. 조건문으로 직접 해 보세요", no);
+        if (f === "print") throw new PyErr("print 는 식 안에서 쓸 수 없습니다", no);
+        throw new PyErr("모르는 함수 " + f + "()", no);
+      }
+    }
+    throw new PyErr("계산할 수 없습니다", no);
+  }
+  function num(v, no) {
+    if (typeof v === "number") return v;
+    if (v === true) return 1;
+    if (v === false) return 0;
+    throw new PyErr("숫자가 아닌 값으로 계산하려고 했습니다", no);
+  }
+  function cmp2(a, o, b, no) {
+    if (o === "==") return eq(a, b);
+    if (o === "!=") return !eq(a, b);
+    if (typeof a === "string" && typeof b === "string") {
+      if (o === "<") return a < b; if (o === ">") return a > b;
+      if (o === "<=") return a <= b; return a >= b;
+    }
+    var x = num(a, no), y = num(b, no);
+    if (o === "<") return x < y; if (o === ">") return x > y;
+    if (o === "<=") return x <= y; return x >= y;
+  }
+  function eq(a, b) {
+    if (typeof a === "string" || typeof b === "string") {
+      if (typeof a !== typeof b) return false;
+      return a === b;
+    }
+    if (a === null || b === null) return a === b;
+    return num(a, 0) === num(b, 0);
+  }
+
+  function execBody(body, env) {
+    for (var i = 0; i < body.length; i++) {
+      var st = body[i];
+      if (++env.steps > 20000) throw new PyErr("계산이 너무 깁니다", st.no);
+      if (st.n === "print") {
+        var parts = [], sep = " ", end = "\n";
+        for (var k = 0; k < st.args.length; k++) parts.push(repr(evalNode(st.args[k], env, st.no)));
+        env.out.push(parts.join(sep));
+      } else if (st.n === "assign") {
+        if (st.targets.length === st.vals.length) {
+          var tmp = st.vals.map(function (v) { return evalNode(v, env, st.no); });
+          for (var j = 0; j < st.targets.length; j++) env.v[st.targets[j]] = tmp[j];
+        } else if (st.vals.length === 1) {
+          var one = evalNode(st.vals[0], env, st.no);
+          for (var j2 = 0; j2 < st.targets.length; j2++) env.v[st.targets[j2]] = one;
+        } else throw new PyErr("= 양쪽 개수가 다릅니다", st.no);
+      } else if (st.n === "if") {
+        if (truthy(evalNode(st.cond, env, st.no || 0))) { execBody(st.then, env); }
+        else {
+          var done = false;
+          for (var m = 0; m < st.elifs.length; m++) {
+            if (truthy(evalNode(st.elifs[m].cond, env, 0))) { execBody(st.elifs[m].body, env); done = true; break; }
+          }
+          if (!done && st.els) execBody(st.els, env);
+        }
+      } else if (st.n === "expr") {
+        evalNode(st.e, env, st.no);
+      }
+    }
+  }
+
+  function run(src, inputs, preset) {
+    var raw = String(src).replace(/\r/g, "").split("\n");
+    var lines = raw.map(function (s, idx) {
+      var t = s.replace(/\s+$/, "");
+      var body = t.replace(/^[ \t]+/, "");
+      var isBlank = body === "" || body[0] === "#";
+      return { text: t, ind: indentOf(t), no: idx + 1, blank: isBlank };
+    });
+    var out = [], env = new Env(inputs, out);
+    if (preset) for (var k in preset) env.v[k] = preset[k];
+    try {
+      var first = 0;
+      while (first < lines.length && lines[first].blank) first++;
+      if (first >= lines.length) return { ok: true, out: "" };
+      if (lines[first].ind !== 0) return { ok: false, err: "1번 줄부터 들여쓰기 없이 시작해야 합니다" };
+      var b = parseBlock(lines, first, 0);
+      if (b.next < lines.length) {
+        var rest = lines.slice(b.next).filter(function (l) { return !l.blank; });
+        if (rest.length) return { ok: false, err: (rest[0].no) + "번 줄 — 여기가 어디에 붙는지 모르겠습니다" };
+      }
+      execBody(b.body, env);
+      return { ok: true, out: out.join("\n") };
+    } catch (e) {
+      if (e instanceof PyErr) return { ok: false, err: e.toString() };
+      return { ok: false, err: "실행 중 문제가 생겼습니다 — " + (e && e.message ? e.message : e) };
+    }
+  }
+
+  root.MiniPy = { run: run };
+})(typeof window !== "undefined" ? window : globalThis);
+
+var PROBS = [
+ {n:"11-1", t:"두 수 중 큰 수", d:"두 정수 <b>a</b>, <b>b</b> 중 큰 쪽을 출력하시오. 같으면 그 값을 출력한다.",
+  vars:["a","b"], cases:[[3,7],[10,2],[5,5],[-4,-9]], k:2,
+  sol:"if a > b:\n    print(a)\nelse:\n    print(b)"},
+ {n:"11-2", t:"홀짝 판정", d:"정수 <b>n</b> 이 짝수면 <code>짝</code>, 홀수면 <code>홀</code> 을 출력하시오.",
+  vars:["n"], cases:[[4],[7],[0],[-3]], k:2,
+  sol:"if n % 2 == 0:\n    print('짝')\nelse:\n    print('홀')"},
+ {n:"11-3", t:"양수 · 음수 · 0 판정", d:"정수 <b>n</b> 이 양수면 <code>양수</code>, 음수면 <code>음수</code>, 0이면 <code>0</code> 을 출력하시오.",
+  vars:["n"], cases:[[5],[-3],[0]], k:3,
+  sol:"if n > 0:\n    print('양수')\nelif n < 0:\n    print('음수')\nelse:\n    print('0')"},
+ {n:"11-4", t:"절댓값", d:"정수 <b>n</b> 의 절댓값을 출력하시오. <b>abs() 는 쓰지 않는다.</b>",
+  vars:["n"], cases:[[-7],[7],[0],[-1]], k:2,
+  sol:"if n < 0:\n    print(-n)\nelse:\n    print(n)"},
+ {n:"11-5", t:"성적 등급", d:"점수 <b>s</b> 에 대해 90 이상 <code>A</code>, 80 이상 <code>B</code>, 70 이상 <code>C</code>, 그 외 <code>D</code> 를 출력하시오.",
+  vars:["s"], cases:[[95],[90],[85],[80],[72],[70],[50]], k:4,
+  sol:"if s >= 90:\n    print('A')\nelif s >= 80:\n    print('B')\nelif s >= 70:\n    print('C')\nelse:\n    print('D')"},
+ {n:"11-6", t:"배수 판정", d:"정수 <b>n</b> 이 3의 배수이면서 5의 배수면 <code>둘 다</code>, 3의 배수면 <code>3의 배수</code>, 5의 배수면 <code>5의 배수</code>, 아니면 <code>아무것도</code> 를 출력하시오.",
+  vars:["n"], cases:[[15],[9],[10],[7],[30]], k:4,
+  sol:"if n % 3 == 0 and n % 5 == 0:\n    print('둘 다')\nelif n % 3 == 0:\n    print('3의 배수')\nelif n % 5 == 0:\n    print('5의 배수')\nelse:\n    print('아무것도')"},
+ {n:"11-7", t:"평일 · 주말", d:"요일 번호 <b>d</b> (1=월 … 7=일) 가 6 또는 7이면 <code>주말</code>, 아니면 <code>평일</code> 을 출력하시오.",
+  vars:["d"], cases:[[1],[3],[5],[6],[7]], k:2,
+  sol:"if d >= 6:\n    print('주말')\nelse:\n    print('평일')"},
+ {n:"11-8", t:"입장 요금", d:"나이 <b>age</b> 에 대해 12세 이하 <code>5000</code>, 18세 이하 <code>8000</code>, 65세 미만 <code>12000</code>, 그 이상 <code>6000</code> 을 출력하시오.",
+  vars:["age"], cases:[[10],[12],[15],[18],[30],[64],[65],[70]], k:4,
+  sol:"if age <= 12:\n    print(5000)\nelif age <= 18:\n    print(8000)\nelif age < 65:\n    print(12000)\nelse:\n    print(6000)"},
+ {n:"11-9", t:"세 수 중 최댓값", d:"세 정수 <b>a</b>, <b>b</b>, <b>c</b> 중 가장 큰 값을 출력하시오. <b>max() 는 쓰지 않는다.</b>",
+  vars:["a","b","c"], cases:[[1,2,3],[9,2,3],[1,9,3],[5,5,5],[-1,-2,-3]], k:3,
+  sol:"if a >= b and a >= c:\n    print(a)\nelif b >= c:\n    print(b)\nelse:\n    print(c)"},
+ {n:"11-10", t:"학년 판정", d:"나이 <b>age</b> 가 8~13이면 <code>초등</code>, 14~16이면 <code>중등</code>, 17~19면 <code>고등</code>, 그 외는 <code>해당 없음</code> 을 출력하시오.",
+  vars:["age"], cases:[[8],[13],[14],[16],[17],[19],[7],[20]], k:4,
+  sol:"if 8 <= age <= 13:\n    print('초등')\nelif 14 <= age <= 16:\n    print('중등')\nelif 17 <= age <= 19:\n    print('고등')\nelse:\n    print('해당 없음')"},
+ {n:"11-11", t:"윤년 판정", d:"연도 <b>y</b> 가 윤년이면 <code>윤년</code>, 아니면 <code>평년</code> 을 출력하시오.<br>4의 배수는 윤년, 단 100의 배수는 평년, 단 400의 배수는 윤년.",
+  vars:["y"], cases:[[2000],[1900],[2024],[2023],[2100],[2400]], k:4,
+  sol:"if y % 400 == 0:\n    print('윤년')\nelif y % 100 == 0:\n    print('평년')\nelif y % 4 == 0:\n    print('윤년')\nelse:\n    print('평년')"},
+ {n:"11-12", t:"가위바위보 심판", d:"<b>a</b>, <b>b</b> 는 각각 <code>'가위'</code> <code>'바위'</code> <code>'보'</code> 중 하나다. 1번이 이기면 <code>1번 승</code>, 2번이 이기면 <code>2번 승</code>, 같으면 <code>무승부</code> 를 출력하시오.",
+  vars:["a","b"], cases:[["가위","보"],["보","가위"],["바위","바위"],["보","바위"],["바위","가위"],["가위","바위"]], k:3,
+  sol:"if a == b:\n    print('무승부')\nelif a == '가위' and b == '보':\n    print('1번 승')\nelif a == '바위' and b == '가위':\n    print('1번 승')\nelif a == '보' and b == '바위':\n    print('1번 승')\nelse:\n    print('2번 승')"}
+];
+
+
+
+var cur = 0, state = {};
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function show(v){ return typeof v === "string" ? v : String(v); }
+
+function tabs(){
+  var h = "";
+  for (var i=0;i<PROBS.length;i++){
+    var st = state[i], dot = "";
+    if (st && st.tried) dot = '<span class="dot ' + (st.pass ? "g":"r") + '"></span>';
+    h += '<button class="tab' + (i===cur?" on":"") + '" onclick="go(' + i + ')">' + PROBS[i].n + dot + '</button>';
+  }
+  $("tabs").innerHTML = h;
+}
+
+function render(){
+  var p = PROBS[cur], st = state[cur] || {};
+  var given = p.vars.map(function(v){ return "<b>" + v + "</b>"; }).join(", ");
+  var h = '<div class="head2"><span class="n">' + p.n + '</span><h2>' + p.t + '</h2></div>';
+  h += '<p class="desc">' + p.d + '</p>';
+  h += '<div class="given">' + given + ' 은(는) <b>이미 값이 들어 있습니다.</b> ' +
+       '그대로 쓰면 됩니다. 여러 값으로 자동으로 시험합니다 &mdash; 모두 맞아야 통과입니다.</div>';
+  h += '<div class="step"><span class="lab">먼저 · 경우가 몇 가지인가</span><div class="kbox">' +
+       '<input id="k" value="' + (st.k || "") + '" placeholder="숫자"><span>가지</span>' +
+       '<span id="kfb" style="font-size:12px"></span></div></div>';
+  h += '<div class="step"><span class="lab">코드</span>' +
+       '<textarea id="code" spellcheck="false" placeholder="여기에 씁니다">' + esc(st.code || "") + '</textarea>' +
+       '<div class="bar"><button onclick="check()">실행하고 채점</button>' +
+       '<button class="ghost" onclick="clr()">지우기</button>' +
+       '<span id="hint" style="font-size:12px;color:var(--ink-3)"></span></div>' +
+       '<div class="res" id="res"></div></div>';
+  $("pane").innerHTML = h;
+  window.scrollTo(0,0);
+}
+
+function go(i){ save(); cur = i; tabs(); render(); }
+function save(){
+  var c = $("code"), k = $("k");
+  if (!c) return;
+  state[cur] = state[cur] || {};
+  state[cur].code = c.value; state[cur].k = k ? k.value : "";
+}
+function clr(){ $("code").value = ""; $("res").innerHTML = ""; $("hint").textContent = ""; }
+
+function check(){
+  save();
+  var p = PROBS[cur], code = $("code").value;
+  if (!code.trim()){ $("res").innerHTML = '<div class="err">코드를 먼저 쓰세요.</div>'; return; }
+  var kf = $("kfb"), kv = ($("k").value || "").trim();
+  if (kv !== ""){
+    kf.innerHTML = (parseInt(kv,10) === p.k)
+      ? '<span style="color:var(--ok)">맞음</span>'
+      : '<span style="color:var(--no)">다시 세어 보세요</span>';
+  } else kf.innerHTML = "";
+
+  var rows = '<div class="line h"><span>주어진 값</span><span>내 출력</span><span>맞는 답</span><span></span></div>';
+  var allPass = true, firstErr = null;
+  for (var i=0;i<p.cases.length;i++){
+    var pre = {}, label = [];
+    for (var j=0;j<p.vars.length;j++){ pre[p.vars[j]] = p.cases[i][j]; label.push(p.vars[j] + "=" + show(p.cases[i][j])); }
+    var want = MiniPy.run(p.sol, [], JSON.parse(JSON.stringify(pre)));
+    var got  = MiniPy.run(code,  [], JSON.parse(JSON.stringify(pre)));
+    if (!got.ok){ allPass = false; firstErr = got.err; break; }
+    var same = got.out.trim() === want.out.trim();
+    if (!same) allPass = false;
+    rows += '<div class="line ' + (same ? "ok":"no") + '"><span>' + esc(label.join("  ")) + '</span>' +
+            '<span>' + (got.out === "" ? "(없음)" : esc(got.out.replace(/\n/g," / "))) + '</span>' +
+            '<span>' + (want.out === "" ? "(없음)" : esc(want.out.replace(/\n/g," / "))) + '</span>' +
+            '<i>' + (same ? "O":"X") + '</i></div>';
+  }
+  state[cur] = state[cur] || {};
+  state[cur].tried = true; state[cur].pass = allPass && !firstErr;
+  if (firstErr){
+    $("res").innerHTML = '<div class="err">' + esc(firstErr) + '</div>';
+    $("hint").textContent = "";
+  } else {
+    $("res").innerHTML = rows + (allPass
+      ? '<div class="done"><b>통과.</b> 다음 문제로 가세요.</div>'
+      : '<div class="note">X 표시된 줄의 값을 손으로 따라가 보세요. 대개 경계값이나 조건 순서입니다.</div>');
+    $("hint").textContent = allPass ? "전부 맞음" : "";
+  }
+  tabs();
+}
+
+document.addEventListener("keydown", function(e){
+  if (e.key === "Tab" && e.target.id === "code"){
+    e.preventDefault();
+    var t = e.target, s = t.selectionStart;
+    t.value = t.value.slice(0,s) + "    " + t.value.slice(t.selectionEnd);
+    t.selectionStart = t.selectionEnd = s + 4;
+  }
+  if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && $("code")) check();
+});
+
+tabs(); render();
+</script>
+</body>
+</html>

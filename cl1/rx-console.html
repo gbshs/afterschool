@@ -288,6 +288,16 @@ document.addEventListener("keydown", function(e){
   }
 });
 
+function fromHash(){
+  var h = (location.hash || "").replace("#","");
+  var m = /^t(\d+)$/.exec(h);
+  if (m){ cur = parseInt(m[1],10); mode = "bank"; return true; }
+  m = /^x(\d+)$/.exec(h);
+  if (m && EXTRA[m[1]]){ cur = parseInt(m[1],10); mode = "extra"; return true; }
+  return false;
+}
+window.addEventListener("hashchange", function(){ if (fromHash()){ tabs(); render(); } });
+fromHash();
 tabs(); render();
 </script>
 </body>
