@@ -390,6 +390,14 @@ document.addEventListener("keydown", function(e){
   }
 })();
 
+// 페이지를 다시 읽지 않고 앵커만 바뀌는 경우에도 화면을 맞춘다
+window.addEventListener("hashchange", function(){
+  var h = String(location.hash || "").replace("#", "").trim().toLowerCase();
+  if (!h || h === "d") { goTri(); return; }
+  var n = parseInt(h, 10);
+  if (!isNaN(n) && sec(n)) go(n);
+});
+
 tabs(); render(); label();
 </script>
 </body>
