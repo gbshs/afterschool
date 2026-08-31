@@ -292,8 +292,11 @@ function gradeTri(){
   else {
     var names = [];
     for (var k2=0;k2<TRI.traps.length;k2++) if (miss[k2] === mx) names.push(TRI.traps[k2]);
-    var nm = names.join(" · ");
-    h += '당신의 가장 약한 유형은 <b>' + nm + '</b>' + ro(nm) + ' 보입니다.<br>';
+    if (names.length >= 3) h += '한 유형으로 좁혀지지 않습니다. 고르게 어려웠던 것으로 보입니다.<br>';
+    else {
+      var nm = names.join(", ");
+      h += '당신의 가장 약한 유형은 <b>' + nm + '</b>' + ro(nm) + ' 보입니다.<br>';
+    }
   }
   h += '유형 1 부터 함께 공부해봐요.<br>' +
        '<button class="pill" onclick="go(1)">유형 1 부터 시작</button>';
