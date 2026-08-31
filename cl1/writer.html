@@ -73,6 +73,7 @@ button:hover{filter:brightness(1.08)}
 .done{background:var(--ok-bg);border-left:3px solid var(--ok);padding:9px 12px;border-radius:0 6px 6px 0;
  font-size:13px;margin-top:10px}
 .note{color:var(--ink-3);font-size:11.5px;margin-top:10px}
+.done{margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .help{background:var(--card);border:1px solid var(--rule-2);border-radius:8px;padding:11px 13px;
  margin:14px 0 0;font-size:12.5px;color:var(--ink-2)}
 .help b{color:var(--ink)}
@@ -657,8 +658,11 @@ function check(){
     $("res").innerHTML = '<div class="err">' + esc(firstErr) + '</div>';
     $("hint").textContent = "";
   } else {
+    var nx = cur + 1;
     $("res").innerHTML = rows + (allPass
-      ? '<div class="done"><b>통과.</b> 다음 문제로 가세요.</div>'
+      ? '<div class="done"><b>통과.</b>' + (nx < PROBS.length
+          ? '<button onclick="go(' + nx + ')">다음 문제 ' + PROBS[nx].n + ' &rarr;</button>'
+          : '<span>마지막 문제까지 끝냈습니다.</span>') + '</div>'
       : '<div class="note">X 표시된 줄의 값을 손으로 따라가 보세요. 대개 경계값이나 조건 순서입니다.</div>');
     $("hint").textContent = allPass ? "전부 맞음" : "";
   }
