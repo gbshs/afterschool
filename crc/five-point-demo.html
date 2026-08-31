@@ -173,19 +173,36 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
 <!-- 01 -->
 <section class="card" id="s0">
   <h2>영어 지문을 읽을 때</h2>
-  <p class="lede">모르는 단어가 나와도 사전을 찾지 않습니다. <b>몇 군데만 짚으면</b> 뜻이 잡히니까요.
-    아래 문장에서 <span class="hard" style="background:var(--mark-a);padding:0 3px;border-radius:2px">노란 칸</span>은 모르는 단어라고 칩시다.</p>
-  <div class="en">The <span class="hard">plenipotentiary</span> <u>abrogated</u> the
-    <span class="hard">concordat</span> because the <span class="hard">suzerain</span> had
-    <u>reneged</u>.</div>
+  <p class="lede">모르는 단어가 나와도 사전을 찾지 않습니다. <b>아는 것만 이어 붙여도</b> 뜻이 잡히니까요.
+    아래에서 <span style="background:var(--mark-a);padding:0 4px;border-radius:2px">노란 칸</span> 셋은
+    <b>모르는 단어</b>입니다. 나머지는 다 아는 것들이죠.</p>
+  <div class="en">The <span class="hard">plenipotentiary</span> signed the
+    <span class="hard">concordat</span>, but the <span class="hard">suzerain</span>
+    later <u>broke</u> it.</div>
   <div class="enq">
-    <div><b>누가</b> the ___ary &mdash; 사람인 듯</div>
-    <div><b>무엇을 했나</b> abrogated &mdash; 뭔가를 없앴다</div>
-    <div><b>무엇을</b> the ___dat &mdash; 문서인 듯</div>
-    <div><b>왜</b> because &hellip; had reneged</div>
+    <div><b>아는 것</b> signed &middot; but &middot; later &middot; broke it</div>
+    <div><b>모르는 것</b> 명사 셋 &mdash; 누구인지, 무엇인지</div>
   </div>
-  <p class="lede" style="margin:16px 0 0">네 단어 중 셋을 몰라도 <b>「누가 무엇을 왜 했다」</b>는 잡힙니다.
-    다 읽은 게 아니라 <b>짚을 곳을 알고 짚은 것</b>입니다.</p>
+  <p class="lede" style="margin:16px 0 0"><b>그래도 이만큼은 읽힙니다.</b></p>
+  <div class="reveal" style="margin-top:8px">
+    <span class="lab">아는 것만 이어 붙이면</span>
+    <b>누군가가</b> 무언가<b>에 서명했는데</b>, <b>다른 누군가가</b> 나중에 <b>그걸 깼다.</b>
+  </div>
+  <div class="nav" style="margin-top:14px">
+    <button class="btn ghost" id="enshow">모르는 단어 셋의 뜻 보기</button>
+  </div>
+  <div id="enans" hidden>
+    <table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px">
+      <tr><td style="padding:7px 10px;border-bottom:1px solid var(--rule);width:38%"><b>plenipotentiary</b></td>
+          <td style="padding:7px 10px;border-bottom:1px solid var(--rule)">전권대사 &mdash; <b>사람</b>이 맞았습니다</td></tr>
+      <tr><td style="padding:7px 10px;border-bottom:1px solid var(--rule)"><b>concordat</b></td>
+          <td style="padding:7px 10px;border-bottom:1px solid var(--rule)">협약 &mdash; <b>서명할 수 있는 무언가</b>가 맞았습니다</td></tr>
+      <tr><td style="padding:7px 10px;border-bottom:1px solid var(--rule)"><b>suzerain</b></td>
+          <td style="padding:7px 10px;border-bottom:1px solid var(--rule)">종주국 &mdash; <b>약속을 깰 수 있는 쪽</b>이 맞았습니다</td></tr>
+    </table>
+    <p class="lede" style="margin:14px 0 0"><b>셋 다 몰랐는데 뜻은 거의 맞았습니다.</b>
+      다 읽은 게 아니라 <b>짚을 곳을 알고 짚은 것</b>입니다.</p>
+  </div>
   <div class="nav">
     <button class="btn" data-go="1">코드에도 짚을 곳이 있습니다 &rarr;</button>
   </div>
@@ -194,7 +211,11 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
 <!-- 02 -->
 <section class="card" id="s1" hidden>
   <h2>코드에서 짚을 곳은 다섯입니다</h2>
-  <p class="lede">문법을 다 알 필요가 없습니다. <b>모르는 줄은 건너뛰고</b> 이 다섯 곳만 봅니다.</p>
+  <p class="lede">코드도 똑같습니다. <b>여러분이 아는 것</b>은
+    <code>def</code> <code>return</code> <code>while</code> <code>for</code> <code>if</code> &mdash; <b>문법</b>입니다.
+    <b>모르는 것</b>은 <code>deque</code> <code>popleft</code> 같은 <b>낱말</b>이죠.
+    영어에서 동사와 구조는 알고 명사만 몰랐던 것과 <b>같은 상황</b>입니다.</p>
+  <p class="lede">그러니 <b>모르는 낱말은 건너뛰고</b> 이 다섯 곳만 봅니다.</p>
   <div class="five">
     <div class="fv"><div class="n">01</div><div class="en2">NAME</div><div class="ko">이름</div>
       <div class="q">자기가 무엇을 한다고 <b>주장</b>하는가?</div></div>
@@ -203,12 +224,15 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
     <div class="fv"><div class="n">03</div><div class="en2">OUT</div><div class="ko">내놓는 것</div>
       <div class="q"><code>return</code>이 <b>몇 군데</b>인가?</div></div>
     <div class="fv"><div class="n">04</div><div class="en2">LOOP</div><div class="ko">도는 것</div>
-      <div class="q">반복문이 <b>몇 개</b>인가?</div></div>
+      <div class="q"><b>무엇을</b> 몇 번 도는가?</div></div>
     <div class="fv"><div class="n">05</div><div class="en2">DEPTH</div><div class="ko">겹치는 것</div>
-      <div class="q">가장 깊은 들여쓰기가 <b>몇 겹</b>인가?</div></div>
+      <div class="q">가장 안쪽 줄까지 <b>조건 몇 개</b>를 지나는가?</div></div>
   </div>
-  <p class="lede" style="margin:16px 0 0">다섯 다 <b>세면 되는 것</b>입니다. 뜻을 몰라도 셀 수 있습니다.
+  <p class="lede" style="margin:16px 0 0">다섯 다 <b>눈으로 짚히는 것</b>입니다. 뜻을 몰라도 짚을 수 있습니다.
     그래서 <b>모르는 코드에서도</b> 됩니다.</p>
+  <p class="lede" style="margin:10px 0 0"><b>NAME · IN · OUT</b> 은 <b>무슨 일을 하는가</b>를 말해 주고,
+    <b>LOOP · DEPTH</b> 는 <b>얼마나 무거운 일인가</b>를 말해 줍니다.
+    앞의 셋으로 문장을 만들고, 뒤의 둘로 <b>이 코드를 얼마나 조심해서 읽어야 할지</b>를 정합니다.</p>
   <div class="nav">
     <button class="btn ghost" data-go="0">&larr; 앞으로</button>
     <button class="btn" data-go="2">모르는 코드로 해 봅시다 &rarr;</button>
@@ -218,8 +242,8 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
 <!-- 03 -->
 <section class="card" id="s2" hidden>
   <h2>이 코드, 하나도 모르겠죠</h2>
-  <p class="lede"><code>deque</code> <code>popleft</code> &mdash; 배운 적 없습니다. <b>그래도 다섯 곳은 셉니다.</b>
-    아래 버튼을 하나씩 눌러 보세요.</p>
+  <p class="lede"><code>deque</code> <code>popleft</code> &mdash; 배운 적 없습니다. <b>그래도 다섯 곳은 짚힙니다.</b>
+    아래 버튼을 <b>순서대로</b> 눌러 보세요. 누르기 전에 <b>먼저 답을 말해 보고</b> 누르는 게 좋습니다.</p>
   <div class="stage">
     <pre class="code" id="code"></pre>
     <svg id="ov"></svg>
@@ -280,8 +304,8 @@ var MARKS = [
   {k:"name", en:"NAME",  ko:"이름",     say:"<b>bfs</b> — 무언가를 <b>찾는다</b>고 주장합니다. b·f·s 가 뭔지는 아직 몰라도 됩니다."},
   {k:"in_",  en:"IN",    ko:"받는 것",  say:"괄호 안에 쉼표가 둘 → <b>인수 3개</b>. 시작점 하나, <code>is_goal</code>·<code>next_states</code> — 이름을 보면 <b>판정하는 법</b>과 <b>다음 후보 만드는 법</b>입니다."},
   {k:"out",  en:"OUT",   ko:"내놓는 것", say:"<code>return</code> 이 <b>2군데</b>. 하나는 <code>came_from</code>, 하나는 <code>None</code> — <b>찾으면 무언가를, 못 찾으면 None</b>."},
-  {k:"loop", en:"LOOP",  ko:"도는 것",  say:"<code>while</code> 하나, <code>for</code> 하나 → <b>반복 2개</b>. 무엇을 도는지는 몰라도 <b>개수는 셉니다</b>."},
-  {k:"depth",en:"DEPTH", ko:"겹",       say:"가장 깊은 줄이 <b>4겹</b>입니다(<code>while</code> → <code>for</code> → <code>if</code> → 대입). <b>깊다 = 복잡하다</b> — 여기까지만 알아도 충분합니다."}
+  {k:"loop", en:"LOOP",  ko:"도는 것",  say:"<code>while</code> 하나, <code>for</code> 하나 → <b>반복 2개</b>. 개수만 세는 게 아닙니다 &mdash; <b><code>while</code> 뒤와 <code>in</code> 뒤를 보면 무엇을 도는지가 나옵니다.</b> <code>while q:</code> 는 <b><code>q</code> 가 빌 때까지</b>, <code>for nxt in next_states(state):</code> 는 <b>다음 후보들을 하나씩</b>. <code>q</code> 가 뭔지 몰라도 <b>「쌓아 놓고 빌 때까지 꺼내 쓴다」</b> 까지는 읽힙니다."},
+  {k:"depth",en:"DEPTH", ko:"겹",       say:"가장 깊은 줄이 <b>4겹</b>입니다. 겹수는 <b>「그 줄까지 가려면 조건을 몇 개 통과해야 하나」</b> 입니다 &mdash; <code>while</code> 안, <code>for</code> 안, <code>if</code> 안. <b>셋을 다 통과해야 닿는 줄</b>이라는 뜻이고, 그래서 <b>깊은 줄일수록 가끔만 일어나는 일</b>입니다. 얕은 줄은 늘 지나갑니다."}
 ];
 
 var FRAME = {name:null, in_:"시작점과 판정 방법 두 가지", loop:"목표에 닿을 때까지 계속 뒤지며", out:"거기까지 간 길, 없으면 None"};
@@ -440,6 +464,10 @@ document.addEventListener("click", function(e){
   var t=e.target.closest(".stab");     if(t) go(+t.dataset.s);
 });
 $("reset").addEventListener("click", reset);
+$("enshow").addEventListener("click", function(){
+  var box=$("enans"); box.hidden=!box.hidden;
+  this.textContent = box.hidden ? "모르는 단어 셋의 뜻 보기" : "뜻 숨기기";
+});
 
 var cs=16;
 function zoom(d){ cs=Math.min(30,Math.max(11,cs+d));
