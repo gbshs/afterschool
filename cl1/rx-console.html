@@ -381,6 +381,15 @@ document.addEventListener("keydown", function(e){
   }
 });
 
+(function(){
+  // 주소 뒤 #d 또는 없음 → 진단, #1 · #2 … → 그 유형
+  var hsh = String(location.hash || "").replace("#", "").trim().toLowerCase();
+  if (hsh && hsh !== "d") {
+    var n = parseInt(hsh, 10);
+    if (!isNaN(n) && sec(n)) { cur = n; mode = "bank"; }
+  }
+})();
+
 tabs(); render(); label();
 </script>
 </body>
