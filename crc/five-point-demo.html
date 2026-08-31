@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Five-Point Scan · 시범</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+
+<style>
+:root{
+  --paper:#F5F6F2; --card:#FFFFFF;
+  --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2;
+  --pine:#2C5A4B; --pine-soft:#E4EEE9; --pine-ink:#FFFFFF;
+  --mark:#D4E85C; --mark-a:rgba(212,232,92,.55);
+  --pane:#1B2420; --pane-ink:#DDE4DA; --pane-dim:#7C8A82;
+  --pane-key:#A8D98C; --pane-str:#E0C58A;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 10px 30px -14px rgba(23,32,28,.2);
+  --f-display:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Bricolage Grotesque",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --code-size:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413; --card:#171D1A;
+    --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+    --rule:#2B332E; --rule-2:#222925;
+    --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+    --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+    --pane:#080B0A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413; --card:#171D1A;
+  --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+  --rule:#2B332E; --rule-2:#222925;
+  --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+  --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+  --pane:#080B0A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--f-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 22px 72px}
+
+.bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.brand .eyebrow{font-family:var(--f-mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--pine)}
+.brand h1{font-family:var(--f-display);font-weight:800;font-size:26px;
+  letter-spacing:-.022em;margin:2px 0 0;line-height:1}
+.zoom{margin-left:auto;display:flex;align-items:center;gap:8px}
+.zoom span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3)}
+.zbtn{font-family:var(--f-mono);font-size:14px;font-weight:600;
+  width:34px;height:30px;border:1px solid var(--rule);background:var(--card);
+  color:var(--ink);border-radius:2px;cursor:pointer;line-height:1}
+
+/* 단계 탭 */
+.steps{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+.stab{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.06em;
+  padding:7px 13px;border:1px solid var(--rule);background:var(--card);color:var(--ink-2);
+  border-radius:2px;cursor:pointer}
+.stab[aria-selected="true"]{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.stab .n{opacity:.6;margin-right:6px}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  box-shadow:var(--shadow);margin-top:16px;padding:22px 24px 24px}
+.card h2{font-family:var(--f-display);font-size:22px;font-weight:800;margin:0 0 6px;
+  letter-spacing:-.015em}
+.card .lede{color:var(--ink-2);font-size:14px;margin:0 0 16px;max-width:64ch}
+.card .lede b{color:var(--ink)}
+
+/* 영어 예시 */
+.en{font-family:var(--f-display);font-size:21px;line-height:1.85;
+  background:var(--pine-soft);border-radius:4px;padding:18px 20px;margin:0 0 14px}
+.en u{text-decoration:none;border-bottom:2px solid var(--pine);padding-bottom:1px}
+.en .hard{background:var(--mark-a);border-radius:2px;padding:0 3px;font-style:italic}
+.enq{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:4px}
+.enq div{border:1px solid var(--rule);border-radius:3px;padding:10px 13px;font-size:13px}
+.enq b{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--pine);margin-bottom:3px}
+
+/* 다섯 곳 카드 */
+.five{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.fv{border:1px solid var(--rule);border-radius:3px;padding:12px 14px 14px;background:var(--paper)}
+.fv .n{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);letter-spacing:.14em}
+.fv .en2{font-family:var(--f-display);font-size:19px;font-weight:800;letter-spacing:-.01em;
+  margin-top:2px;line-height:1.15}
+.fv .ko{font-size:12px;color:var(--pine);font-weight:600;margin-top:1px}
+.fv .q{font-size:12.5px;color:var(--ink-2);margin-top:7px;line-height:1.5}
+
+/* 코드 + 오버레이 */
+.stage{position:relative;background:var(--pane);border-radius:4px;padding:20px 22px;
+  margin-top:4px;overflow:hidden}
+pre.code{margin:0;font-family:var(--f-mono);font-size:var(--code-size);line-height:2.05;
+  color:var(--pane-ink);white-space:pre;overflow-x:auto}
+pre.code .k{color:var(--pane-key)} pre.code .s{color:var(--pane-str)}
+pre.code .cm{color:var(--pane-dim)}
+#ov{position:absolute;inset:0;pointer-events:none;overflow:visible}
+#ov .ring{fill:none;stroke:var(--mark);stroke-width:2.4;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px rgba(212,232,92,.35))}
+#ov .gd{stroke:var(--mark);stroke-width:1.4;stroke-dasharray:3 5;opacity:.75}
+#ov text{fill:var(--mark);font-family:var(--f-mono);font-size:12px;font-weight:600}
+
+/* 마크 버튼 */
+.marks{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 0}
+.mbtn{font-family:var(--f-mono);font-size:12px;font-weight:600;letter-spacing:.05em;
+  padding:9px 15px;border:1px solid var(--rule);background:var(--card);color:var(--ink);
+  border-radius:2px;cursor:pointer;display:flex;align-items:baseline;gap:7px}
+.mbtn small{font-family:var(--f-body);font-size:11px;color:var(--ink-3);letter-spacing:0}
+.mbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.mbtn[aria-pressed="true"] small{color:var(--mark)}
+.mbtn.done::after{content:"●";color:var(--mark);font-size:9px;margin-left:2px}
+.mbtn:disabled{opacity:.4;cursor:default}
+
+.reveal{margin-top:14px;border-left:3px solid var(--mark);background:var(--mark-a);
+  border-radius:0 3px 3px 0;padding:12px 16px;font-size:14px;line-height:1.65;
+  min-height:52px}
+.reveal .lab{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-2);display:block;margin-bottom:3px}
+.reveal.empty{background:transparent;border-left-color:var(--rule);color:var(--ink-3)}
+
+.frame{margin-top:16px;border:1px dashed var(--rule);border-radius:3px;padding:16px 18px}
+.frame .fl{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pine);margin-bottom:8px}
+.frame p{margin:0;font-size:17px;line-height:1.95}
+.frame .slot{border-bottom:2px solid var(--rule);padding:0 6px;color:var(--ink-3);
+  transition:color .25s, border-color .25s}
+.frame .slot.on{border-color:var(--pine);color:var(--ink);font-weight:600}
+
+.nav{display:flex;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap}
+.btn{font-family:var(--f-body);font-size:14px;font-weight:600;padding:11px 22px;
+  border:1px solid var(--pine);background:var(--pine);color:var(--pine-ink);
+  border-radius:2px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--pine)}
+.btn:disabled{opacity:.35;cursor:default}
+.tip{margin-left:auto;font-size:12px;color:var(--ink-3)}
+
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
+  display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3)}
+@media (max-width:700px){ .wrap{padding:18px 14px 56px} .tip{margin-left:0;width:100%} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<div class="bar">
+  <div class="brand">
+    <div class="eyebrow">Code Reading Comprehension &middot; Unit 1</div>
+    <h1>Five-Point Scan &mdash; 시범</h1>
+  </div>
+  <div class="zoom"><span>글자</span>
+    <button class="zbtn" id="zout">A&minus;</button><button class="zbtn" id="zin">A+</button></div>
+</div>
+
+<div class="steps">
+  <button class="stab" data-s="0" aria-selected="true"><span class="n">01</span>영어에서는</button>
+  <button class="stab" data-s="1" aria-selected="false"><span class="n">02</span>다섯 곳</button>
+  <button class="stab" data-s="2" aria-selected="false"><span class="n">03</span>찾아봅시다</button>
+</div>
+
+<!-- 01 -->
+<section class="card" id="s0">
+  <h2>영어 지문을 읽을 때</h2>
+  <p class="lede">모르는 단어가 나와도 사전을 찾지 않습니다. <b>몇 군데만 짚으면</b> 뜻이 잡히니까요.
+    아래 문장에서 <span class="hard" style="background:var(--mark-a);padding:0 3px;border-radius:2px">노란 칸</span>은 모르는 단어라고 칩시다.</p>
+  <div class="en">The <span class="hard">plenipotentiary</span> <u>abrogated</u> the
+    <span class="hard">concordat</span> because the <span class="hard">suzerain</span> had
+    <u>reneged</u>.</div>
+  <div class="enq">
+    <div><b>누가</b> the ___ary &mdash; 사람인 듯</div>
+    <div><b>무엇을 했나</b> abrogated &mdash; 뭔가를 없앴다</div>
+    <div><b>무엇을</b> the ___dat &mdash; 문서인 듯</div>
+    <div><b>왜</b> because &hellip; had reneged</div>
+  </div>
+  <p class="lede" style="margin:16px 0 0">네 단어 중 셋을 몰라도 <b>「누가 무엇을 왜 했다」</b>는 잡힙니다.
+    다 읽은 게 아니라 <b>짚을 곳을 알고 짚은 것</b>입니다.</p>
+  <div class="nav">
+    <button class="btn" data-go="1">코드에도 짚을 곳이 있습니다 &rarr;</button>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="card" id="s1" hidden>
+  <h2>코드에서 짚을 곳은 다섯입니다</h2>
+  <p class="lede">문법을 다 알 필요가 없습니다. <b>모르는 줄은 건너뛰고</b> 이 다섯 곳만 봅니다.</p>
+  <div class="five">
+    <div class="fv"><div class="n">01</div><div class="en2">NAME</div><div class="ko">이름</div>
+      <div class="q">자기가 무엇을 한다고 <b>주장</b>하는가?</div></div>
+    <div class="fv"><div class="n">02</div><div class="en2">IN</div><div class="ko">받는 것</div>
+      <div class="q">인수가 <b>몇 개</b>이고 무엇인가?</div></div>
+    <div class="fv"><div class="n">03</div><div class="en2">OUT</div><div class="ko">내놓는 것</div>
+      <div class="q"><code>return</code>이 <b>몇 군데</b>인가?</div></div>
+    <div class="fv"><div class="n">04</div><div class="en2">LOOP</div><div class="ko">도는 것</div>
+      <div class="q">반복문이 <b>몇 개</b>인가?</div></div>
+    <div class="fv"><div class="n">05</div><div class="en2">DEPTH</div><div class="ko">겹치는 것</div>
+      <div class="q">가장 깊은 들여쓰기가 <b>몇 겹</b>인가?</div></div>
+  </div>
+  <p class="lede" style="margin:16px 0 0">다섯 다 <b>세면 되는 것</b>입니다. 뜻을 몰라도 셀 수 있습니다.
+    그래서 <b>모르는 코드에서도</b> 됩니다.</p>
+  <div class="nav">
+    <button class="btn ghost" data-go="0">&larr; 앞으로</button>
+    <button class="btn" data-go="2">모르는 코드로 해 봅시다 &rarr;</button>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="card" id="s2" hidden>
+  <h2>이 코드, 하나도 모르겠죠</h2>
+  <p class="lede"><code>deque</code> <code>popleft</code> &mdash; 배운 적 없습니다. <b>그래도 다섯 곳은 셉니다.</b>
+    아래 버튼을 하나씩 눌러 보세요.</p>
+  <div class="stage">
+    <pre class="code" id="code"></pre>
+    <svg id="ov"></svg>
+  </div>
+  <div class="marks" id="marks"></div>
+  <div class="reveal empty" id="rv"><span class="lab">여기에 답이 나옵니다</span>버튼을 눌러 보세요.</div>
+  <div class="frame">
+    <div class="fl">Sentence Frame &middot; 다섯 곳을 채우면 문장이 나옵니다</div>
+    <p>이 코드는 <span class="slot" id="f1">무엇</span>을(를) 받아서
+      <span class="slot" id="f2">무엇</span>하며,
+      <span class="slot" id="f3">무엇</span>을(를) 내놓는다.</p>
+  </div>
+  <div class="nav">
+    <button class="btn ghost" data-go="1">&larr; 앞으로</button>
+    <button class="btn ghost" id="reset">처음부터</button>
+    <span class="tip" id="tip">다섯 개를 다 누르면 문장이 완성됩니다.</span>
+  </div>
+</section>
+
+<footer><span>파이썬 코드 문해력 키우기</span><span>FIVE-POINT SCAN</span></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i);};
+
+/* 지문 — Passage 3(bfs)의 앞부분. 뒤에 길 되짚는 부분이 더 붙는다. */
+var LINES = [
+ [["def ","k"],["bfs(start, is_goal, next_states):",""]],
+ [["    came_from = {start: ",""],["None","k"],["}",""]],
+ [["    q = deque([start])",""]],
+ [["",""]],
+ [["    ",""],["while","k"],[" q:",""]],
+ [["        state = q.popleft()",""]],
+ [["",""]],
+ [["        ",""],["if","k"],[" is_goal(state):",""]],
+ [["            ",""],["return","k"],[" came_from",""]],
+ [["",""]],
+ [["        ",""],["for","k"],[" nxt ",""],["in","k"],[" next_states(state):",""]],
+ [["            ",""],["if","k"],[" nxt ",""],["not in","k"],[" came_from:",""]],
+ [["                came_from[nxt] = state",""]],
+ [["                q.append(nxt)",""]],
+ [["",""]],
+ [["    ",""],["return","k"],[" ",""],["None","k"]]
+];
+
+/* 표시할 자리: 줄번호(0-base), 시작 열, 길이 */
+var SPOTS = {
+  name : [{l:0, c:4,  n:3}],
+  in_  : [{l:0, c:8,  n:5},{l:0, c:15, n:7},{l:0, c:24, n:11}],
+  out  : [{l:8, c:12, n:17},{l:15,c:4,  n:11}],
+  loop : [{l:4, c:4,  n:7},{l:10,c:8,  n:29}],
+  deep : [{l:12,c:16, n:22},{l:13,c:16, n:13}]
+};
+
+var MARKS = [
+  {k:"name", en:"NAME",  ko:"이름",     say:"<b>bfs</b> — 무언가를 <b>찾는다</b>고 주장합니다. b·f·s 가 뭔지는 아직 몰라도 됩니다."},
+  {k:"in_",  en:"IN",    ko:"받는 것",  say:"괄호 안에 쉼표가 둘 → <b>인수 3개</b>. 시작점 하나, <code>is_goal</code>·<code>next_states</code> — 이름을 보면 <b>판정하는 법</b>과 <b>다음 후보 만드는 법</b>입니다."},
+  {k:"out",  en:"OUT",   ko:"내놓는 것", say:"<code>return</code> 이 <b>2군데</b>. 하나는 <code>came_from</code>, 하나는 <code>None</code> — <b>찾으면 무언가를, 못 찾으면 None</b>."},
+  {k:"loop", en:"LOOP",  ko:"도는 것",  say:"<code>while</code> 하나, <code>for</code> 하나 → <b>반복 2개</b>. 무엇을 도는지는 몰라도 <b>개수는 셉니다</b>."},
+  {k:"depth",en:"DEPTH", ko:"겹",       say:"가장 깊은 줄이 <b>4겹</b>입니다(<code>while</code> → <code>for</code> → <code>if</code> → 대입). <b>깊다 = 복잡하다</b> — 여기까지만 알아도 충분합니다."}
+];
+
+var FRAME = {name:null, in_:"시작점과 판정 방법 두 가지", loop:"목표에 닿을 때까지 계속 뒤지며", out:"거기까지 간 길, 없으면 None"};
+
+var picked = {}, cur = null;
+
+/* 코드 그리기 */
+function draw(){
+  var h="";
+  for(var i=0;i<LINES.length;i++){
+    h+='<span class="ln" data-l="'+i+'">';
+    var segs=LINES[i], any=false;
+    for(var j=0;j<segs.length;j++){
+      var t=segs[j][0], c=segs[j][1];
+      if(t==="") continue;
+      any=true;
+      h += c ? '<span class="'+c+'">'+esc(t)+'</span>' : esc(t);
+    }
+    if(!any) h+="&nbsp;";
+    h+='</span>'+(i<LINES.length-1?"\n":"");
+  }
+  $("code").innerHTML=h;
+}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+/* 줄 텍스트 기준으로 문자 폭 재기 */
+function metrics(){
+  var pre=$("code");
+  var probe=document.createElement("span");
+  probe.style.cssText="position:absolute;visibility:hidden;white-space:pre";
+  probe.style.font=getComputedStyle(pre).font;
+  probe.textContent="0".repeat(40);
+  pre.appendChild(probe);
+  var cw=probe.getBoundingClientRect().width/40;
+  pre.removeChild(probe);
+  var lns=pre.querySelectorAll(".ln");
+  return {cw:cw, lns:lns};
+}
+
+function clearOv(){ $("ov").innerHTML=""; }
+
+function ring(x,y,w,h,delay){
+  var svg=$("ov"), NS="http://www.w3.org/2000/svg";
+  var pad=5;
+  var e=document.createElementNS(NS,"ellipse");
+  e.setAttribute("cx",x+w/2); e.setAttribute("cy",y+h/2);
+  e.setAttribute("rx",w/2+pad+2); e.setAttribute("ry",h/2+pad-1);
+  e.setAttribute("class","ring");
+  e.setAttribute("transform","rotate(-1.5 "+(x+w/2)+" "+(y+h/2)+")");
+  svg.appendChild(e);
+  var len=e.getTotalLength ? e.getTotalLength() : 400;
+  e.style.strokeDasharray=len; e.style.strokeDashoffset=len;
+  e.style.transition="stroke-dashoffset .5s cubic-bezier(.2,.8,.3,1) "+delay+"ms";
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ e.style.strokeDashoffset=0; }); });
+}
+
+function markSpots(key){
+  clearOv();
+  var m=metrics(), pre=$("code"), box=pre.parentNode.getBoundingClientRect();
+  if(key==="depth"){ depthGuides(m,box); return; }
+  var list=SPOTS[key]||[];
+  for(var i=0;i<list.length;i++){
+    var sp=list[i], ln=m.lns[sp.l];
+    if(!ln) continue;
+    var r=ln.getBoundingClientRect();
+    ring(r.left-box.left+sp.c*m.cw, r.top-box.top, sp.n*m.cw, r.height, i*140);
+  }
+}
+
+/* DEPTH — 들여쓰기 눈금 */
+function depthGuides(m,box){
+  var NS="http://www.w3.org/2000/svg", svg=$("ov");
+  var deep=SPOTS.deep;               // 가장 깊은 줄 (4겹)
+  var top=m.lns[4].getBoundingClientRect().top-box.top;
+  var bot=m.lns[13].getBoundingClientRect().bottom-box.top;
+  var x0=m.lns[0].getBoundingClientRect().left-box.left;
+  for(var d=1;d<=4;d++){
+    var x=x0+(d*4)*m.cw;
+    var l=document.createElementNS(NS,"line");
+    l.setAttribute("x1",x); l.setAttribute("x2",x);
+    l.setAttribute("y1",top); l.setAttribute("y2",bot);
+    l.setAttribute("class","gd");
+    l.style.opacity=0; l.style.transition="opacity .35s "+(d*130)+"ms";
+    svg.appendChild(l);
+    requestAnimationFrame(function(el){return function(){
+      requestAnimationFrame(function(){ el.style.opacity=.75; });};}(l));
+    var t=document.createElementNS(NS,"text");
+    t.setAttribute("x",x+5); t.setAttribute("y",top-6); t.textContent=d;
+    t.style.opacity=0; t.style.transition="opacity .35s "+(d*130)+"ms";
+    svg.appendChild(t);
+    requestAnimationFrame(function(el){return function(){
+      requestAnimationFrame(function(){ el.style.opacity=1; });};}(t));
+  }
+  for(var i=0;i<deep.length;i++){
+    var sp=deep[i], r=m.lns[sp.l].getBoundingClientRect();
+    ring(x0+sp.c*m.cw, r.top-box.top, sp.n*m.cw, r.height, 560+i*140);
+  }
+}
+
+function buildMarks(){
+  var h="";
+  for(var i=0;i<MARKS.length;i++){
+    h+='<button class="mbtn" data-k="'+MARKS[i].k+'" aria-pressed="false">'+
+       MARKS[i].en+' <small>'+MARKS[i].ko+'</small></button>';
+  }
+  $("marks").innerHTML=h;
+  Array.prototype.forEach.call($("marks").querySelectorAll(".mbtn"), function(b){
+    b.addEventListener("click", function(){ pick(b.dataset.k); });
+  });
+}
+
+function pick(k){
+  cur=k; picked[k]=true;
+  Array.prototype.forEach.call($("marks").querySelectorAll(".mbtn"), function(b){
+    b.setAttribute("aria-pressed", b.dataset.k===k ? "true":"false");
+    b.classList.toggle("done", !!picked[b.dataset.k] && b.dataset.k!==k);
+  });
+  var m=null;
+  for(var i=0;i<MARKS.length;i++) if(MARKS[i].k===k) m=MARKS[i];
+  $("rv").className="reveal";
+  $("rv").innerHTML='<span class="lab">'+m.en+' &middot; '+m.ko+'</span>'+m.say;
+  markSpots(k);
+  fillFrame();
+}
+
+function fillFrame(){
+  if(picked.in_){ $("f1").textContent=FRAME.in_; $("f1").classList.add("on"); }
+  if(picked.loop){ $("f2").textContent=FRAME.loop; $("f2").classList.add("on"); }
+  if(picked.out){ $("f3").textContent=FRAME.out; $("f3").classList.add("on"); }
+  var n=0; for(var i=0;i<MARKS.length;i++) if(picked[MARKS[i].k]) n++;
+  $("tip").textContent = n===5
+    ? "다섯 곳으로 문장이 나왔습니다. 무슨 코드인지는 아직 몰라도 됩니다."
+    : "다섯 개를 다 누르면 문장이 완성됩니다. (" + n + "/5)";
+}
+
+function reset(){
+  picked={}; cur=null; clearOv();
+  Array.prototype.forEach.call($("marks").querySelectorAll(".mbtn"), function(b){
+    b.setAttribute("aria-pressed","false"); b.classList.remove("done"); });
+  ["f1","f2","f3"].forEach(function(id){ $(id).textContent="무엇"; $(id).classList.remove("on"); });
+  $("rv").className="reveal empty";
+  $("rv").innerHTML='<span class="lab">여기에 답이 나옵니다</span>버튼을 눌러 보세요.';
+  $("tip").textContent="다섯 개를 다 누르면 문장이 완성됩니다.";
+}
+
+function go(n){
+  for(var i=0;i<3;i++) $("s"+i).hidden = (i!==n);
+  Array.prototype.forEach.call(document.querySelectorAll(".stab"), function(t){
+    t.setAttribute("aria-selected", (+t.dataset.s===n)?"true":"false"); });
+  window.scrollTo(0,0);
+  if(n===2 && cur) setTimeout(function(){ markSpots(cur); },30);
+}
+
+document.addEventListener("click", function(e){
+  var g=e.target.closest("[data-go]"); if(g) go(+g.dataset.go);
+  var t=e.target.closest(".stab");     if(t) go(+t.dataset.s);
+});
+$("reset").addEventListener("click", reset);
+
+var cs=16;
+function zoom(d){ cs=Math.min(30,Math.max(11,cs+d));
+  document.documentElement.style.setProperty("--code-size",cs+"px");
+  if(cur) setTimeout(function(){ markSpots(cur); },30); }
+$("zin").addEventListener("click",function(){zoom(2);});
+$("zout").addEventListener("click",function(){zoom(-2);});
+window.addEventListener("resize", function(){ if(cur) markSpots(cur); });
+
+draw(); buildMarks(); reset();
+})();
+</script>
+</body>
+</html>

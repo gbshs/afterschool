@@ -167,6 +167,7 @@ body{margin:0;background:var(--paper);color:var(--ink);
 </style>
 </head>
 <body>
+
 <div class="wrap">
 
   <div class="bar">
@@ -236,7 +237,7 @@ body{margin:0;background:var(--paper);color:var(--ink);
 
   var ROUNDS = [
     {
-      tag: "Passage 1", sec: 90,
+      tag: "Passage 1", sec: 150,
       code:
 '<span class="k">def</span> is_safe(state):\n'+
 '    farmer, wolf, sheep, cabbage = state\n'+
@@ -255,7 +256,7 @@ body{margin:0;background:var(--paper);color:var(--ink);
       sent: '이 코드는 <b>state 하나</b>를 받아서 <b>반복 없이 두 가지를 검사</b>하며, <b>True 또는 False</b>를 내놓는다.'
     },
     {
-      tag: "Passage 2", sec: 60,
+      tag: "Passage 2", sec: 100,
       code:
 '<span class="k">def</span> validate(pw):\n'+
 '    <span class="k">if</span> len(pw) &lt; <span class="s">8</span>:\n'+
@@ -284,7 +285,7 @@ body{margin:0;background:var(--paper);color:var(--ink);
       sent: '이 코드는 <b>비밀번호 하나</b>를 받아서 <b>글자를 하나씩 훑으며</b>, <b>통과 여부와 그 이유</b>를 함께 내놓는다.'
     },
     {
-      tag: "Passage 3", sec: 40,
+      tag: "Passage 3", sec: 70,
       code:
 '<span class="k">def</span> bfs(start, is_goal, next_states):\n'+
 '    came_from = {start: <span class="k">None</span>}\n'+
@@ -341,26 +342,24 @@ body{margin:0;background:var(--paper);color:var(--ink);
     clock.classList.toggle("warn", state === "running" && left <= 10);
     bar.style.transform = "scaleX(" + (total ? Math.max(0,left)/total : 1) + ")";
 
-    var hide = (state === "ready" || state === "covered");
+    var hide = (state === "ready");
     paneWrap.classList.toggle("hidden-code", hide);
     cover.classList.toggle("pre", state === "ready");
 
     if(state === "ready"){
       coverTitle.textContent = "시작을 누르면 보입니다";
-      coverText.textContent = "학습지를 펴 두세요. 시간이 끝나면 코드는 가려집니다.";
+      coverText.textContent = "학습지를 펴 두세요. 코드를 보면서 다섯 칸을 채웁니다.";
       main.textContent = "시작"; main.hidden = false;
       again.hidden = true;
-      tip.textContent = "코드를 보면서 쓰지 마세요. 덮인 뒤에 씁니다.";
+      tip.textContent = "외우는 것이 아닙니다. 코드를 보면서 씁니다 — 시간 안에.";
     } else if(state === "running"){
-      main.textContent = "덮기"; main.hidden = false;
+      main.textContent = "다 썼습니다"; main.hidden = false;
       again.hidden = true;
       tip.textContent = "첫 줄부터 읽지 마세요. 이름 · 인수 · return · 반복 · 겹수.";
     } else if(state === "covered"){
-      coverTitle.textContent = "덮었습니다";
-      coverText.textContent = "학습지의 다섯 칸을 채우고, 한 문장을 완성하세요. 다 쓴 뒤에 확인을 누릅니다.";
       main.textContent = "확인하기"; main.hidden = false;
       again.hidden = false;
-      tip.textContent = "기억나지 않는 칸은 비워 두세요. 비운 칸이 다음에 볼 곳입니다.";
+      tip.textContent = "시간 끝. 못 채운 칸은 비워 두세요 — 비운 칸이 다음에 볼 곳입니다.";
     } else {
       main.hidden = true;
       again.hidden = false;
