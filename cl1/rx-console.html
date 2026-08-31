@@ -119,6 +119,11 @@ var store = {};
 
 function $(id){ return document.getElementById(id); }
 var LINENOTE = '<p class="note">출력이 <b>두 줄</b>이면 <b>/</b> 로 나눠 쓰세요. 인쇄물과 같은 표기입니다.</p>';
+function ro(w){
+  var c = w.charCodeAt(w.length - 1);
+  if (c >= 0xAC00 && c <= 0xD7A3) { var j = (c - 0xAC00) % 28; return (j === 0 || j === 8) ? "로" : "으로"; }
+  return "로";
+}
 function norm(s){
   s = String(s == null ? "" : s).trim().toLowerCase();
   s = s.replace(/[\u2018\u2019\u201c\u201d'"`]/g, "");
@@ -282,18 +287,17 @@ function gradeTri(){
          '<b>' + TRI.traps[k] + '</b><div class="mbar"><i style="width:' + pct + '%"></i></div>' +
          '<span>' + got + '/' + tot + '</span></div>';
   }
-  h += '<div class="rx"><b>처방</b> — ';
-  if (mx === 0) h += '전부 맞았습니다. 유형 1 부터 순서대로 가세요.';
+  h += '<div class="rx"><b>진단</b> — ';
+  if (mx === 0) h += '전부 맞았습니다.<br>';
   else {
-    h += '여기부터 하세요.<br>';
-    for (var k2=0;k2<TRI.traps.length;k2++){
-      if (miss[k2] !== mx) continue;
-      var t = TRI.rx[String(k2)], b2 = sec(t);
-      h += '<button class="pill" onclick="go(' + t + ')">유형 ' + t + ' ' + b2.title + '</button>';
-    }
+    var names = [];
+    for (var k2=0;k2<TRI.traps.length;k2++) if (miss[k2] === mx) names.push(TRI.traps[k2]);
+    var nm = names.join(" · ");
+    h += '당신의 가장 약한 유형은 <b>' + nm + '</b>' + ro(nm) + ' 보입니다.<br>';
   }
-  h += '</div><p class="note">가장 많이 틀린 함정이 시작점입니다. ' +
-       '점수는 기록하지 않습니다 — 어디부터 볼지 정하는 데만 씁니다.</p></div>';
+  h += '유형 1 부터 함께 공부해봐요.<br>' +
+       '<button class="pill" onclick="go(1)">유형 1 부터 시작</button>';
+  h += '</div><p class="note">점수는 기록하지 않습니다 — 어디가 약한지 보는 데만 씁니다.</p></div>';
   $("report").innerHTML = h;
   $("report").scrollIntoView({behavior:"smooth", block:"start"});
   tabs();
