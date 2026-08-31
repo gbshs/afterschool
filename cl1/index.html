@@ -58,7 +58,7 @@ a.card:focus-visible{outline:2px solid var(--active);outline-offset:2px}
 .ico{font-size:24px;line-height:1;flex:0 0 auto}
 .meta{min-width:0;flex:1}
 .nm{display:block;font-family:var(--serif);font-weight:700;font-size:17px}
-.ds{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.55}
+.ds{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.55;word-break:keep-all}
 .labs{margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
 a.lab{display:block;text-align:center;text-decoration:none;color:inherit;
   background:var(--surface);border:1px solid var(--line);border-radius:3px;
@@ -108,9 +108,8 @@ footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line-soft);
 
 <section class="grp">
   <div class="grp-h"><h2>실험실</h2><span class="grp-n">3</span></div>
-  <p style="color:var(--muted);font-size:13.5px;margin:10px 0 0;font-family:var(--serif)">
-    <b>지금 찾지 않아도 됩니다.</b> 유형 2 · 4 · 3 · 10 을 배울 때 하나씩 씁니다.
-    그때 선생님이 부르는 것을 아래에서 누르세요.</p>
+  <p style="color:var(--muted);font-size:13.5px;margin:10px 0 0;font-family:var(--serif);word-break:keep-all">
+    수업 중에 선생님이 말하는 것을 누르세요.</p>
   <div class="labs">
     <a class="lab" href="t1/"><span class="lab-n">t1</span><span class="lab-l">경계</span></a>
     <a class="lab" href="t2/"><span class="lab-n">t2</span><span class="lab-l">조합</span></a>
