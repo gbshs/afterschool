@@ -298,8 +298,7 @@ function gradeTri(){
       h += '당신의 가장 약한 유형은 <b>' + nm + '</b>' + ro(nm) + ' 보입니다.<br>';
     }
   }
-  h += '유형 1 부터 함께 공부해봐요.<br>' +
-       '<button class="pill" onclick="go(1)">유형 1 부터 시작</button>';
+  h += '유형 1 부터 함께 공부해봐요.';
   h += '</div><p class="note">점수는 기록하지 않습니다 — 어디가 약한지 보는 데만 씁니다.</p></div>';
   $("report").innerHTML = h;
   $("report").scrollIntoView({behavior:"smooth", block:"start"});
