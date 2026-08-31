@@ -59,12 +59,21 @@ a.card:focus-visible{outline:2px solid var(--active);outline-offset:2px}
 .meta{min-width:0;flex:1}
 .nm{display:block;font-family:var(--serif);font-weight:700;font-size:17px}
 .ds{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.55}
+.labs{margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+a.lab{display:block;text-align:center;text-decoration:none;color:inherit;
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:14px 8px;box-shadow:var(--shadow);
+  transition:border-color .15s ease, transform .15s ease}
+a.lab:hover{border-color:var(--active-line);transform:translateY(-1px)}
+a.lab:focus-visible{outline:2px solid var(--active);outline-offset:2px}
+.lab-n{display:block;font-size:11.5px;letter-spacing:.12em;color:var(--muted)}
+.lab-l{display:block;font-family:var(--serif);font-weight:700;font-size:16px;margin-top:3px}
 .note{margin-top:44px;border-top:1px solid var(--line);padding-top:20px;
   font-size:13.5px;color:var(--muted);font-family:var(--serif);line-height:1.8}
 .note b{color:var(--ink);font-weight:700}
 footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line-soft);
   font-size:12px;color:var(--muted)}
-@media (max-width:600px){ .wrap{padding:36px 16px 64px} }
+@media (max-width:600px){ .wrap{padding:36px 16px 64px} .labs{grid-template-columns:repeat(2,1fr)} }
 </style>
 </head>
 <body>
@@ -101,8 +110,13 @@ footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line-soft);
   <div class="grp-h"><h2>실험실</h2><span class="grp-n">3</span></div>
   <p style="color:var(--muted);font-size:13.5px;margin:10px 0 0;font-family:var(--serif)">
     <b>지금 찾지 않아도 됩니다.</b> 유형 2 · 4 · 3 · 10 을 배울 때 하나씩 씁니다.
-    그때 선생님이 <b>t1</b> · <b>t2</b> · <b>t3</b> · <b>t4</b> 중 하나를 부르면,
-    이 주소 뒤에 그것만 붙여 들어오세요.</p>
+    그때 선생님이 부르는 것을 아래에서 누르세요.</p>
+  <div class="labs">
+    <a class="lab" href="t1/"><span class="lab-n">t1</span><span class="lab-l">경계</span></a>
+    <a class="lab" href="t2/"><span class="lab-n">t2</span><span class="lab-l">조합</span></a>
+    <a class="lab" href="t3/"><span class="lab-n">t3</span><span class="lab-l">순서</span></a>
+    <a class="lab" href="t4/"><span class="lab-n">t4</span><span class="lab-l">누락</span></a>
+  </div>
 </section>
 
 <section class="grp">

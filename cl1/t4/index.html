@@ -701,21 +701,7 @@ draw4();
 <script>
 (function(){
   var n = 4;
-  var t = document.getElementById("tabs");
-  if (t) {
-    var bs = t.querySelectorAll(".tab");
-    for (var k = 0; k < bs.length; k++) {
-      var c = bs[k].cloneNode(true);
-      bs[k].parentNode.replaceChild(c, bs[k]);
-      var L = c.getAttribute("data-lab");
-      c.setAttribute("aria-selected", L == n ? "true" : "false");
-      if (L != n) {
-        (function (lab, el) {
-          el.addEventListener("click", function () { location.href = "../t" + lab + "/"; });
-        })(L, c);
-      }
-    }
-  }
+  var t = document.getElementById("tabs"); if (t) t.style.display = "none";
   for (var i = 1; i <= 4; i++) {
     var el = document.getElementById("lab" + i);
     if (el) el.classList.toggle("hide", i !== n);
