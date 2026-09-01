@@ -78,15 +78,15 @@ body{margin:0;background:var(--paper);color:var(--ink);
   box-shadow:var(--shadow);margin-top:16px;padding:22px 24px 24px}
 .card h2{font-family:var(--f-display);font-size:22px;font-weight:800;margin:0 0 6px;
   letter-spacing:-.015em}
-.card .lede{color:var(--ink-2);font-size:14px;margin:0 0 16px;max-width:64ch}
+.card .lede{color:var(--ink-2);font-size:14.5px;margin:0 0 16px;max-width:820px}
 .card .lede b{color:var(--ink)}
 
 /* 영어 예시 */
-.en{font-family:var(--f-display);font-size:21px;line-height:1.85;
+.en{font-family:var(--f-display);font-size:21px;line-height:1.85;max-width:820px;
   background:var(--pine-soft);border-radius:4px;padding:18px 20px;margin:0 0 14px}
 .en u{text-decoration:none;border-bottom:2px solid var(--pine);padding-bottom:1px}
 .en .hard{background:var(--mark-a);border-radius:2px;padding:0 3px;font-style:italic}
-.enq{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:4px}
+.enq{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:4px;max-width:820px}
 .enq div{border:1px solid var(--rule);border-radius:3px;padding:10px 13px;font-size:13px}
 .enq b{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--pine);margin-bottom:3px}
@@ -124,14 +124,14 @@ pre.code .cm{color:var(--pane-dim)}
 .mbtn.done::after{content:"●";color:var(--mark);font-size:9px;margin-left:2px}
 .mbtn:disabled{opacity:.4;cursor:default}
 
-.reveal{margin-top:14px;border-left:3px solid var(--mark);background:var(--mark-a);
+.reveal{margin-top:14px;max-width:820px;border-left:3px solid var(--mark);background:var(--mark-a);
   border-radius:0 3px 3px 0;padding:12px 16px;font-size:14px;line-height:1.65;
   min-height:52px}
 .reveal .lab{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--ink-2);display:block;margin-bottom:3px}
 .reveal.empty{background:transparent;border-left-color:var(--rule);color:var(--ink-3)}
 
-.frame{margin-top:16px;border:1px dashed var(--rule);border-radius:3px;padding:16px 18px}
+.frame{margin-top:16px;max-width:820px;border:1px dashed var(--rule);border-radius:3px;padding:16px 18px}
 .frame .fl{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--pine);margin-bottom:8px}
 .frame p{margin:0;font-size:17px;line-height:1.95}
@@ -192,7 +192,7 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
     <button class="btn ghost" id="enshow">모르는 단어 셋의 뜻 보기</button>
   </div>
   <div id="enans" hidden>
-    <table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px">
+    <table style="width:100%;max-width:820px;border-collapse:collapse;margin-top:12px;font-size:13.5px">
       <tr><td style="padding:7px 10px;border-bottom:1px solid var(--rule);width:38%"><b>plenipotentiary</b></td>
           <td style="padding:7px 10px;border-bottom:1px solid var(--rule)">전권대사 &mdash; <b>사람</b>이 맞았습니다</td></tr>
       <tr><td style="padding:7px 10px;border-bottom:1px solid var(--rule)"><b>concordat</b></td>
