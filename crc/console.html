@@ -1,0 +1,1795 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CRC Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F5F6F2; --card:#FFFFFF;
+  --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2;
+  --pine:#2C5A4B; --pine-soft:#E4EEE9; --pine-ink:#FFFFFF;
+  --mark:#D4E85C; --mark-a:rgba(212,232,92,.55);
+  --pane:#1B2420; --pane-ink:#DDE4DA; --pane-dim:#7C8A82;
+  --pane-key:#A8D98C; --pane-str:#E0C58A;
+  --shadow:0 1px 2px rgba(23,32,28,.05), 0 10px 30px -14px rgba(23,32,28,.2);
+  --f-display:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Bricolage Grotesque",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --code-size:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413; --card:#171D1A;
+    --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+    --rule:#2B332E; --rule-2:#222925;
+    --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+    --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+    --pane:#080B0A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413; --card:#171D1A;
+  --ink:#E6EAE2; --ink-2:#9BA69F; --ink-3:#727E77;
+  --rule:#2B332E; --rule-2:#222925;
+  --pine:#7BC4A8; --pine-soft:#1D2A25; --pine-ink:#0D1412;
+  --mark:#C9DE55; --mark-a:rgba(201,222,85,.22);
+  --pane:#080B0A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1340px;margin:0 auto;padding:22px clamp(14px,3vw,36px) 80px}
+.bar{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-bottom:12px;
+  border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--pine);font-weight:600}
+h1{font-family:var(--f-display);font-weight:800;font-size:27px;margin:2px 0 0;line-height:1;
+  letter-spacing:-.022em}
+.sub{font-size:12.5px;color:var(--ink-2);margin:5px 0 0}
+.zoom{margin-left:auto;display:flex;gap:7px;align-items:center}
+.zoom span{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;color:var(--ink-3)}
+.zbtn{font-family:var(--f-mono);font-size:13px;font-weight:600;width:32px;height:29px;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:2px;cursor:pointer}
+
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 0}
+.tab{font-family:var(--f-mono);font-size:12px;font-weight:600;padding:8px 14px;border:1px solid var(--rule);
+  background:var(--card);color:var(--ink-2);border-radius:999px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.tab .k{opacity:.65;margin-right:5px}
+.tab.done::after{content:" ●";font-size:8px;color:var(--mark)}
+
+.head2{display:flex;align-items:baseline;gap:10px;margin:22px 0 4px;flex-wrap:wrap}
+.head2 .n{font-family:var(--f-mono);font-size:10px;letter-spacing:.15em;color:var(--ink-3)}
+.head2 h2{font-family:var(--f-display);font-size:23px;font-weight:800;margin:0;letter-spacing:-.015em}
+.lede{color:var(--ink-2);font-size:13.5px;margin:0 0 14px;max-width:84ch}
+.lede b{color:var(--ink)}
+
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+.q{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:13px 15px 14px;
+  box-shadow:var(--shadow)}
+.q.ok{border-color:var(--pine);border-width:2px;padding:12px 14px 13px}
+.q.no{border-color:#C0603F;border-width:2px;padding:12px 14px 13px}
+.qn{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);font-weight:600;margin-bottom:7px;
+  display:flex;justify-content:space-between}
+.qn .src{color:var(--pine);font-weight:500}
+pre.cd{margin:0 0 10px;background:var(--pane);color:var(--pane-ink);border-radius:3px;
+  padding:11px 13px;font-family:var(--f-mono);font-size:var(--cs,13px);line-height:1.75;
+  white-space:pre;overflow-x:auto}
+pre.cd .k{color:var(--pane-key)} pre.cd .s{color:var(--pane-str)} pre.cd .c{color:var(--pane-dim)}
+
+.opts{display:grid;gap:6px}
+.opt{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--rule);border-radius:3px;
+  padding:9px 12px;font-size:13.5px;cursor:pointer;background:var(--paper);line-height:1.5}
+.opt i{font-style:normal;font-family:var(--f-mono);font-size:10.5px;font-weight:600;width:19px;height:19px;
+  border-radius:50%;background:var(--rule-2);color:var(--ink-2);display:grid;place-items:center;flex:0 0 auto;
+  margin-top:2px}
+.opt:hover{border-color:var(--pine)}
+.opt.sel{border-color:var(--ink);border-width:2px;padding:8px 11px}
+.opt.sel i{background:var(--ink);color:var(--paper)}
+.opt.right{border-color:var(--pine);border-width:2px;background:var(--pine-soft);padding:8px 11px}
+.opt.right i{background:var(--pine);color:#fff}
+.opt.wrong{opacity:.5;text-decoration:line-through}
+
+.row{display:flex;align-items:center;gap:9px;margin-top:4px}
+.row span{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);min-width:64px}
+.row input{flex:1;min-width:0;font-family:var(--f-body);font-size:14px;padding:8px 11px;
+  border:1px solid var(--rule);border-radius:2px;background:var(--paper);color:var(--ink)}
+.row input:focus{outline:2px solid var(--pine);outline-offset:-1px}
+.five5{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:7px;margin-top:4px}
+.five5 label{display:block;font-family:var(--f-mono);font-size:10px;color:var(--ink-3);margin-bottom:3px}
+.five5 input{width:100%;font-family:var(--f-body);font-size:14px;padding:7px 9px;border:1px solid var(--rule);
+  border-radius:2px;background:var(--paper);color:var(--ink)}
+
+.fb{font-size:12.5px;line-height:1.6;margin-top:9px;padding:9px 11px;border-radius:3px;display:none}
+.fb.show{display:block}
+.fb.y{background:var(--pine-soft);border-left:3px solid var(--pine)}
+.fb.n{background:#F7E9E4;border-left:3px solid #C0603F}
+.fb b.t{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:3px;color:var(--ink-2)}
+
+.acts{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--rule);
+  padding:11px 0 12px;margin-top:20px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--f-body);font-size:13.5px;font-weight:600;padding:10px 19px;border-radius:2px;
+  cursor:pointer;border:1px solid var(--pine);background:var(--pine);color:var(--pine-ink)}
+.btn.g{background:transparent;color:var(--pine)}
+.tip{margin-left:auto;font-size:12px;color:var(--ink-3)}
+
+.report{margin-top:18px;background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:16px 18px}
+.report h3{font-family:var(--f-display);font-size:18px;margin:0 0 10px;font-weight:800}
+.mrow{display:flex;align-items:center;gap:10px;font-size:13px;margin-bottom:6px}
+.mrow b{min-width:170px}
+.mbar{flex:1;height:9px;background:var(--rule-2);border-radius:99px;overflow:hidden}
+.mbar i{display:block;height:100%;background:var(--pine)}
+.mrow.weak b{color:#C0603F}
+.mrow.weak .mbar i{background:#C0603F}
+.note{font-size:12px;color:var(--ink-3);margin-top:11px}
+footer{margin-top:30px;padding-top:12px;border-top:1px solid var(--rule);display:flex;
+  justify-content:space-between;font-size:11px;color:var(--ink-3)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<div class="bar">
+  <div>
+    <div class="eyebrow">Code Reading Comprehension &middot; Day 1</div>
+    <h1>Reading Console</h1>
+    <p class="sub">종이에 먼저 답을 쓰고 옮겨 적습니다. <b>많이 읽는 것이 전부입니다.</b></p>
+  </div>
+  <div class="zoom"><span>글자</span>
+    <button class="zbtn" id="zo">A&minus;</button><button class="zbtn" id="zi">A+</button></div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div id="pane"></div>
+<div class="acts">
+  <button class="btn" id="g1">이 유형 채점</button>
+  <button class="btn g" id="ga">전체 채점</button>
+  <button class="btn g" id="gc">지우기</button>
+  <span class="tip" id="tip"></span>
+</div>
+<div id="report"></div>
+<footer><span>파이썬 코드 문해력 키우기</span><span>READING CONSOLE</span></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var BANK = {
+ "1": [
+  {
+   "n": "1-1",
+   "src": "edu 선택정렬 속",
+   "code": [
+    "m = i",
+    "for j in range(i + 1, n):",
+    "    if A[j] < A[m]:",
+    "        m = j",
+    "print(m)"
+   ],
+   "o": [
+    "A 전체에서 가장 작은 값이 있는 자리 번호를 출력한다",
+    "i 번째부터 끝까지 중에서 가장 작은 값이 있는 자리 번호를 출력한다",
+    "A 전체에서 가장 작은 값을 출력한다",
+    "i 번째보다 작은 값이 몇 개인지 출력한다"
+   ],
+   "c": 1,
+   "why": "두 군데를 봐야 합니다. <b>① <code>range(i + 1, n)</code> 이라 앞쪽은 아예 안 봅니다</b> &mdash; A 전체가 아니라 <b>i 번째부터 뒤쪽</b>만. <b>② <code>m</code> 은 값이 아니라 자리 번호</b>입니다(<code>m = j</code>). 값을 원하면 <code>A[m]</code> 이라고 써야 하죠.<br>이게 <b>선택 정렬의 안쪽 반복</b>입니다 &mdash; 앞은 이미 정렬됐으니 안 봅니다."
+  },
+  {
+   "n": "1-2",
+   "src": "edu 버블정렬 속",
+   "code": [
+    "swapped = False",
+    "for j in range(n - 1):",
+    "    if A[j] > A[j + 1]:",
+    "        A[j], A[j + 1] = A[j + 1], A[j]",
+    "        swapped = True",
+    "print(swapped)"
+   ],
+   "o": [
+    "A 를 완전히 정렬한다",
+    "한 바퀴 도는 동안 교환이 한 번이라도 있었는지 알려준다",
+    "교환이 몇 번 일어났는지 센다",
+    "A 가 이미 정렬돼 있으면 True 를 출력한다"
+   ],
+   "c": 1,
+   "why": "<code>swapped</code> 는 <b>세지 않고 True 로 바꾸기만</b> 합니다. 그래서 <b>횟수가 아니라 있었나 없었나</b>죠. 이미 정렬돼 있으면 <b>False</b> 가 나옵니다 — 4번은 거꾸로입니다."
+  },
+  {
+   "n": "1-3",
+   "src": "지어냄 · 겹침",
+   "code": [
+    "c = 0",
+    "best = A[0]",
+    "for x in A:",
+    "    if x > best:",
+    "        best = x",
+    "    if x % 2 == 0:",
+    "        c += 1",
+    "print(best, c)"
+   ],
+   "o": [
+    "A 의 최댓값을 찾는다",
+    "A 의 짝수 개수를 센다",
+    "최댓값을 찾으면서 동시에 짝수 개수를 센다",
+    "A 에서 가장 큰 짝수를 찾는다"
+   ],
+   "c": 2,
+   "why": "<b>한 반복 안에 독립된 일이 둘</b> 있습니다. 두 <code>if</code> 는 들여쓰기가 같아 <b>서로 안 겹칩니다</b>. 마지막 <code>print(best, c)</code> 가 둘 다 내놓는 것이 힌트였습니다."
+  },
+  {
+   "n": "1-4",
+   "src": "edu 판정기",
+   "code": [
+    "for i in range(len(r) - 1):",
+    "    if r[i] > r[i + 1]:",
+    "        print(False)",
+    "        break",
+    "else:",
+    "    print(True)"
+   ],
+   "o": [
+    "r 이 작은 것부터 놓였는지 알려준다",
+    "r 에서 순서가 뒤집힌 자리를 모두 찾는다",
+    "r 을 정렬한다",
+    "r 의 최댓값을 찾는다"
+   ],
+   "c": 0,
+   "why": "<b>하나라도 어긋나면 그 자리에서 끝</b>납니다(<code>break</code>). 전부 찾는 게 아니라 <b>있나 없나</b>만 봅니다. <code>for-else</code> 는 <b>break 없이 끝났을 때</b>만 실행됩니다."
+  },
+  {
+   "n": "1-5",
+   "src": "지어냄 · 걸러내기",
+   "code": [
+    "r = []",
+    "for x in A:",
+    "    if x % 3 == 0:",
+    "        r.append(x)",
+    "print(len(r))"
+   ],
+   "o": [
+    "3의 배수를 모두 출력한다",
+    "3의 배수가 몇 개인지 출력한다",
+    "A 의 길이를 출력한다",
+    "3의 배수 중 가장 큰 것을 출력한다"
+   ],
+   "c": 1,
+   "why": "<b>골라 담고 나서 개수만</b> 냅니다. <code>r</code> 자체는 안 찍히죠. <b>걸러내기 + 세기</b> 두 단계입니다."
+  },
+  {
+   "n": "1-6",
+   "src": "지어냄 · 플래그",
+   "code": [
+    "found = False",
+    "for x in A:",
+    "    if x == t:",
+    "        found = True",
+    "        break",
+    "if found:",
+    "    print('있다')",
+    "else:",
+    "    print('없다')"
+   ],
+   "o": [
+    "t 가 A 에 몇 개 있는지 센다",
+    "t 가 A 에 있는지 알려준다",
+    "t 가 A 의 몇 번째에 있는지 알려준다",
+    "A 에서 t 를 지운다"
+   ],
+   "c": 1,
+   "why": "<code>found</code> 는 <b>False 로 시작해 True 로 한 번</b> 바뀝니다. <b>플래그</b>죠. <code>break</code> 가 있으니 <b>처음 만나면 끝</b> — 개수도 자리도 안 셉니다."
+  },
+  {
+   "n": "1-7",
+   "src": "edu 퀵정렬 속",
+   "code": [
+    "less, same, more = [], [], []",
+    "for v in A:",
+    "    if v < p:",
+    "        less.append(v)",
+    "    elif v > p:",
+    "        more.append(v)",
+    "    else:",
+    "        same.append(v)",
+    "print(len(less), len(same), len(more))"
+   ],
+   "o": [
+    "A 를 정렬한다",
+    "p 보다 작은 것 · 같은 것 · 큰 것이 각각 몇 개인지 센다",
+    "A 에서 p 를 찾는다",
+    "A 의 최솟값과 최댓값을 찾는다"
+   ],
+   "c": 1,
+   "why": "<b>세 상자에 나눠 담고</b> 개수만 냅니다. <code>elif</code> 라서 <b>한 값은 한 상자에만</b> 들어갑니다. 담긴 것을 이어 붙이면 정렬이 되지만, <b>이 코드는 거기까지 안 갑니다</b>."
+  },
+  {
+   "n": "1-8",
+   "src": "지어냄 · 누적+조건",
+   "code": [
+    "s = 0",
+    "for x in A:",
+    "    if x > 0:",
+    "        s += x",
+    "print(s)"
+   ],
+   "o": [
+    "A 의 모든 값을 더한다",
+    "A 의 양수만 더한다",
+    "A 의 양수가 몇 개인지 센다",
+    "A 의 최댓값을 찾는다"
+   ],
+   "c": 1,
+   "why": "<code>s += x</code> 는 <b>값을 더합니다</b>(누적). <code>s += 1</code> 이면 개수 세기(카운팅)죠. <b>1 을 더하나 값을 더하나</b>가 둘을 가릅니다."
+  },
+  {
+   "n": "1-9",
+   "src": "지어냄 · 중첩",
+   "code": [
+    "c = 0",
+    "for i in range(n):",
+    "    for j in range(i + 1, n):",
+    "        if A[i] > A[j]:",
+    "            c += 1",
+    "print(c)"
+   ],
+   "o": [
+    "A 를 정렬하는 데 필요한 교환 횟수를 센다",
+    "앞의 값이 뒤의 값보다 큰 짝이 몇 쌍인지 센다",
+    "A 의 최댓값을 찾는다",
+    "A 가 정렬돼 있는지 알려준다"
+   ],
+   "c": 1,
+   "why": "<code>j</code> 가 <code>i+1</code> 부터라 <b>모든 짝을 한 번씩</b> 봅니다. 세는 것은 <b>뒤집힌 짝의 개수</b>. 정렬이 얼마나 흐트러졌는지를 재는 값입니다."
+  },
+  {
+   "n": "1-10",
+   "src": "지어냄 · 극값 자리",
+   "code": [
+    "m = 0",
+    "for i in range(1, len(A)):",
+    "    if A[i] < A[m]:",
+    "        m = i",
+    "print(A[m])"
+   ],
+   "o": [
+    "A 의 최솟값을 출력한다",
+    "A 의 최솟값이 있는 자리를 출력한다",
+    "A 의 첫 값을 출력한다",
+    "A 를 정렬한다"
+   ],
+   "c": 0,
+   "why": "1-1 과 <b>딱 한 글자</b> 다릅니다. 마지막이 <code>print(m)</code> 이 아니라 <b><code>print(A[m])</code></b> 이죠. 자리를 들고 다니다가 <b>마지막에 값으로 바꿉니다</b>."
+  }
+ ],
+ "4": [
+  {
+   "n": "4-1",
+   "code": [
+    "c = 0",
+    "best = A[0]",
+    "for x in A:",
+    "    if x > best:",
+    "        best = x",
+    "    if x % 2 == 0:",
+    "        c += 1"
+   ],
+   "a": "2",
+   "why": "<code>best</code> 쪽과 <code>c</code> 쪽. 두 <code>if</code> 가 <b>들여쓰기가 같아</b> 서로 상관없습니다."
+  },
+  {
+   "n": "4-2",
+   "code": [
+    "s = 0",
+    "for x in A:",
+    "    if x > 0:",
+    "        s += x"
+   ],
+   "a": "1",
+   "why": "하나뿐입니다. <code>if</code> 는 <b>골라내는 조건</b>이지 별개의 일이 아닙니다."
+  },
+  {
+   "n": "4-3",
+   "code": [
+    "s = 0",
+    "c = 0",
+    "for x in A:",
+    "    s += x",
+    "    c += 1"
+   ],
+   "a": "2",
+   "why": "<b>합계</b>와 <b>개수</b>. 조건이 없어도 하는 일은 둘입니다."
+  },
+  {
+   "n": "4-4",
+   "code": [
+    "less, more = [], []",
+    "for v in A:",
+    "    if v < p:",
+    "        less.append(v)",
+    "    else:",
+    "        more.append(v)"
+   ],
+   "a": "1",
+   "why": "<code>if / else</code> 는 <b>한 가지 일의 두 갈래</b>입니다. 한 값은 <b>둘 중 하나에만</b> 갑니다 — 그러니 일은 하나."
+  },
+  {
+   "n": "4-5",
+   "code": [
+    "mx = A[0]",
+    "mn = A[0]",
+    "for x in A:",
+    "    if x > mx:",
+    "        mx = x",
+    "    if x < mn:",
+    "        mn = x"
+   ],
+   "a": "2",
+   "why": "<b>최댓값</b>과 <b>최솟값</b>. 4-1 과 같은 모양입니다 — 독립된 <code>if</code> 둘."
+  },
+  {
+   "n": "4-6",
+   "code": [
+    "c = 0",
+    "for x in A:",
+    "    if x > 0:",
+    "        if x % 2 == 0:",
+    "            c += 1"
+   ],
+   "a": "1",
+   "why": "<code>if</code> 가 둘이지만 <b>하나가 다른 하나 안에</b> 있습니다. 겹쳐 있으면 <b>조건이 두 개인 한 가지 일</b>입니다."
+  },
+  {
+   "n": "4-7",
+   "code": [
+    "s = 0",
+    "c = 0",
+    "found = False",
+    "for x in A:",
+    "    s += x",
+    "    if x % 2 == 0:",
+    "        c += 1",
+    "    if x == t:",
+    "        found = True"
+   ],
+   "a": "3",
+   "why": "<b>합계 · 짝수 개수 · 있나 없나</b> 셋입니다. 이런 코드가 시험에 나오면 <b>하나만 보고 답합니다</b>."
+  },
+  {
+   "n": "4-8",
+   "code": [
+    "r = []",
+    "for x in A:",
+    "    if x not in r:",
+    "        r.append(x)"
+   ],
+   "a": "1",
+   "why": "하나 &mdash; <b>중복 없이 골라 담기</b>. <code>not in</code> 은 조건이지 별개의 일이 아닙니다."
+  }
+ ],
+ "2": [
+  {
+   "n": "2-1",
+   "code": [
+    "def is_sorted(r):",
+    "    for i in range(len(r) - 1):",
+    "        if r[i] > r[i + 1]:",
+    "            return False",
+    "    return True"
+   ],
+   "a": {
+    "NAME": "is_sorted",
+    "IN": "1",
+    "OUT": "2",
+    "LOOP": "1",
+    "DEPTH": "3"
+   }
+  },
+  {
+   "n": "2-2",
+   "code": [
+    "def selection_sort(A):",
+    "    A = A[:]",
+    "    n = len(A)",
+    "    for i in range(n - 1):",
+    "        m = i",
+    "        for j in range(i + 1, n):",
+    "            if A[j] < A[m]:",
+    "                m = j",
+    "        A[i], A[m] = A[m], A[i]",
+    "    return A"
+   ],
+   "a": {
+    "NAME": "selection_sort",
+    "IN": "1",
+    "OUT": "1",
+    "LOOP": "2",
+    "DEPTH": "4"
+   }
+  },
+  {
+   "n": "2-3",
+   "code": [
+    "def bubble_sort(A):",
+    "    A = A[:]",
+    "    n = len(A)",
+    "    for i in range(n - 1):",
+    "        swapped = False",
+    "        for j in range(n - 1 - i):",
+    "            if A[j] > A[j + 1]:",
+    "                A[j], A[j + 1] = A[j + 1], A[j]",
+    "                swapped = True",
+    "        if not swapped:",
+    "            break",
+    "    return A"
+   ],
+   "a": {
+    "NAME": "bubble_sort",
+    "IN": "1",
+    "OUT": "1",
+    "LOOP": "2",
+    "DEPTH": "4"
+   }
+  },
+  {
+   "n": "2-4",
+   "code": [
+    "def insertion_sort(A):",
+    "    A = A[:]",
+    "    n = len(A)",
+    "    for i in range(1, n):",
+    "        key = A[i]",
+    "        j = i - 1",
+    "        while j >= 0:",
+    "            if A[j] > key:",
+    "                A[j + 1] = A[j]",
+    "                j -= 1",
+    "            else:",
+    "                break",
+    "        A[j + 1] = key",
+    "    return A"
+   ],
+   "a": {
+    "NAME": "insertion_sort",
+    "IN": "1",
+    "OUT": "1",
+    "LOOP": "2",
+    "DEPTH": "4"
+   }
+  },
+  {
+   "n": "2-5",
+   "code": [
+    "def grade(s, p):",
+    "    if s >= 90:",
+    "        if p:",
+    "            return 'A'",
+    "        else:",
+    "            return 'A-'",
+    "    elif s >= 80:",
+    "        return 'B'",
+    "    return 'C'"
+   ],
+   "a": {
+    "NAME": "grade",
+    "IN": "2",
+    "OUT": "4",
+    "LOOP": "0",
+    "DEPTH": "3"
+   }
+  },
+  {
+   "n": "2-6",
+   "code": [
+    "def count_both(A, x, y):",
+    "    c = 0",
+    "    for v in A:",
+    "        if v % x == 0:",
+    "            if v % y == 0:",
+    "                c += 1",
+    "    return c"
+   ],
+   "a": {
+    "NAME": "count_both",
+    "IN": "3",
+    "OUT": "1",
+    "LOOP": "1",
+    "DEPTH": "4"
+   }
+  },
+  {
+   "n": "2-7",
+   "code": [
+    "def split3(A, p):",
+    "    less, same, more = [], [], []",
+    "    for v in A:",
+    "        if v < p:",
+    "            less.append(v)",
+    "        elif v > p:",
+    "            more.append(v)",
+    "        else:",
+    "            same.append(v)",
+    "    return less, same, more"
+   ],
+   "a": {
+    "NAME": "split3",
+    "IN": "2",
+    "OUT": "1",
+    "LOOP": "1",
+    "DEPTH": "4"
+   }
+  },
+  {
+   "n": "2-8",
+   "code": [
+    "def find(A, t):",
+    "    for i in range(len(A)):",
+    "        if A[i] == t:",
+    "            return i",
+    "    return -1"
+   ],
+   "a": {
+    "NAME": "find",
+    "IN": "2",
+    "OUT": "2",
+    "LOOP": "1",
+    "DEPTH": "3"
+   }
+  }
+ ],
+ "3": [
+  {
+   "n": "3-1",
+   "code": [
+    "s = 0",
+    "for x in A:",
+    "    s += x"
+   ],
+   "best": "합계 구하기",
+   "tag": "누적",
+   "a": [
+    "누적",
+    "합계",
+    "합",
+    "합계구하기",
+    "합구하기",
+    "다더하기",
+    "전부더하기",
+    "총합",
+    "accumulator"
+   ],
+   "why": "<code>0</code> 으로 시작 + <code>+=</code> <b>값</b>. 읽는 법은 <b>「합계 구하기」</b>, 패턴 이름은 <b>누적</b>."
+  },
+  {
+   "n": "3-2",
+   "code": [
+    "c = 0",
+    "for x in A:",
+    "    if x > 0:",
+    "        c += 1"
+   ],
+   "best": "양수 개수 세기",
+   "tag": "카운팅",
+   "a": [
+    "카운팅",
+    "개수",
+    "개수세기",
+    "세기",
+    "양수개수",
+    "양수개수세기",
+    "양수의개수",
+    "카운트",
+    "counter"
+   ],
+   "why": "<code>+= 1</code> &mdash; 값이 아니라 <b>1</b>. 그냥 「개수 세기」도 맞지만, <b>무엇의 개수인지</b>까지 말하면 더 좋습니다 &mdash; <b>양수</b>의 개수."
+  },
+  {
+   "n": "3-3",
+   "code": [
+    "m = A[0]",
+    "for x in A:",
+    "    if x > m:",
+    "        m = x"
+   ],
+   "best": "최댓값 찾기",
+   "tag": "극값",
+   "a": [
+    "극값",
+    "최댓값",
+    "최대값",
+    "최댓값찾기",
+    "최대값찾기",
+    "가장큰값",
+    "최대",
+    "제일큰값",
+    "max",
+    "minmax"
+   ],
+   "why": "첫 원소로 시작 + 비교 후 교체. 부등호가 <code>&gt;</code> 이니 <b>최댓값</b>입니다. <b>「극값」만 쓰면 최대인지 최소인지가 안 남습니다.</b>"
+  },
+  {
+   "n": "3-4",
+   "code": [
+    "f = False",
+    "for x in A:",
+    "    if x == t:",
+    "        f = True",
+    "        break"
+   ],
+   "best": "t 가 있는지 확인하기",
+   "tag": "플래그",
+   "a": [
+    "플래그",
+    "있는지확인",
+    "있는지",
+    "있는지확인하기",
+    "존재확인",
+    "포함확인",
+    "찾기",
+    "있나없나",
+    "flag"
+   ],
+   "why": "<code>False</code> 로 시작해 <code>True</code> 로 한 번. <code>break</code> 가 있으니 <b>있나 없나</b>만 &mdash; 개수도 자리도 안 셉니다."
+  },
+  {
+   "n": "3-5",
+   "code": [
+    "r = []",
+    "for x in A:",
+    "    if x % 2 == 0:",
+    "        r.append(x)"
+   ],
+   "best": "짝수만 골라 담기",
+   "tag": "걸러내기",
+   "a": [
+    "걸러내기",
+    "필터",
+    "골라담기",
+    "짝수만골라담기",
+    "짝수골라내기",
+    "짝수만모으기",
+    "골라내기",
+    "filter"
+   ],
+   "why": "빈 리스트 + 조건부 <code>append</code>. <b>무엇을</b> 골라 담는지까지 말하면 좋습니다 &mdash; <b>짝수</b>."
+  },
+  {
+   "n": "3-6",
+   "code": [
+    "A[i], A[m] = A[m], A[i]"
+   ],
+   "best": "두 자리의 값 바꾸기",
+   "tag": "교환",
+   "a": [
+    "교환",
+    "값바꾸기",
+    "바꾸기",
+    "자리바꾸기",
+    "스왑",
+    "swap",
+    "맞바꾸기"
+   ],
+   "why": "한 줄에 쉼표가 <b>양쪽</b>. 교재 <b>선택 정렬</b>의 마지막 줄입니다."
+  },
+  {
+   "n": "3-7",
+   "code": [
+    "c = 0",
+    "m = A[0]",
+    "for x in A:",
+    "    if x > m:",
+    "        m = x",
+    "    if x < 0:",
+    "        c += 1"
+   ],
+   "best": "최댓값 찾기 + 음수 개수 세기",
+   "tag": "극값 · 카운팅",
+   "g": [
+    [
+     "최댓값",
+     "최대",
+     "극값",
+     "가장큰",
+     "제일큰",
+     "max"
+    ],
+    [
+     "음수",
+     "개수",
+     "카운팅",
+     "세기",
+     "count"
+    ]
+   ],
+   "a": [
+    "극값카운팅",
+    "최댓값개수",
+    "최댓값음수개수",
+    "극값과카운팅",
+    "최댓값찾기음수개수세기",
+    "최댓값과음수개수",
+    "최대값음수개수"
+   ],
+   "why": "<b>둘이 겹쳐</b> 있습니다. 독립된 <code>if</code> 둘이죠. <b>하나만 쓰면 절반만 본 겁니다.</b>"
+  },
+  {
+   "n": "3-8",
+   "code": [
+    "s = 0",
+    "c = 0",
+    "for x in A:",
+    "    s += x",
+    "    c += 1"
+   ],
+   "best": "합계와 개수 구하기",
+   "tag": "누적 · 카운팅",
+   "g": [
+    [
+     "합계",
+     "합",
+     "누적",
+     "더하",
+     "총합",
+     "평균",
+     "sum"
+    ],
+    [
+     "개수",
+     "카운팅",
+     "세기",
+     "평균",
+     "count"
+    ]
+   ],
+   "a": [
+    "누적카운팅",
+    "합계개수",
+    "합계와개수",
+    "합과개수",
+    "누적과카운팅",
+    "평균",
+    "평균구하기",
+    "합계개수구하기"
+   ],
+   "why": "<b>합계</b>와 <b>개수</b>. 둘을 나누면 평균이니 <b>「평균 내려는 코드」</b> 라고 읽어도 맞습니다."
+  },
+  {
+   "n": "3-9",
+   "code": [
+    "sw = False",
+    "for j in range(n - 1):",
+    "    if A[j] > A[j + 1]:",
+    "        A[j], A[j + 1] = A[j + 1], A[j]",
+    "        sw = True"
+   ],
+   "best": "옆끼리 바꾸면서 바꿨는지 표시하기",
+   "tag": "교환 · 플래그",
+   "g": [
+    [
+     "교환",
+     "바꾸",
+     "맞바꾸",
+     "스왑",
+     "swap",
+     "버블"
+    ],
+    [
+     "플래그",
+     "표시",
+     "flag",
+     "여부",
+     "알려",
+     "버블"
+    ]
+   ],
+   "a": [
+    "교환플래그",
+    "플래그교환",
+    "교환과플래그",
+    "바꾸기와표시",
+    "한바퀴돌며교환",
+    "버블정렬한바퀴",
+    "버블정렬",
+    "옆끼리교환"
+   ],
+   "why": "교재 <b>버블 정렬</b>의 안쪽 한 바퀴입니다. 쉼표 양쪽은 <b>교환</b>, <code>sw</code> 는 <b>플래그</b>."
+  },
+  {
+   "n": "3-10",
+   "code": [
+    "r = []",
+    "c = 0",
+    "for x in A:",
+    "    if x % 3 == 0:",
+    "        r.append(x)",
+    "        c += 1"
+   ],
+   "best": "3의 배수를 골라 담고 세기",
+   "tag": "걸러내기 · 카운팅",
+   "g": [
+    [
+     "3의배수",
+     "3배수",
+     "걸러",
+     "필터",
+     "골라",
+     "모으"
+    ],
+    [
+     "개수",
+     "카운팅",
+     "세기",
+     "담고세",
+     "count"
+    ]
+   ],
+   "a": [
+    "걸러내기카운팅",
+    "골라담고세기",
+    "3의배수골라담기",
+    "3의배수개수",
+    "필터카운팅",
+    "골라담기와개수세기",
+    "3의배수모으고세기"
+   ],
+   "why": "<b>담으면서 세기.</b> 다만 <code>len(r)</code> 이면 되니 <code>c</code> 는 사실 없어도 됩니다."
+  },
+  {
+   "n": "3-11",
+   "code": [
+    "m = 0",
+    "for i in range(1, len(A)):",
+    "    if A[i] < A[m]:",
+    "        m = i"
+   ],
+   "best": "최솟값이 있는 자리 찾기",
+   "tag": "극값",
+   "a": [
+    "극값",
+    "최솟값",
+    "최소값",
+    "최솟값찾기",
+    "최솟값자리",
+    "최솟값위치",
+    "최솟값자리찾기",
+    "가장작은값자리",
+    "최소",
+    "최솟값인덱스"
+   ],
+   "why": "극값인데 <b>값이 아니라 자리</b>를 들고 다닙니다(<code>m = i</code>). 교재 <b>선택 정렬</b>의 안쪽. <b>「최솟값 찾기」도 맞지만 「자리」까지 쓰면 더 정확합니다.</b>"
+  },
+  {
+   "n": "3-12",
+   "code": [
+    "a, b = b, a"
+   ],
+   "best": "두 값 맞바꾸기",
+   "tag": "교환",
+   "a": [
+    "교환",
+    "값바꾸기",
+    "바꾸기",
+    "맞바꾸기",
+    "스왑",
+    "swap",
+    "자리바꾸기"
+   ],
+   "why": "가장 짧은 패턴. 임시 변수 없이 한 줄로."
+  }
+ ],
+ "5": [
+  {
+   "n": "5-1",
+   "code": [
+    "x = 8",
+    "if x > 5:",
+    "    if x > 10:",
+    "        print('큼')",
+    "else:",
+    "    print('작음')"
+   ],
+   "q": "5번 줄 <code>else</code>",
+   "a": [
+    "2"
+   ],
+   "out": "아무것도 출력되지 않는다",
+   "why": "<code>else</code> 는 <b>들여쓰기가 같은 <code>if</code></b> 와 짝입니다. 5번 줄은 맨 왼쪽에서 시작하니 <b>2번 줄</b>. <br>그래서 x=8 은 2번이 참이라 <code>else</code> 로 안 가고, 3번이 거짓이라 아무것도 안 나옵니다."
+  },
+  {
+   "n": "5-2",
+   "code": [
+    "x = 8",
+    "if x > 5:",
+    "    if x > 10:",
+    "        print('큼')",
+    "    else:",
+    "        print('보통')"
+   ],
+   "q": "5번 줄 <code>else</code>",
+   "a": [
+    "3"
+   ],
+   "out": "보통",
+   "why": "이번엔 <code>else</code> 가 <b>한 칸 들어가</b> 있습니다. 그러니 <b>3번 줄</b> 짝. 5-1 과 <b>들여쓰기만</b> 다릅니다."
+  },
+  {
+   "n": "5-3",
+   "code": [
+    "n = 7",
+    "if n % 2 == 0:",
+    "    if n % 3 == 0:",
+    "        print('6의 배수')",
+    "    else:",
+    "        print('짝수')",
+    "else:",
+    "    print('홀수')"
+   ],
+   "q": "7번 줄 <code>else</code>",
+   "a": [
+    "2"
+   ],
+   "out": "홀수",
+   "why": "<code>else</code> 가 둘입니다. <b>5번 줄은 3번 줄</b>, <b>7번 줄은 2번 줄</b>의 짝. 세로줄을 그으면 바로 보입니다."
+  },
+  {
+   "n": "5-4",
+   "code": [
+    "for i in range(3):",
+    "    if i > 0:",
+    "        print(i)",
+    "else:",
+    "    print('끝')"
+   ],
+   "q": "4번 줄 <code>else</code>",
+   "a": [
+    "1"
+   ],
+   "out": "1 / 2 / 끝",
+   "why": "<b>함정입니다.</b> 이 <code>else</code> 는 <code>if</code> 가 아니라 <b><code>for</code> 의 짝</b>입니다. 파이썬은 <code>for-else</code> 가 있습니다 &mdash; <b><code>break</code> 없이 끝나면</b> 실행됩니다."
+  },
+  {
+   "n": "5-5",
+   "code": [
+    "A = [1,3,2]",
+    "for i in range(len(A)-1):",
+    "    if A[i] > A[i+1]:",
+    "        print('아님')",
+    "        break",
+    "else:",
+    "    print('정렬됨')"
+   ],
+   "q": "6번 줄 <code>else</code>",
+   "a": [
+    "2"
+   ],
+   "out": "아님",
+   "why": "교재 <b>판정기</b>의 모양입니다. <code>for-else</code> &mdash; <code>break</code> 로 빠져나갔으니 <code>else</code> 는 <b>실행되지 않습니다</b>."
+  },
+  {
+   "n": "5-6",
+   "code": [
+    "s = 95",
+    "if s >= 90:",
+    "    print('A')",
+    "elif s >= 80:",
+    "    print('B')",
+    "else:",
+    "    print('C')"
+   ],
+   "q": "6번 줄 <code>else</code>",
+   "a": [
+    "2"
+   ],
+   "out": "A",
+   "why": "<code>elif</code> 는 <b>같은 <code>if</code> 의 일부</b>입니다. 그러니 <code>else</code> 도 결국 <b>2번 줄</b> 것이죠. 셋이 <b>한 덩어리</b>입니다."
+  }
+ ],
+ "6": [
+  {
+   "n": "6-1",
+   "code": [
+    "def f(a):",
+    "    b = a[0]",
+    "    for c in a:",
+    "        if c > b:",
+    "            b = c",
+    "    return b"
+   ],
+   "o": [
+    "a 의 최댓값을 돌려준다",
+    "a 의 최솟값을 돌려준다",
+    "a 의 합계를 돌려준다",
+    "a 의 길이를 돌려준다"
+   ],
+   "c": 0,
+   "why": "이름이 <code>f</code> <code>a</code> <code>b</code> <code>c</code> 뿐입니다. 그래도 <b>구조는 그대로</b>죠 &mdash; 첫 원소로 시작 + 비교 후 교체 = <b>극값</b>. 부등호가 <code>&gt;</code> 이니 <b>최댓값</b>."
+  },
+  {
+   "n": "6-2",
+   "code": [
+    "def g(a, b):",
+    "    c = 0",
+    "    for d in a:",
+    "        if d == b:",
+    "            c += 1",
+    "    return c"
+   ],
+   "o": [
+    "a 에 b 가 있는지 알려준다",
+    "a 에 b 가 몇 개 있는지 센다",
+    "a 에서 b 를 지운다",
+    "b 가 a 의 몇 번째인지 알려준다"
+   ],
+   "c": 1,
+   "why": "<code>+= 1</code> 이고 <code>break</code> 가 <b>없습니다</b>. 끝까지 다 도니 <b>개수</b>죠. <code>break</code> 가 있었으면 1번(있나 없나)입니다."
+  },
+  {
+   "n": "6-3",
+   "code": [
+    "def h(a):",
+    "    b = a[:]",
+    "    n = len(b)",
+    "    for i in range(n - 1):",
+    "        m = i",
+    "        for j in range(i + 1, n):",
+    "            if b[j] < b[m]:",
+    "                m = j",
+    "            ",
+    "        b[i], b[m] = b[m], b[i]",
+    "    return b"
+   ],
+   "o": [
+    "a 를 작은 것부터 정렬해 돌려준다",
+    "a 의 최솟값을 돌려준다",
+    "a 를 거꾸로 뒤집어 돌려준다",
+    "a 에서 중복을 없앤다"
+   ],
+   "c": 0,
+   "why": "<b>교재의 선택 정렬</b>입니다. 이름만 지웠죠. 안쪽에서 <b>가장 작은 자리를 찾고</b>, 밖에서 <b>앞자리와 교환</b>합니다. 부등호가 <code>&lt;</code> 이니 <b>작은 것부터</b>."
+  },
+  {
+   "n": "6-4",
+   "code": [
+    "def p(a, b):",
+    "    x, y, z = [], [], []",
+    "    for c in a:",
+    "        if c < b:",
+    "            x.append(c)",
+    "        elif c > b:",
+    "            z.append(c)",
+    "        else:",
+    "            y.append(c)",
+    "    return x, y, z"
+   ],
+   "o": [
+    "a 를 정렬해 돌려준다",
+    "a 를 b 보다 작은 것 · 같은 것 · 큰 것 셋으로 나눈다",
+    "a 에서 b 를 찾는다",
+    "a 의 최솟값과 최댓값을 돌려준다"
+   ],
+   "c": 1,
+   "why": "<b>교재 퀵 정렬의 나누는 부분</b>입니다. 빈 리스트 셋 + <code>elif</code> 로 <b>한 값은 한 상자에만</b>. <b>담기만 하고 정렬은 안 합니다.</b>"
+  },
+  {
+   "n": "6-5",
+   "code": [
+    "def q(a):",
+    "    for i in range(len(a) - 1):",
+    "        if a[i] > a[i + 1]:",
+    "            return False",
+    "    return True"
+   ],
+   "o": [
+    "a 를 정렬한다",
+    "a 가 작은 것부터 놓였는지 알려준다",
+    "a 의 최댓값을 돌려준다",
+    "a 에 중복이 있는지 알려준다"
+   ],
+   "c": 1,
+   "why": "<b>교재의 판정기</b>입니다. 옆끼리 비교해서 <b>하나라도 어긋나면 즉시 False</b>. 끝까지 갔으면 True."
+  },
+  {
+   "n": "6-6",
+   "code": [
+    "def r(a, b):",
+    "    for i in range(len(a)):",
+    "        if a[i] == b:",
+    "            return i",
+    "    return -1"
+   ],
+   "o": [
+    "a 에 b 가 있는지 알려준다",
+    "a 에서 b 가 처음 나오는 자리를 돌려준다",
+    "a 에 b 가 몇 개 있는지 센다",
+    "a 를 정렬한다"
+   ],
+   "c": 1,
+   "why": "<code>return i</code> &mdash; <b>자리 번호</b>를 돌려줍니다. <b>처음 만나면 끝</b>이고, 없으면 <code>-1</code>. <b>선형 탐색</b>입니다."
+  }
+ ],
+ "7": [
+  {
+   "n": "7-1",
+   "code": [
+    "c = 0",
+    "for i in range(5):",
+    "    c += 1"
+   ],
+   "a": "5"
+  },
+  {
+   "n": "7-2",
+   "code": [
+    "c = 0",
+    "for i in range(1, 5):",
+    "    c += 1"
+   ],
+   "a": "4"
+  },
+  {
+   "n": "7-3",
+   "code": [
+    "c = 0",
+    "n = 4",
+    "for i in range(n - 1):",
+    "    c += 1"
+   ],
+   "a": "3"
+  },
+  {
+   "n": "7-4",
+   "code": [
+    "c = 0",
+    "for i in range(3):",
+    "    for j in range(4):",
+    "        c += 1"
+   ],
+   "a": "12"
+  },
+  {
+   "n": "7-5",
+   "code": [
+    "c = 0",
+    "n = 4",
+    "for i in range(n):",
+    "    for j in range(i + 1, n):",
+    "        c += 1"
+   ],
+   "a": "6"
+  },
+  {
+   "n": "7-6",
+   "code": [
+    "c = 0",
+    "n = 4",
+    "for i in range(n - 1):",
+    "    for j in range(n - 1 - i):",
+    "        c += 1"
+   ],
+   "a": "6"
+  },
+  {
+   "n": "7-7",
+   "code": [
+    "c = 0",
+    "for i in range(5):",
+    "    if i % 2 == 0:",
+    "        c += 1"
+   ],
+   "a": "3"
+  },
+  {
+   "n": "7-8",
+   "code": [
+    "c = 0",
+    "i = 8",
+    "while i > 1:",
+    "    i = i // 2",
+    "    c += 1"
+   ],
+   "a": "3"
+  }
+ ],
+ "8": [
+  {
+   "n": "8-1",
+   "src": "100제 87",
+   "code": [
+    "def f(a):",
+    "    b = []",
+    "    for i in a:",
+    "        if i % 2 == 0:",
+    "            b.append(i + 1)",
+    "    return b",
+    "",
+    "x = [1, 2, 3, 4]",
+    "y = f(x)",
+    "print(len(y))"
+   ],
+   "o": [
+    "a 의 짝수를 모두 1 씩 키워 돌려주고, 그 개수를 출력한다",
+    "a 의 짝수 개수를 출력한다",
+    "a 의 모든 값을 1 씩 키운 개수를 출력한다",
+    "a 의 홀수를 골라 개수를 출력한다"
+   ],
+   "c": 0,
+   "why": "함수는 <b>짝수만 골라 +1 해서 담고</b>(걸러내기), 밖에서는 <b>그 길이</b>만 씁니다. <b>2번도 답이 같지만</b> 함수가 하는 일은 개수 세기가 아니라 <b>골라 담기</b>입니다 &mdash; 값이 바뀐 새 리스트를 돌려주죠."
+  },
+  {
+   "n": "8-2",
+   "src": "100제 88",
+   "code": [
+    "def g(lst):",
+    "    total = 0",
+    "    for n in lst:",
+    "        if n > 3:",
+    "            total += n",
+    "    return total",
+    "",
+    "a = [1, 2, 3, 4, 5]",
+    "result = g(a)",
+    "print(result)"
+   ],
+   "o": [
+    "lst 의 모든 값을 더한다",
+    "3 보다 큰 값만 더한다",
+    "3 보다 큰 값이 몇 개인지 센다",
+    "lst 의 최댓값을 돌려준다"
+   ],
+   "c": 1,
+   "why": "<code>total += n</code> &mdash; <b>1 이 아니라 값</b>을 더합니다. 그러니 개수가 아니라 <b>합계</b>. 조건은 골라내는 자리일 뿐."
+  },
+  {
+   "n": "8-3",
+   "src": "100제 89",
+   "code": [
+    "def f(x):",
+    "    y = []",
+    "    for i in range(len(x)):",
+    "        if x[i] % 2 == 1:",
+    "            y.append(x[i] * 2)",
+    "    return y",
+    "",
+    "a = [2, 3, 4, 5]",
+    "b = f(a)",
+    "print(b[1])"
+   ],
+   "o": [
+    "a 의 홀수를 두 배로 만들어 담고, 그중 두 번째를 출력한다",
+    "a 의 두 번째 값을 두 배로 만들어 출력한다",
+    "a 의 홀수 개수를 출력한다",
+    "a 를 전부 두 배로 만들어 두 번째를 출력한다"
+   ],
+   "c": 0,
+   "why": "<b>걸러내기 + 값 바꾸기</b>입니다. <code>b[1]</code> 은 <b>새로 담긴 리스트의</b> 두 번째이지 원래 <code>a</code> 의 두 번째가 아닙니다 &mdash; 여기서 제일 많이 헷갈립니다."
+  },
+  {
+   "n": "8-4",
+   "src": "100제 91",
+   "code": [
+    "def f(x):",
+    "    s = 0",
+    "    for i in range(len(x)):",
+    "        for j in range(i + 1):",
+    "            if x[i] > x[j]:",
+    "                s += 1",
+    "    return s",
+    "",
+    "a = [1, 2, 3]",
+    "print(f(a))"
+   ],
+   "o": [
+    "x 를 정렬하는 데 필요한 교환 횟수를 센다",
+    "뒤에 있는 값이 앞의 값보다 큰 짝이 몇 쌍인지 센다",
+    "앞에 있는 값이 뒤의 값보다 큰 짝이 몇 쌍인지 센다",
+    "x 의 최댓값을 돌려준다"
+   ],
+   "c": 1,
+   "why": "<code>range(i + 1)</code> 이라 <b><code>j</code> 가 <code>i</code> 앞쪽</b>을 훑습니다. 그러니 세는 것은 <b>「뒤가 앞보다 큰」</b> 짝. <b>부등호 방향과 훑는 방향을 같이 봐야</b> 합니다."
+  },
+  {
+   "n": "8-5",
+   "src": "100제 93",
+   "code": [
+    "def f(lst):",
+    "    total = 0",
+    "    for i in lst:",
+    "        for j in lst:",
+    "            if i % 2 == 0:",
+    "                if j % 2 == 1:",
+    "                    total += i * j",
+    "    return total",
+    "",
+    "a = [1, 2, 3]",
+    "print(f(a))"
+   ],
+   "o": [
+    "짝수끼리 곱한 값을 모두 더한다",
+    "짝수와 홀수를 짝지어 곱한 값을 모두 더한다",
+    "모든 짝의 곱을 더한다",
+    "짝수의 개수와 홀수의 개수를 곱한다"
+   ],
+   "c": 1,
+   "why": "<code>if</code> 가 <b>겹쳐</b> 있습니다 &mdash; 바깥이 짝수, 안쪽이 홀수. <b>둘 다 통과해야</b> 더해지죠. 겹친 <code>if</code> 는 <b><code>and</code> 와 같습니다</b>."
+  },
+  {
+   "n": "8-6",
+   "src": "100제 94",
+   "code": [
+    "def f(lst):",
+    "    s = 0",
+    "    for i in range(len(lst)):",
+    "        for j in range(i, len(lst)):",
+    "            if lst[j] % 2 == 0:",
+    "                s += 1",
+    "    return s",
+    "",
+    "a = [1, 2, 3, 4]",
+    "print(f(a))"
+   ],
+   "o": [
+    "짝수의 개수를 센다",
+    "짝수가 각각 몇 번씩 훑히는지 모두 더한다",
+    "짝수 짝의 개수를 센다",
+    "리스트를 정렬한다"
+   ],
+   "c": 1,
+   "why": "바깥 <code>i</code> 는 <b>조건에 안 쓰입니다</b> &mdash; 안쪽만 <code>lst[j]</code> 를 봅니다. 그래서 같은 짝수를 <b>여러 번</b> 셉니다. <b>바깥 반복이 조건에 안 나오면 「몇 번 훑히나」를 세는 것</b>입니다."
+  },
+  {
+   "n": "8-7",
+   "src": "100제 95",
+   "code": [
+    "def t(x):",
+    "    r = []",
+    "    for i in x:",
+    "        for j in x:",
+    "            if i > j:",
+    "                if i % j == 0:",
+    "                    r.append((i, j))",
+    "    return len(r)",
+    "",
+    "a = [2, 4, 6]",
+    "print(t(a))"
+   ],
+   "o": [
+    "x 안에서 서로 나누어떨어지는 짝이 몇 쌍인지 센다",
+    "x 의 약수가 몇 개인지 센다",
+    "x 에서 큰 값이 몇 개인지 센다",
+    "x 를 정렬한다"
+   ],
+   "c": 0,
+   "why": "<b>큰 쪽이 작은 쪽으로 나누어떨어지는</b> 짝을 담습니다. <code>i &gt; j</code> 가 있어 <b>같은 짝을 두 번 세지 않습니다</b>. 담아 놓고 <b>개수만</b> 돌려주죠."
+  },
+  {
+   "n": "8-8",
+   "src": "100제 96",
+   "code": [
+    "def t(lst):",
+    "    result = 0",
+    "    for i in lst:",
+    "        for j in lst:",
+    "            if i + j == 5:",
+    "                if i != j:",
+    "                    result += 1",
+    "    return result",
+    "",
+    "x = [1, 2, 3, 4]",
+    "print(t(x))"
+   ],
+   "o": [
+    "합이 5 가 되는 서로 다른 두 수의 짝이 몇 쌍인지 센다",
+    "합이 5 가 되는 짝을 순서까지 따져 몇 가지인지 센다",
+    "합이 5 가 되는 값이 몇 개인지 센다",
+    "5 보다 작은 값의 개수를 센다"
+   ],
+   "c": 1,
+   "why": "<b>함정입니다.</b> <code>i &gt; j</code> 같은 제한이 없어 <b>(1,4) 와 (4,1) 을 따로 셉니다</b>. 「몇 쌍」이 아니라 <b>「순서까지 따진 몇 가지」</b> &mdash; 8-7 과 견줘 보세요."
+  },
+  {
+   "n": "8-9",
+   "src": "100제 98",
+   "code": [
+    "def f(x):",
+    "    return x + 1",
+    "",
+    "def g(x):",
+    "    return x * 2",
+    "",
+    "def h(x):",
+    "    if x % 2 == 0:",
+    "        return f(x)",
+    "    else:",
+    "        return g(x)",
+    "",
+    "lst = [1, 2, 3]",
+    "total = 0",
+    "for i in lst:",
+    "    total += h(i)",
+    "print(total)"
+   ],
+   "o": [
+    "모든 값을 두 배로 만들어 더한다",
+    "짝수는 1 더하고 홀수는 두 배로 만들어 더한다",
+    "홀수는 1 더하고 짝수는 두 배로 만들어 더한다",
+    "모든 값에 1 을 더해 합한다"
+   ],
+   "c": 1,
+   "why": "<code>h</code> 가 <b>갈림길</b>입니다 &mdash; 짝수면 <code>f</code>(＋1), 홀수면 <code>g</code>(×2). <b>이름이 f·g·h 라 아무것도 안 알려줍니다.</b> 안을 들여다봐야 합니다."
+  },
+  {
+   "n": "8-10",
+   "src": "100제 100",
+   "code": [
+    "def f(n):",
+    "    result = []",
+    "    for i in range(n):",
+    "        if i % 2 == 0:",
+    "            result.append(i)",
+    "    return result",
+    "",
+    "def g(lst):",
+    "    new = []",
+    "    for i in lst:",
+    "        if i < 5:",
+    "            new.append(i + 1)",
+    "    return new",
+    "",
+    "def h(lst):",
+    "    s = 0",
+    "    for x in lst:",
+    "        s += x",
+    "    return s",
+    "",
+    "x = f(6)",
+    "y = g(x)",
+    "print(h(y))"
+   ],
+   "o": [
+    "0 부터 5 까지 더한다",
+    "짝수를 고르고 → 5 미만만 1 씩 키우고 → 합한다",
+    "짝수를 1 씩 키워 합한다",
+    "0 부터 5 까지 짝수의 개수를 센다"
+   ],
+   "c": 1,
+   "why": "<b>세 덩어리가 줄줄이</b> 이어집니다 &mdash; 걸러내기 → 걸러내며 값 바꾸기 → 누적. <b>한 함수씩 무엇을 내놓는지</b>만 적어 가면 풀립니다. <code>g</code> 안의 <code>i &lt; 5</code> 가 <b>4 를 걸러내지 않는다</b>는 점이 함정입니다."
+  }
+ ]
+};
+var META = {"1": ["무엇을 하는가", "코드를 읽고 하는 일을 고릅니다. <b>먼저 스스로 말해 보고</b> 고르세요.", "pick"], "2": ["다섯 곳", "NAME · IN · OUT · LOOP · DEPTH. <b>세면 되는 것</b>들입니다.", "five"], "3": ["이 덩어리가 하는 일", "한 마디로 씁니다. <b>패턴 이름도, 읽는 법도</b> 정답입니다.", "text"], "4": ["독립된 일이 몇 개", "한 반복 안에 <b>서로 상관없는 일</b>이 몇 가지인지.", "num"], "5": ["else 는 누구의 짝", "줄번호로 답합니다. <b>들여쓰기가 같은 것</b>을 찾으세요.", "num"], "6": ["이름을 지운 판", "<code>f(a, b, c)</code> 뿐입니다. <b>구조만 보고</b> 고릅니다.", "pick"], "7": ["몇 번 도는가", "반복이 <b>몇 번</b> 도는지 숫자로.", "num"], "8": ["종합 — 무엇을 하는가", "1학기 <b>기초 100제</b> 종합 문항입니다. 그땐 <b>출력 결과</b>를 따라갔죠. 이번엔 <b>무엇을 하는 코드인지</b>를 봅니다.", "pick"]};
+var ORDER = ["1","2","3","4","5","6","7","8"];
+var $ = function(i){ return document.getElementById(i); };
+var cur = "1", store = {};
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+var KW = /\b(def|for|while|if|elif|else|return|break|continue|in|not|and|or|True|False|None|len|range|print|append)\b/g;
+function hl(lines){
+  return lines.map(function(l){
+    var t = esc(l);
+    t = t.replace(/(#.*)$/, '<span class="c">$1</span>');
+    t = t.replace(KW, '<span class="k">$1</span>');
+    t = t.replace(/('[^']*')/g, '<span class="s">$1</span>');
+    return t;
+  }).join("\n");
+}
+function norm(t){
+  t = String(t||"").trim().toLowerCase();
+  t = t.replace(/[\s·,.\/\-+&()\[\]「」'"]+/g,"");
+  t = t.replace(/그리고|하면서|동시에/g,"");
+  t = t.replace(/갯수/g,"개수").replace(/최대값/g,"최댓값").replace(/최소값/g,"최솟값");
+  return t;
+}
+function loose(t){
+  t = norm(t);
+  ["하는코드","하는것","하는거","합니다","한다","해요","임","이다"].forEach(function(s){
+    if (t.length > s.length && t.slice(-s.length) === s) t = t.slice(0, -s.length);
+  });
+  return t;
+}
+function okText(item, v){
+  var set = {};
+  item.a.forEach(function(a){ set[norm(a)] = 1; set[loose(a)] = 1; });
+  if (item.best){ set[norm(item.best)] = 1; set[loose(item.best)] = 1; }
+  if (set[norm(v)] || set[loose(v)]) return true;
+  if (item.g){
+    var n = norm(v);
+    if (!n) return false;
+    return item.g.every(function(grp){
+      return grp.some(function(k){ return n.indexOf(norm(k)) >= 0; });
+    });
+  }
+  return false;
+}
+
+function tabs(){
+  var h = "";
+  ORDER.forEach(function(t){
+    var st = store[t];
+    h += '<button class="tab'+(st&&st.graded?" done":"")+'" data-t="'+t+'" aria-selected="'+(t===cur)+'">'+
+         '<span class="k">'+t+'</span>'+META[t][0]+'</button>';
+  });
+  $("tabs").innerHTML = h;
+}
+
+function render(){
+  var items = BANK[cur], m = META[cur], kind = m[2];
+  var h = '<div class="head2"><span class="n">TYPE '+cur+'</span><h2>'+m[0]+'</h2></div>'+
+          '<p class="lede">'+m[1]+' &nbsp;<b>'+items.length+'문항</b></p><div class="grid">';
+  items.forEach(function(it, i){
+    var id = cur+"-"+i;
+    h += '<div class="q" id="q'+id+'"><div class="qn"><span>'+it.n+'</span>'+
+         (it.src ? '<span class="src">'+it.src+'</span>' : '')+'</div>';
+    h += '<pre class="cd">'+hl(it.code)+'</pre>';
+    if (kind === "pick"){
+      h += '<div class="opts">';
+      it.o.forEach(function(o, k){
+        h += '<div class="opt" data-i="'+id+'" data-k="'+k+'"><i>'+(k+1)+'</i><span>'+o+'</span></div>';
+      });
+      h += '</div>';
+    } else if (kind === "five"){
+      h += '<div class="five5">'+
+        ["NAME","IN","OUT","LOOP","DEPTH"].map(function(f){
+          return '<div><label>'+f+'</label><input id="in'+id+'-'+f+'" autocomplete="off"></div>';
+        }).join("")+'</div>';
+    } else {
+      var lab = (kind === "num") ? (cur === "5" ? "줄번호" : "숫자") : "한 마디로";
+      var pre = (cur === "5" && it.q) ? '<div style="font-size:12.5px;color:var(--ink-2);margin-bottom:6px">'+it.q+' 는 몇 번 줄 <code>if</code> 의 짝인가?</div>' : "";
+      h += pre + '<div class="row"><span>'+lab+'</span><input id="in'+id+'" autocomplete="off"></div>';
+    }
+    h += '<div class="fb" id="fb'+id+'"></div></div>';
+  });
+  h += '</div>';
+  $("pane").innerHTML = h;
+  restore();
+  $("tip").textContent = "";
+  window.scrollTo(0,0);
+}
+
+function restore(){
+  var st = store[cur]; if (!st) return;
+  BANK[cur].forEach(function(it, i){
+    var id = cur+"-"+i, v = st.vals[i];
+    if (v === undefined || v === null) return;
+    var kind = META[cur][2];
+    if (kind === "pick"){
+      var o = document.querySelector('.opt[data-i="'+id+'"][data-k="'+v+'"]');
+      if (o) o.classList.add("sel");
+    } else if (kind === "five"){
+      ["NAME","IN","OUT","LOOP","DEPTH"].forEach(function(f){
+        var e = $("in"+id+"-"+f); if (e && v[f] !== undefined) e.value = v[f];
+      });
+    } else { var e2 = $("in"+id); if (e2) e2.value = v; }
+  });
+  if (st.graded) grade(true);
+}
+
+function collect(){
+  var kind = META[cur][2], vals = [];
+  BANK[cur].forEach(function(it, i){
+    var id = cur+"-"+i;
+    if (kind === "pick"){
+      var s = document.querySelector('.opt[data-i="'+id+'"].sel');
+      vals.push(s ? +s.dataset.k : null);
+    } else if (kind === "five"){
+      var o = {};
+      ["NAME","IN","OUT","LOOP","DEPTH"].forEach(function(f){
+        var e = $("in"+id+"-"+f); o[f] = e ? e.value : "";
+      });
+      vals.push(o);
+    } else { var e2 = $("in"+id); vals.push(e2 ? e2.value : ""); }
+  });
+  return vals;
+}
+
+function judge(t, i, v){
+  var it = BANK[t][i], kind = META[t][2];
+  if (kind === "pick") return v === it.c;
+  if (kind === "five"){
+    if (!v) return false;
+    return norm(v.NAME) === norm(it.a.NAME) && ["IN","OUT","LOOP","DEPTH"].every(function(f){
+      return String(v[f]).replace(/[^0-9]/g,"") === it.a[f];
+    });
+  }
+  if (kind === "text") return okText(it, v);
+  return String(v).replace(/[^0-9]/g,"") === String(it.a);
+}
+
+function grade(quiet){
+  var vals = collect();
+  store[cur] = {vals: vals, graded: true};
+  var right = 0;
+  BANK[cur].forEach(function(it, i){
+    var id = cur+"-"+i, ok = judge(cur, i, vals[i]);
+    var blank = (vals[i] === null || vals[i] === "" || vals[i] === undefined);
+    if (ok) right++;
+    var box = $("q"+id); box.classList.remove("ok","no");
+    if (!blank || ok) box.classList.add(ok ? "ok" : "no");
+    var kind = META[cur][2];
+    if (kind === "pick"){
+      document.querySelectorAll('.opt[data-i="'+id+'"]').forEach(function(o){
+        o.classList.remove("right","wrong");
+        if (+o.dataset.k === it.c) o.classList.add("right");
+        else if (o.classList.contains("sel")) o.classList.add("wrong");
+      });
+    }
+    var f = $("fb"+id);
+    var ans = "";
+    if (kind === "five") ans = "NAME "+it.a.NAME+" · IN "+it.a.IN+" · OUT "+it.a.OUT+" · LOOP "+it.a.LOOP+" · DEPTH "+it.a.DEPTH;
+    else if (kind === "text") ans = it.best + '　<span style="color:var(--ink-3)">패턴 이름 — '+it.tag+'</span>';
+    else if (kind === "pick") ans = (it.c+1)+"번";
+    else ans = it.a + (it.out ? '　<span style="color:var(--ink-3)">출력 — '+it.out+'</span>' : "");
+    f.className = "fb show " + (ok ? "y" : "n");
+    f.innerHTML = '<b class="t">'+(ok ? "맞음" : "답")+'</b>'+
+                  (ok ? "" : '<div style="margin-bottom:5px"><b>'+ans+'</b></div>') +
+                  (it.why || "");
+  });
+  tabs();
+  $("tip").textContent = right + " / " + BANK[cur].length;
+  if (!quiet) $("tip").textContent += "  ·  틀린 것만 다시 보세요";
+}
+
+function all(){
+  var h = '<div class="report"><h3>유형별 정답률</h3>';
+  var weak = [];
+  ORDER.forEach(function(t){
+    var st = store[t];
+    var tot = BANK[t].length, got = 0;
+    if (st) BANK[t].forEach(function(it,i){ if (judge(t,i,st.vals[i])) got++; });
+    var pct = Math.round(got/tot*100);
+    if (st && pct < 80) weak.push(t);
+    h += '<div class="mrow'+(st && pct<80 ? " weak":"")+'"><b>'+t+'. '+META[t][0]+'</b>'+
+         '<div class="mbar"><i style="width:'+(st?pct:0)+'%"></i></div>'+
+         '<span style="font-family:var(--f-mono);font-size:12px;min-width:52px;text-align:right">'+
+         (st ? got+"/"+tot : "—")+'</span></div>';
+  });
+  h += '<p class="note">'+(weak.length
+        ? '<b>80% 아래인 유형 — '+weak.map(function(t){return t+"번";}).join(" · ")+'</b>. 거기부터 다시 읽습니다.'
+        : '아직 채점하지 않은 유형이 있거나, 전부 80% 이상입니다.')+
+       ' 점수는 기록하지 않습니다.</p></div>';
+  $("report").innerHTML = h;
+  $("report").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+document.addEventListener("click", function(e){
+  var t = e.target.closest(".tab");
+  if (t){ store[cur] = {vals: collect(), graded: !!(store[cur]&&store[cur].graded)}; cur = t.dataset.t; tabs(); render(); return; }
+  var o = e.target.closest(".opt");
+  if (o){
+    document.querySelectorAll('.opt[data-i="'+o.dataset.i+'"]').forEach(function(x){ x.classList.remove("sel"); });
+    o.classList.add("sel");
+  }
+});
+$("g1").addEventListener("click", function(){ grade(false); });
+$("ga").addEventListener("click", function(){ store[cur]={vals:collect(),graded:true}; all(); });
+$("gc").addEventListener("click", function(){ store[cur]=null; $("report").innerHTML=""; tabs(); render(); });
+document.addEventListener("keydown", function(e){
+  if (e.key !== "Enter") return;
+  var t = e.target; if (!t || t.tagName !== "INPUT") return;
+  e.preventDefault();
+  var all2 = Array.prototype.slice.call(document.querySelectorAll("#pane input"));
+  var i = all2.indexOf(t);
+  if (i > -1 && i < all2.length - 1) all2[i+1].focus(); else $("g1").click();
+});
+var cs = 13;
+function zoom(d){ cs = Math.min(24, Math.max(10, cs+d));
+  document.documentElement.style.setProperty("--cs", cs+"px"); }
+$("zi").addEventListener("click", function(){ zoom(1.5); });
+$("zo").addEventListener("click", function(){ zoom(-1.5); });
+
+tabs(); render();
+})();
+</script>
+
+</body>
+</html>
