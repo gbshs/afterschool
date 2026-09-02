@@ -409,7 +409,6 @@ FRAME: {in_:"값 하나와 함수 둘", loop:"쌓아 두고 앞에서 하나씩 
 }
 };
 
-var VER = "exam";
 var MARKS = [
   {k:"in_",  en:"IN",    ko:"받는 것"},
   {k:"var",  en:"VAR",   ko:"값에 붙는 이름"},
@@ -417,10 +416,7 @@ var MARKS = [
   {k:"loop", en:"LOOP",  ko:"도는 것"},
   {k:"depth",en:"DEPTH", ko:"겹"}
 ];
-function B(){ return BOOK[VER]; }
-var LINES, SPOTS, FRAME;
-function useVer(v){ VER=v; LINES=B().LINES; SPOTS=B().SPOTS; FRAME=B().FRAME; }
-useVer("exam");
+var LINES = BOOK.exam.LINES, SPOTS = BOOK.exam.SPOTS, FRAME = BOOK.exam.FRAME;
 
 var picked = {}, cur = null;
 
@@ -533,22 +529,22 @@ function buildMarks(){
 }
 
 function pick(k){
-  cur=k; picked[VER]=picked[VER]||{}; picked[VER][k]=true;
+  cur=k; picked[k]=true;
   Array.prototype.forEach.call($("marks").querySelectorAll(".mbtn"), function(b){
     b.setAttribute("aria-pressed", b.dataset.k===k ? "true":"false");
-    b.classList.toggle("done", !!picked[VER][b.dataset.k] && b.dataset.k!==k);
+    b.classList.toggle("done", !!picked[b.dataset.k] && b.dataset.k!==k);
   });
   var m=null;
   for(var i=0;i<MARKS.length;i++) if(MARKS[i].k===k) m=MARKS[i];
   $("rv").className="reveal";
   $("rv").innerHTML='<span class="lab">'+m.en+' &middot; '+m.ko+
-    '</span>'+B().SAY[k];
+    '</span>'+BOOK.exam.SAY[k];
   markSpots(k);
   fillFrame();
 }
 
 function fillFrame(){
-  var P=picked[VER]||{};
+  var P=picked;
   $("f1").textContent = P.in_  ? FRAME.in_  : "무엇"; $("f1").classList.toggle("on", !!P.in_);
   $("f2").textContent = P.loop ? FRAME.loop : "무엇"; $("f2").classList.toggle("on", !!P.loop);
   $("f3").textContent = P.out  ? FRAME.out  : "무엇"; $("f3").classList.toggle("on", !!P.out);
@@ -561,7 +557,7 @@ function fillFrame(){
 }
 
 function reset(){
-  picked={}; cur=null; clearOv(); useVer("exam"); draw(); paintVer();
+  picked={}; cur=null; clearOv(); draw(); paintMarks();
   Array.prototype.forEach.call($("marks").querySelectorAll(".mbtn"), function(b){
     b.setAttribute("aria-pressed","false"); b.classList.remove("done"); });
   ["f1","f2","f3","f4"].forEach(function(id){ $(id).textContent="무엇"; $(id).classList.remove("on"); });
@@ -571,9 +567,9 @@ function reset(){
   $("tip").textContent="다섯 개를 다 누르면 문장이 완성됩니다.";
 }
 
-/* 판 바꾸기 */
-function paintVer(){
-  var P=picked[VER]||{};
+/* 마크 버튼 다시 칠하기 */
+function paintMarks(){
+  var P=picked;
   Array.prototype.forEach.call($("marks").querySelectorAll(".mbtn"), function(b){
     b.setAttribute("aria-pressed", (cur && b.dataset.k===cur)?"true":"false");
     b.classList.toggle("done", !!P[b.dataset.k] && b.dataset.k!==cur); });
