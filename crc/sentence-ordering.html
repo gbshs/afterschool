@@ -118,6 +118,7 @@ body{margin:0;background:var(--paper);color:var(--ink);
 @media (prefers-color-scheme:light){
   :root:not([data-theme="dark"]) .line{background:#242F2A;border-color:#32403A}
 }
+.line.long{font-size:11.5px;padding:8px 9px;letter-spacing:-.2px}
 .line:hover{border-color:var(--mark)}
 .line.sel{border-color:var(--mark);box-shadow:0 0 0 1px var(--mark)}
 .line.dragging{opacity:.25}
@@ -284,7 +285,7 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
       ],
       dist: [
         '<span class="k">if</span> left == right:',
-        '<span class="k">return</span> <span class="k">True</span>'
+        '<span class="k">break</span>'
       ]
     },
     {
@@ -301,6 +302,7 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
         {t:'moves.append((<span class="s">1</span> - farmer, wolf, <span class="s">1</span> - sheep, cabbage))', i:2},
         {t:'<span class="k">return</span> [s <span class="k">for</span> s <span class="k">in</span> moves <span class="k">if</span> is_safe(s)]', i:1}
       ],
+      swaps: [[[4,5],[6,7]]],
       dist: [
         'moves = moves + [state]',
         '<span class="k">return</span> moves'
@@ -346,6 +348,7 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
 
   function render(){
     [bin,sol].forEach(function(z){ z.innerHTML = ""; });
+
     var b = inZone("bin"), s = inZone("sol");
 
     if(!b.length){ bin.innerHTML = '<div class="empty">모두 옮겼습니다</div>'; }
@@ -364,9 +367,20 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
     });
   }
 
+  /* 긴 줄이 있는 문제는 글자를 줄여 가로 스크롤을 없앤다 */
+  function longest(){
+    var m = 0;
+    items.forEach(function(x){
+      var n = x.html.replace(/<[^>]+>/g, "").length + Math.max(0, x.wantIndent) * 4;
+      if (n > m) m = n;
+    });
+    return m;
+  }
+
   function node(it, indentable){
     var el = document.createElement("div");
-    el.className = "line" + (it.id === selId ? " sel" : "") + (it.mark ? " " + it.mark : "");
+    el.className = "line" + (it.id === selId ? " sel" : "") + (it.mark ? " " + it.mark : "")
+                 + (longest() > 42 ? " long" : "");
     el.dataset.id = it.id;
     el.innerHTML = it.html;
     if(indentable) el.style.marginLeft = (it.indent * STEP) + "px";
@@ -550,17 +564,40 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
     tries[pi]++;
     items.forEach(function(it){ it.mark = null; });
 
-    var hasDist = s.some(function(it){ return it.want < 0; });
+    var hasDist = s.length > p.lines.length;
     var need = p.lines.length;
 
+    /* 두 가지를 봐준다.
+       ① 같은 글자의 타일이 둘 있을 수 있으니 타일 정체가 아니라 「글자 + 들여쓰기」로 견준다.
+       ② 들여쓰기가 같은 독립된 덩어리(예: 서로 상관없는 if 둘)는 순서를 바꿔도 맞다.
+          문제에 swaps 로 선언해 둔 짝을 서로 바꾼 배열도 정답으로 받는다. */
+    var cands = [p.lines];
+    (p.swaps || []).forEach(function(pair){
+      var add = [];
+      cands.forEach(function(seq){
+        var t = seq.slice(), A = pair[0], B = pair[1];
+        var blkA = seq.slice(A[0], A[1] + 1), blkB = seq.slice(B[0], B[1] + 1);
+        for(var k=0;k<blkB.length;k++) t[A[0]+k] = blkB[k];
+        for(var k=0;k<blkA.length;k++) t[B[0]+k] = blkA[k];
+        add.push(t);
+      });
+      cands = cands.concat(add);
+    });
+
     var firstBad = -1, indentOnly = false;
-    for(var i=0;i<Math.max(s.length,need);i++){
-      var it = s[i];
-      if(!it || it.want !== i || it.indent !== it.wantIndent){
-        firstBad = i;
-        if(it && it.want === i && it.indent !== it.wantIndent) indentOnly = true;
-        break;
+    for(var c=0;c<cands.length;c++){
+      var want = cands[c], bad = -1, io2 = false;
+      for(var i=0;i<Math.max(s.length,need);i++){
+        var it = s[i], w = want[i];
+        var textOk = !!(it && w && it.html === w.t);
+        if(!textOk || it.indent !== w.i){
+          bad = i;
+          if(textOk && it.indent !== w.i) io2 = true;
+          break;
+        }
       }
+      if(bad < 0){ firstBad = -1; indentOnly = false; break; }
+      if(bad > firstBad){ firstBad = bad; indentOnly = io2; }
     }
 
     if(firstBad < 0 && s.length === need){
