@@ -286,9 +286,10 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
     <div class="fv"><div class="n">01</div><div class="en2">IN</div><div class="ko">받는 것</div>
       <div class="q">인수가 <b>몇 개</b>이고 무엇인가?</div></div>
     <div class="fv" style="border-color:var(--pine);background:var(--pine-soft)">
-      <div class="n">02</div><div class="en2">VAR</div><div class="ko">만드는 것</div>
-      <div class="q"><code>=</code> 왼쪽과 <code>for</code> 뒤의 이름.<br>
-        <b>몇 개이고, 서로 어떻게 이어지나?</b></div></div>
+      <div class="n">02</div><div class="en2">VAR</div><div class="ko">담기는 것</div>
+      <div class="q"><code>=</code> 왼쪽과 <code>for</code> 뒤에 오는 이름.<br>
+        <b>몇 개이고, 서로 어떻게 이어지나?</b><br>
+        <span style="color:var(--ink-3)">이미 받은 이름이라도 <code>=</code> 왼쪽에 다시 나오면 센다</span></div></div>
     <div class="fv"><div class="n">03</div><div class="en2">OUT</div><div class="ko">내놓는 것</div>
       <div class="q"><code>return</code>이 <b>몇 군데</b>인가?</div></div>
     <div class="fv"><div class="n">04</div><div class="en2">LOOP</div><div class="ko">도는 것</div>
@@ -367,7 +368,7 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
 
   <div class="concl" id="concl" hidden>
     <b>읽을 수 있는 이름이 하나도 없었는데 다섯 곳이 다 나왔습니다.</b>
-    받는 것 3개(그중 둘은 함수), 만드는 것 4개와 그 연결, 내놓는 곳 2군데, 반복 2개, 4겹.<br>
+    받는 것 3개(그중 둘은 함수), 값이 담기는 이름 4개와 그 연결, 내놓는 곳 2군데, 반복 2개, 4겹.<br>
     <b>특히 연결이 전부입니다</b> &mdash; <code>a</code> 가 <code>q</code> 로, <code>q</code> 에서 <code>s</code> 로,
     <code>s</code> 에서 <code>t</code> 로, <code>t</code> 가 <b>다시 <code>q</code> 로</b>. 돌고 있죠.
     그리고 <code>t</code> 는 <code>d</code> 에 쌓여 밖으로 나갑니다.<br>
@@ -420,7 +421,7 @@ SPOTS: {
   deep : [{l:12,c:16, n:8},{l:13,c:16, n:11}]
 },
 SAY: {
-  var:"안에서 새로 만드는 이름이 <b>4개</b> &mdash; <code>d</code> <code>q</code> <code>s</code> <code>t</code>. 이름은 한 글자씩이라 아무 뜻이 없죠. <b>그런데 연결은 읽힙니다.</b> <code>a</code> 가 <code>q</code> 에 담기고 &rarr; <code>q</code> 에서 꺼낸 것이 <code>s</code> &rarr; <code>s</code> 에서 나온 것이 <code>t</code> &rarr; <code>t</code> 가 <b>다시 <code>q</code> 로</b>. <b>돌고 있습니다.</b> 그리고 <code>t</code> 는 <code>d</code> 에도 쌓이고, <b>그 <code>d</code> 가 <code>return</code> 됩니다.</b> 이게 이 코드의 전부예요 &mdash; <b>이름 없이 읽어 냈습니다.</b>",
+  var:"<code>=</code> 왼쪽과 <code>for</code> 뒤에 오는 이름이 <b>4개</b> &mdash; <code>d</code> <code>q</code> <code>s</code> <code>t</code>. 이름은 한 글자씩이라 아무 뜻이 없죠. <b>그런데 연결은 읽힙니다.</b> <code>a</code> 가 <code>q</code> 에 담기고 &rarr; <code>q</code> 에서 꺼낸 것이 <code>s</code> &rarr; <code>s</code> 에서 나온 것이 <code>t</code> &rarr; <code>t</code> 가 <b>다시 <code>q</code> 로</b>. <b>돌고 있습니다.</b> 그리고 <code>t</code> 는 <code>d</code> 에도 쌓이고, <b>그 <code>d</code> 가 <code>return</code> 됩니다.</b> 이게 이 코드의 전부예요 &mdash; <b>이름 없이 읽어 냈습니다.</b>",
   in_ :"<b>3개</b> &mdash; 개수는 그대로 셉니다. 무엇인지는 모르죠. <b>그런데 셋이 아래에서 어떻게 쓰이는지를 보면 나옵니다.</b> <code>a</code> 는 <code>{a: None}</code> 과 <code>deque([a])</code> 처럼 <b>그냥 놓입니다</b> &mdash; <b>값</b>입니다. <code>b</code> 와 <code>c</code> 는 <code>b(s)</code> <code>c(s)</code> 처럼 <b>괄호를 달고 불립니다</b> &mdash; <b>함수</b>죠. <b>이름이 아니라 쓰이는 자리가 말해 줍니다.</b>",
   out :"<b>2군데</b> &mdash; <code>d</code> 아니면 <code>None</code>. <b>찾으면 모은 것을, 못 찾으면 아무것도.</b> <code>return</code> 은 파이썬이 정한 말이라 <b>이름을 아무리 지워도 그대로</b>입니다.",
   loop:"<b>2개</b> &mdash; <code>while q:</code> 는 <code>q</code> 가 빌 때까지, <code>for t in c(s):</code> 는 <code>c</code> 가 준 것들을 하나씩. 게다가 <code>popleft</code> 와 <code>append</code> 를 보면 <b>쌓아 놓고 앞에서 꺼낸다</b>까지 읽힙니다 &mdash; <b>이름이 아니라 동작으로.</b>",
@@ -433,7 +434,7 @@ FRAME: {in_:"값 하나와 함수 둘", loop:"쌓아 두고 앞에서 하나씩 
 var VER = "exam";
 var MARKS = [
   {k:"in_",  en:"IN",    ko:"받는 것"},
-  {k:"var",  en:"VAR",   ko:"만드는 것"},
+  {k:"var",  en:"VAR",   ko:"담기는 것"},
   {k:"out",  en:"OUT",   ko:"내놓는 것"},
   {k:"loop", en:"LOOP",  ko:"도는 것"},
   {k:"depth",en:"DEPTH", ko:"겹"}
