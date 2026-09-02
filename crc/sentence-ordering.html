@@ -180,6 +180,7 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
 </style>
 </head>
 <body>
+
 <div class="wrap">
 
   <div class="bar">
@@ -253,19 +254,19 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
 
   var PROBLEMS = [
     {
-      name: "is_safe",
-      hint: "농부가 없을 때 위험한 조합을 걸러내는 함수입니다.",
+      name: "rank",
+      hint: "점수를 위에서부터 걸러 등급을 돌려주는 함수입니다.",
       lines: [
-        {t:'<span class="k">def</span> is_safe(state):', i:0},
-        {t:'farmer, wolf, sheep, cabbage = state', i:1},
-        {t:'<span class="k">if</span> wolf == sheep <span class="k">and</span> farmer != sheep:', i:1},
-        {t:'<span class="k">return</span> <span class="k">False</span>', i:2},
-        {t:'<span class="k">if</span> sheep == cabbage <span class="k">and</span> farmer != sheep:', i:1},
-        {t:'<span class="k">return</span> <span class="k">False</span>', i:2},
-        {t:'<span class="k">return</span> <span class="k">True</span>', i:1}
+        {t:'<span class="k">def</span> rank(score):', i:0},
+        {t:'<span class="k">if</span> score &gt;= <span class="s">90</span>:', i:1},
+        {t:'<span class="k">return</span> <span class="s">\'A\'</span>', i:2},
+        {t:'<span class="k">elif</span> score &gt;= <span class="s">80</span>:', i:1},
+        {t:'<span class="k">return</span> <span class="s">\'B\'</span>', i:2},
+        {t:'<span class="k">return</span> <span class="s">\'C\'</span>', i:1}
       ],
       dist: [
-        '<span class="k">if</span> wolf == sheep <span class="k">or</span> farmer != sheep:'
+        '<span class="k">if</span> score &gt;= <span class="s">80</span>:',
+        '<span class="k">elif</span> score &gt;= <span class="s">90</span>:'
       ]
     },
     {
@@ -623,5 +624,6 @@ kbd{font-family:var(--f-mono);font-size:11px;background:var(--pine-soft);color:v
   build();
 })();
 </script>
+
 </body>
 </html>
