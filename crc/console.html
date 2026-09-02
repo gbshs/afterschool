@@ -1757,11 +1757,18 @@ function grade(quiet){
   var right = 0;
   BANK[cur].forEach(function(it, i){
     var id = cur+"-"+i, ok = judge(cur, i, vals[i]);
-    var blank = (vals[i] === null || vals[i] === "" || vals[i] === undefined);
+    var kind = META[cur][2], v = vals[i];
+    var blank = (v === null || v === "" || v === undefined);
+    /* 유형 2 는 답이 {IN,VAR,OUT,LOOP,DEPTH} 객체라 다섯 칸이 다 비어도
+       객체 자체는 null 도 "" 도 아니다. 그래서 안 푼 문항이 오답으로 찍혔다. */
+    if (!blank && kind === "five"){
+      blank = ["IN","VAR","OUT","LOOP","DEPTH"].every(function(f){
+        return !v[f] || String(v[f]).trim() === "";
+      });
+    }
     if (ok) right++;
     var box = $("q"+id); box.classList.remove("ok","no");
     if (!blank || ok) box.classList.add(ok ? "ok" : "no");
-    var kind = META[cur][2];
     if (kind === "pick"){
       document.querySelectorAll('.opt[data-i="'+id+'"]').forEach(function(o){
         o.classList.remove("right","wrong");
