@@ -191,7 +191,7 @@ body{margin:0;background:var(--paper);color:var(--ink);
   <div class="stage">
     <div class="stage-head">
       <div class="stage-tag" id="tag">Passage 1</div>
-      <div class="stage-hint" id="hint">다섯 곳만 봅니다 — NAME · IN · OUT · LOOP · DEPTH</div>
+      <div class="stage-hint" id="hint">다섯 곳만 봅니다 — IN · VAR · OUT · LOOP · DEPTH</div>
       <div class="clock">
         <div class="adj">
           <button id="minus">−10초</button>
@@ -247,8 +247,8 @@ body{margin:0;background:var(--paper);color:var(--ink);
 '        <span class="k">return</span> <span class="k">False</span>\n'+
 '    <span class="k">return</span> <span class="k">True</span>',
       key: [
-        ["NAME","is_safe","안전한지 판단한다고 주장"],
         ["IN","1개","state — 네 값이 묶여 있음"],
+        ["VAR","4개","farmer · wolf · sheep · cabbage — state 하나를 넷으로 쪼갠 것뿐, 쌓이는 게 없다"],
         ["OUT","3군데","False · False · True"],
         ["LOOP","0개","반복이 없음"],
         ["DEPTH","2겹","if 안에 return"]
@@ -276,8 +276,8 @@ body{margin:0;background:var(--paper);color:var(--ink);
 '\n'+
 '    <span class="k">return</span> <span class="k">True</span>, <span class="s">\'규칙을 모두 지켰습니다\'</span>',
       key: [
-        ["NAME","validate","검사한다고 주장"],
         ["IN","1개","pw — 비밀번호 하나"],
+        ["VAR","3개","has_alpha · has_digit · c — pw → c(한 글자씩) → 깃발 둘이 False 에서 True 로"],
         ["OUT","3군데","판정과 이유, 늘 두 개씩"],
         ["LOOP","1개","for c in pw"],
         ["DEPTH","3겹","for → if → 대입"]
@@ -308,8 +308,8 @@ body{margin:0;background:var(--paper);color:var(--ink);
 '\n'+
 '    <span class="k">return</span> <span class="k">None</span>',
       key: [
-        ["NAME","bfs","무언가를 찾는다고 주장"],
         ["IN","3개","시작 · 목표 판정법 · 다음 후보"],
+        ["VAR","5개","came_from · q · state · nxt · path — start → q → state → nxt → 다시 q 로 돈다"],
         ["OUT","2군데","길 또는 None"],
         ["LOOP","3개","while · while · for"],
         ["DEPTH","4겹","깊다 = 복잡하다"]

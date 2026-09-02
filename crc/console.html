@@ -489,12 +489,16 @@ var BANK = {
     "    return True"
    ],
    "a": {
-    "NAME": "is_sorted",
     "IN": "1",
     "OUT": "2",
     "LOOP": "1",
-    "DEPTH": "3"
-   }
+    "DEPTH": "3",
+    "VAR": "1"
+   },
+   "nm": "정렬돼 있는지 판정하기",
+   "vars": [
+    "i"
+   ]
   },
   {
    "n": "2-2",
@@ -511,12 +515,20 @@ var BANK = {
     "    return A"
    ],
    "a": {
-    "NAME": "selection_sort",
     "IN": "1",
     "OUT": "1",
     "LOOP": "2",
-    "DEPTH": "4"
-   }
+    "DEPTH": "4",
+    "VAR": "5"
+   },
+   "nm": "가장 작은 것을 찾아 앞으로 보내며 정렬하기",
+   "vars": [
+    "A",
+    "n",
+    "i",
+    "m",
+    "j"
+   ]
   },
   {
    "n": "2-3",
@@ -535,12 +547,20 @@ var BANK = {
     "    return A"
    ],
    "a": {
-    "NAME": "bubble_sort",
     "IN": "1",
     "OUT": "1",
     "LOOP": "2",
-    "DEPTH": "4"
-   }
+    "DEPTH": "4",
+    "VAR": "5"
+   },
+   "nm": "옆끼리 견줘 바꾸며 정렬하기 (다 안 바뀌면 멈춘다)",
+   "vars": [
+    "A",
+    "n",
+    "i",
+    "swapped",
+    "j"
+   ]
   },
   {
    "n": "2-4",
@@ -561,12 +581,20 @@ var BANK = {
     "    return A"
    ],
    "a": {
-    "NAME": "insertion_sort",
     "IN": "1",
     "OUT": "1",
     "LOOP": "2",
-    "DEPTH": "4"
-   }
+    "DEPTH": "4",
+    "VAR": "5"
+   },
+   "nm": "앞쪽 정렬된 자리에 하나씩 끼워 넣기",
+   "vars": [
+    "A",
+    "n",
+    "i",
+    "key",
+    "j"
+   ]
   },
   {
    "n": "2-5",
@@ -582,12 +610,14 @@ var BANK = {
     "    return 'C'"
    ],
    "a": {
-    "NAME": "grade",
     "IN": "2",
     "OUT": "4",
     "LOOP": "0",
-    "DEPTH": "3"
-   }
+    "DEPTH": "3",
+    "VAR": "0"
+   },
+   "nm": "점수와 여부로 등급 매기기",
+   "vars": []
   },
   {
    "n": "2-6",
@@ -601,12 +631,17 @@ var BANK = {
     "    return c"
    ],
    "a": {
-    "NAME": "count_both",
     "IN": "3",
     "OUT": "1",
     "LOOP": "1",
-    "DEPTH": "4"
-   }
+    "DEPTH": "4",
+    "VAR": "2"
+   },
+   "nm": "x 와 y 로 둘 다 나눠지는 것 세기",
+   "vars": [
+    "c",
+    "v"
+   ]
   },
   {
    "n": "2-7",
@@ -623,12 +658,19 @@ var BANK = {
     "    return less, same, more"
    ],
    "a": {
-    "NAME": "split3",
     "IN": "2",
     "OUT": "1",
     "LOOP": "1",
-    "DEPTH": "4"
-   }
+    "DEPTH": "4",
+    "VAR": "4"
+   },
+   "nm": "기준보다 작은 것·같은 것·큰 것으로 나누기",
+   "vars": [
+    "less",
+    "same",
+    "more",
+    "v"
+   ]
   },
   {
    "n": "2-8",
@@ -640,12 +682,16 @@ var BANK = {
     "    return -1"
    ],
    "a": {
-    "NAME": "find",
     "IN": "2",
     "OUT": "2",
     "LOOP": "1",
-    "DEPTH": "3"
-   }
+    "DEPTH": "3",
+    "VAR": "1"
+   },
+   "nm": "t 가 있는 자리 찾기 (없으면 -1)",
+   "vars": [
+    "i"
+   ]
   }
  ],
  "3": [
@@ -1567,7 +1613,7 @@ var BANK = {
   }
  ]
 };
-var META = {"1": ["무엇을 하는가", "코드를 읽고 하는 일을 고릅니다. <b>먼저 스스로 말해 보고</b> 고르세요.", "pick"], "2": ["다섯 곳", "NAME · IN · OUT · LOOP · DEPTH. <b>세면 되는 것</b>들입니다.", "five"], "3": ["이 덩어리가 하는 일", "한 마디로 씁니다. <b>패턴 이름도, 읽는 법도</b> 정답입니다.", "text"], "4": ["독립된 일이 몇 개", "한 반복 안에 <b>서로 상관없는 일</b>이 몇 가지인지.", "num"], "5": ["else 는 누구의 짝", "줄번호로 답합니다. <b>들여쓰기가 같은 것</b>을 찾으세요.", "num"], "6": ["이름을 지운 판", "<code>f(a, b, c)</code> 뿐입니다. <b>구조만 보고</b> 고릅니다.", "pick"], "7": ["몇 번 도는가", "반복이 <b>몇 번</b> 도는지 숫자로.", "num"], "8": ["종합 — 무엇을 하는가", "1학기 <b>기초 100제</b> 종합 문항입니다. 그땐 <b>출력 결과</b>를 따라갔죠. 이번엔 <b>무엇을 하는 코드인지</b>를 봅니다.", "pick"]};
+var META = {"1": ["무엇을 하는가", "코드를 읽고 하는 일을 고릅니다. <b>먼저 스스로 말해 보고</b> 고르세요.", "pick"], "2": ["다섯 곳", "<b>IN · VAR · OUT · LOOP · DEPTH</b>. 다섯 다 숫자로 셉니다. <b>VAR 은 <code>=</code> 왼쪽과 <code>for</code> 뒤에 나오는 서로 다른 이름</b>의 개수예요.", "five"], "3": ["이 덩어리가 하는 일", "한 마디로 씁니다. <b>패턴 이름도, 읽는 법도</b> 정답입니다.", "text"], "4": ["독립된 일이 몇 개", "한 반복 안에 <b>서로 상관없는 일</b>이 몇 가지인지.", "num"], "5": ["else 는 누구의 짝", "줄번호로 답합니다. <b>들여쓰기가 같은 것</b>을 찾으세요.", "num"], "6": ["이름을 지운 판", "<code>f(a, b, c)</code> 뿐입니다. <b>구조만 보고</b> 고릅니다.", "pick"], "7": ["몇 번 도는가", "반복이 <b>몇 번</b> 도는지 숫자로.", "num"], "8": ["종합 — 무엇을 하는가", "1학기 <b>기초 100제</b> 종합 문항입니다. 그땐 <b>출력 결과</b>를 따라갔죠. 이번엔 <b>무엇을 하는 코드인지</b>를 봅니다.", "pick"]};
 var ORDER = ["1","2","3","4","5","6","7","8"];
 var $ = function(i){ return document.getElementById(i); };
 var cur = "1", store = {};
@@ -1639,7 +1685,7 @@ function render(){
       h += '</div>';
     } else if (kind === "five"){
       h += '<div class="five5">'+
-        ["NAME","IN","OUT","LOOP","DEPTH"].map(function(f){
+        ["IN","VAR","OUT","LOOP","DEPTH"].map(function(f){
           return '<div><label>'+f+'</label><input id="in'+id+'-'+f+'" autocomplete="off"></div>';
         }).join("")+'</div>';
     } else {
@@ -1666,7 +1712,7 @@ function restore(){
       var o = document.querySelector('.opt[data-i="'+id+'"][data-k="'+v+'"]');
       if (o) o.classList.add("sel");
     } else if (kind === "five"){
-      ["NAME","IN","OUT","LOOP","DEPTH"].forEach(function(f){
+      ["IN","VAR","OUT","LOOP","DEPTH"].forEach(function(f){
         var e = $("in"+id+"-"+f); if (e && v[f] !== undefined) e.value = v[f];
       });
     } else { var e2 = $("in"+id); if (e2) e2.value = v; }
@@ -1683,7 +1729,7 @@ function collect(){
       vals.push(s ? +s.dataset.k : null);
     } else if (kind === "five"){
       var o = {};
-      ["NAME","IN","OUT","LOOP","DEPTH"].forEach(function(f){
+      ["IN","VAR","OUT","LOOP","DEPTH"].forEach(function(f){
         var e = $("in"+id+"-"+f); o[f] = e ? e.value : "";
       });
       vals.push(o);
@@ -1697,7 +1743,7 @@ function judge(t, i, v){
   if (kind === "pick") return v === it.c;
   if (kind === "five"){
     if (!v) return false;
-    return norm(v.NAME) === norm(it.a.NAME) && ["IN","OUT","LOOP","DEPTH"].every(function(f){
+    return ["IN","VAR","OUT","LOOP","DEPTH"].every(function(f){
       return String(v[f]).replace(/[^0-9]/g,"") === it.a[f];
     });
   }
@@ -1725,14 +1771,22 @@ function grade(quiet){
     }
     var f = $("fb"+id);
     var ans = "";
-    if (kind === "five") ans = "NAME "+it.a.NAME+" · IN "+it.a.IN+" · OUT "+it.a.OUT+" · LOOP "+it.a.LOOP+" · DEPTH "+it.a.DEPTH;
+    if (kind === "five") ans = "IN "+it.a.IN+" · VAR "+it.a.VAR+" · OUT "+it.a.OUT+" · LOOP "+it.a.LOOP+" · DEPTH "+it.a.DEPTH;
     else if (kind === "text") ans = it.best + '　<span style="color:var(--ink-3)">패턴 이름 — '+it.tag+'</span>';
     else if (kind === "pick") ans = (it.c+1)+"번";
     else ans = it.a + (it.out ? '　<span style="color:var(--ink-3)">출력 — '+it.out+'</span>' : "");
+    /* 유형 2 는 넷을 맞혔어도 NAME 모범 한 마디는 늘 보여 준다 — 내가 쓴 것과 대 보라고. */
+    var nmLine = (kind === "five" && it.nm)
+      ? '<div style="margin-top:5px;padding-top:5px;border-top:1px solid var(--rule)">'+
+        (it.vars && it.vars.length
+          ? '<b>VAR</b> — <code>'+it.vars.join('</code> <code>')+'</code>　'
+          : '<b>VAR</b> — 없음(안에서 새로 만드는 이름이 하나도 없다)　')+
+        '<b>한 마디로</b> '+it.nm+'</div>'
+      : "";
     f.className = "fb show " + (ok ? "y" : "n");
     f.innerHTML = '<b class="t">'+(ok ? "맞음" : "답")+'</b>'+
                   (ok ? "" : '<div style="margin-bottom:5px"><b>'+ans+'</b></div>') +
-                  (it.why || "");
+                  (it.why || "") + nmLine;
   });
   tabs();
   $("tip").textContent = right + " / " + BANK[cur].length;
