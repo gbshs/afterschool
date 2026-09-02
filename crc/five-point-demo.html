@@ -271,22 +271,22 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
 
   <div class="nav">
     <button class="btn ghost" id="creset">다시</button>
-    <button class="btn" data-go="1">모양 다섯 곳 &rarr;</button>
+    <button class="btn" data-go="1">다음 &rarr;</button>
   </div>
 </section>
 
 <!-- 02 -->
 <section class="card" id="s1" hidden>
-  <h2>받고 · 만들고 · 내놓고</h2>
-  <p class="lede">앞 화면에서 막힌 이유를 한 마디로 하면 &mdash;
-    <b>반복 안에서 변수 둘(<code>best</code> 와 <code>c</code>)이 따로 자라고 있었기 때문</b>입니다.
-    하나를 따라가면 나머지가 안 보이죠. 그러니 한 줄씩 읽지 말고
+  <h2>데이터는 어디로 지나가나</h2>
+  <p class="lede">앞 문제의 핵심은 이것입니다 &mdash;
+    <b>반복 하나 안에 변수가 둘(<code>best</code> 와 <code>c</code>)이고, 둘이 각각 하는 일이 있었다</b>는 것.
+    그래서 한 가지 일만 보면 답이 절반만 나옵니다. 그러니 한 줄씩 읽지 말고
     <b>데이터가 어디로 들어와서 무엇을 거쳐 어디로 나가는지</b>부터 봅니다. 그 길목이 다섯입니다.</p>
   <div class="five">
     <div class="fv"><div class="n">01</div><div class="en2">IN</div><div class="ko">받는 것</div>
       <div class="q">인수가 <b>몇 개</b>이고 무엇인가?</div></div>
     <div class="fv" style="border-color:var(--pine);background:var(--pine-soft)">
-      <div class="n">02</div><div class="en2">VAR</div><div class="ko">담기는 것</div>
+      <div class="n">02</div><div class="en2">VAR</div><div class="ko">값에 붙는 이름</div>
       <div class="q"><code>=</code> 왼쪽과 <code>for</code> 뒤에 오는 이름.<br>
         <b>몇 개이고, 서로 어떻게 이어지나?</b><br>
         <span style="color:var(--ink-3)">이미 받은 이름이라도 <code>=</code> 왼쪽에 다시 나오면 센다</span></div></div>
@@ -300,37 +300,16 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
   <p class="lede" style="margin:16px 0 0">여러분이 막히는 건 <b>모르는 게 있어서가 아닙니다.</b> <code>for</code> <code>if</code> <code>%</code> <code>+=</code> 는 이미 다 배웠죠. 다만 <b>코드 전체의 구조가 빨리 안 잡혀서</b> 해석이 안 되는 것입니다. 그래서 <b>구조부터 잡는 연습</b>을 합니다.
     <b>IN &rarr; VAR &rarr; OUT</b> 이 <b>데이터가 지나가는 길</b>이고,
     <b>LOOP · DEPTH</b> 가 <b>그 길을 몇 번, 얼마나 깊이 지나는가</b>입니다.</p>
-  <p class="lede" style="margin:10px 0 0"><b>가운데 VAR 이 알맹이입니다.</b>
+  <p class="lede" style="margin:10px 0 0"><b>가운데 VAR &mdash; 변수가 알맹이입니다.</b>
     변수는 <b>무엇으로 시작해서 무엇이 되는지</b>가 정해져 있습니다 &mdash;
     <code>0</code> 으로 시작해 값이 쌓이면 합계, <code>1</code> 씩 쌓이면 개수,
-    빈 리스트로 시작해 골라 담기면 걸러내기. <b>변수 하나의 일생이 곧 그 코드가 하는 일</b>이고,
-    <b>변수가 둘이면 하는 일도 둘</b>입니다 &mdash; 앞 화면에서 막힌 게 바로 그것이었죠.</p>
-  <div class="names">
-    <div class="nh">코드에 나오는 「이름」은 세 가지입니다 &mdash; 섞어 쓰면 안 됩니다</div>
-    <table>
-      <tr><th>무엇</th><th>예</th><th>누가 지었나</th><th>시험지에서는</th></tr>
-      <tr><td><b>파이썬이 정한 이름</b></td>
-          <td><code>popleft</code> <code>append</code> <code>len</code> <code>range</code></td>
-          <td>파이썬</td><td class="keep">그대로 나온다 &mdash; <b>믿어도 된다</b></td></tr>
-      <tr><td><b>함수 이름</b></td>
-          <td><code>bfs</code> <code>is_safe</code> <code>validate</code></td>
-          <td>코드를 쓴 사람</td><td class="gone">바뀐다 &mdash; <code>f</code></td></tr>
-      <tr><td><b>변수 이름</b></td>
-          <td><code>came_from</code> <code>state</code> <code>total</code></td>
-          <td>코드를 쓴 사람</td><td class="gone">바뀐다 &mdash; <code>d</code> <code>s</code></td></tr>
-    </table>
-    <p>아래 두 줄은 <b>쓴 사람이 지은 이름</b>이라 시험지에서 바뀝니다 &mdash;
-      그러니 <b>이름에서 답을 얻으려 하지 않습니다.</b> 이름은 바뀌어도
-      <b>변수와 변수의 연결은 안 바뀝니다.</b> 우리가 <b>VAR 을 보는</b> 이유가 이것입니다.
-      대신 <b>첫째 줄</b>(<code>popleft</code> <code>append</code> <code>len</code>)은 파이썬이 정한 이름이라
-      시험에서도 그대로 나옵니다. 이건 이름이 아니라 <b>동작</b>을 알려 주니 단서로 써도 됩니다.</p>
-  </div>
+    빈 리스트로 시작해 골라 담기면 걸러내기. <b>변수 하나가 곧 한 가지 일</b>이고,
+    <b>변수가 둘이면 하는 일도 둘</b>입니다 &mdash; 앞 문제가 바로 그것이었죠.</p>
   <div class="concl" style="margin-top:14px;border-color:var(--rule);background:var(--paper)">
-    <b>이름이 아니라 연결을 봅니다.</b> 이름은 쓴 사람 마음이지만,
+    <b>이름이 아니라 연결을 봅니다.</b> 이름은 쓴 사람 마음대로지만,
     <b>어느 변수에서 어느 변수로 값이 옮겨 가는지</b>는 코드가 바꿀 수 없습니다.<br>
-    다음 화면은 <b>시험지처럼 이름이 지워진 코드</b>입니다 &mdash;
-    <code>f(a, b, c)</code> 뿐이라 이름에서 얻을 게 하나도 없습니다.
-    <b>그래도 다섯 곳이 다 읽히는지</b> 직접 해 봅니다.</div>
+    다음 화면은 <b>이름이 <code>f</code> <code>a</code> <code>b</code> <code>c</code> 뿐인 코드</b>입니다.
+    이름에서 얻을 게 하나도 없죠. <b>그래도 다섯 곳이 다 읽히는지</b> 직접 해 봅니다.</div>
   <div class="nav">
     <button class="btn ghost" data-go="0">&larr; 앞으로</button>
     <button class="btn" data-go="2">다음 &rarr;</button>
@@ -340,10 +319,9 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
 <!-- 03 -->
 <section class="card" id="s2" hidden>
   <h2>이름이 하나도 없는 코드로</h2>
-  <p class="lede"><b>시험지에 나오는 그대로입니다</b> &mdash; <code>f(a, b, c)</code>, 변수는 <code>d</code> <code>q</code> <code>s</code> <code>t</code>.
-    <b>이름에서 얻을 것이 하나도 없습니다.</b> <code>deque</code> 처럼 처음 보는 것도 하나 섞여 있지만
-    <b>그것도 문제가 아닙니다.</b> 줄이 겹치고 <code>return</code> 이 여러 군데라
-    <b>어디부터 볼지</b>가 문제죠.<br>
+  <p class="lede"><b>이름이 <code>f(a, b, c)</code> 뿐이고 변수도 <code>d</code> <code>q</code> <code>s</code> <code>t</code> 입니다.</b>
+    <b>이름에서 얻을 것이 하나도 없죠.</b> 게다가 줄이 겹치고 <code>return</code> 이 여러 군데라
+    <b>어디부터 볼지</b>가 문제입니다.<br>
     버튼을 <b>순서대로</b> 눌러 보세요. 누르기 전에 <b>먼저 답을 말해 보고</b> 누르는 게 좋습니다.</p>
   <div class="two">
   <div>
@@ -372,7 +350,7 @@ footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
     <b>특히 연결이 전부입니다</b> &mdash; <code>a</code> 가 <code>q</code> 로, <code>q</code> 에서 <code>s</code> 로,
     <code>s</code> 에서 <code>t</code> 로, <code>t</code> 가 <b>다시 <code>q</code> 로</b>. 돌고 있죠.
     그리고 <code>t</code> 는 <code>d</code> 에 쌓여 밖으로 나갑니다.<br>
-    <b>이름을 기다리지 말고 연결을 보세요.</b> 시험지 코드가 딱 이렇게 생겼습니다.
+    <b>이름을 기다리지 말고 연결을 보세요.</b>
   </div>
   <div class="nav">
     <button class="btn ghost" data-go="1">&larr; 앞으로</button>
@@ -421,7 +399,7 @@ SPOTS: {
   deep : [{l:12,c:16, n:8},{l:13,c:16, n:11}]
 },
 SAY: {
-  var:"<code>=</code> 왼쪽과 <code>for</code> 뒤에 오는 이름이 <b>4개</b> &mdash; <code>d</code> <code>q</code> <code>s</code> <code>t</code>. 이름은 한 글자씩이라 아무 뜻이 없죠. <b>그런데 연결은 읽힙니다.</b> <code>a</code> 가 <code>q</code> 에 담기고 &rarr; <code>q</code> 에서 꺼낸 것이 <code>s</code> &rarr; <code>s</code> 에서 나온 것이 <code>t</code> &rarr; <code>t</code> 가 <b>다시 <code>q</code> 로</b>. <b>돌고 있습니다.</b> 그리고 <code>t</code> 는 <code>d</code> 에도 쌓이고, <b>그 <code>d</code> 가 <code>return</code> 됩니다.</b> 이게 이 코드의 전부예요 &mdash; <b>이름 없이 읽어 냈습니다.</b>",
+  var:"<code>=</code> 왼쪽과 <code>for</code> 뒤에 오는 이름이 <b>4개</b> &mdash; <code>d</code> <code>q</code> <code>s</code> <code>t</code>. 이름은 한 글자씩이라 아무 뜻이 없죠. <b>그런데 연결은 읽힙니다.</b><br><b>먼저 <code>a</code> 가 두 군데로 갈라집니다.</b> <code>d = {a: None}</code> 은 딕셔너리라 <code>a</code> 가 <b>열쇠로 들어가</b> 첫 기록이 되고, <code>q = deque([a])</code> 는 <code>a</code> 를 <b>앞으로 볼 것</b>으로 넣어 둡니다.<br>그다음은 이렇게 돕니다 &mdash; <code>q</code> 에서 꺼낸 것이 <code>s</code> &rarr; <code>s</code> 에서 나온 것이 <code>t</code> &rarr; <code>t</code> 가 <b>다시 <code>q</code> 로</b>. 그리고 <code>t</code> 는 <code>d</code> 에도 기록되고, <b>그 <code>d</code> 가 <code>return</code> 됩니다.</b> 이게 이 코드의 전부예요 &mdash; <b>이름 없이 읽어 냈습니다.</b>",
   in_ :"<b>3개</b> &mdash; 개수는 그대로 셉니다. 무엇인지는 모르죠. <b>그런데 셋이 아래에서 어떻게 쓰이는지를 보면 나옵니다.</b> <code>a</code> 는 <code>{a: None}</code> 과 <code>deque([a])</code> 처럼 <b>그냥 놓입니다</b> &mdash; <b>값</b>입니다. <code>b</code> 와 <code>c</code> 는 <code>b(s)</code> <code>c(s)</code> 처럼 <b>괄호를 달고 불립니다</b> &mdash; <b>함수</b>죠. <b>이름이 아니라 쓰이는 자리가 말해 줍니다.</b>",
   out :"<b>2군데</b> &mdash; <code>d</code> 아니면 <code>None</code>. <b>찾으면 모은 것을, 못 찾으면 아무것도.</b> <code>return</code> 은 파이썬이 정한 말이라 <b>이름을 아무리 지워도 그대로</b>입니다.",
   loop:"<b>2개</b> &mdash; <code>while q:</code> 는 <code>q</code> 가 빌 때까지, <code>for t in c(s):</code> 는 <code>c</code> 가 준 것들을 하나씩. 게다가 <code>popleft</code> 와 <code>append</code> 를 보면 <b>쌓아 놓고 앞에서 꺼낸다</b>까지 읽힙니다 &mdash; <b>이름이 아니라 동작으로.</b>",
@@ -434,7 +412,7 @@ FRAME: {in_:"값 하나와 함수 둘", loop:"쌓아 두고 앞에서 하나씩 
 var VER = "exam";
 var MARKS = [
   {k:"in_",  en:"IN",    ko:"받는 것"},
-  {k:"var",  en:"VAR",   ko:"담기는 것"},
+  {k:"var",  en:"VAR",   ko:"값에 붙는 이름"},
   {k:"out",  en:"OUT",   ko:"내놓는 것"},
   {k:"loop", en:"LOOP",  ko:"도는 것"},
   {k:"depth",en:"DEPTH", ko:"겹"}
