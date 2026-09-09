@@ -936,7 +936,7 @@ var BANK = {
     "A 의 최댓값과 음수를 모두 더한다"
    ],
    "c": 2,
-   "why": "한 마디로 <b>최댓값 찾기 + 음수 개수 세기</b>. 들여쓰기가 같은 <code>if</code> 둘 &mdash; <b>서로 상관없는 일 두 가지</b>가 한 반복 안에 겹쳐 있습니다. <b>하나만 고르면 절반만 읽은 것</b>입니다.",
+   "why": "한 마디로 <b>최댓값 찾기 + 음수 개수 세기</b>. 두 <code>if</code> 가 <b>서로 다른 변수</b>를 만집니다 &mdash; 위는 <code>m</code> 만 읽고 바꾸고, 아래는 <code>c</code> 만 읽고 바꿉니다. 한쪽이 바꾼 값을 다른 쪽이 읽지 않으니 <b>서로 상관없는 일 두 가지</b>죠. <b>하나만 고르면 절반만 읽은 것입니다.</b> (들여쓰기가 같다는 것만으로는 독립인지 알 수 없습니다 &mdash; 변수를 봐야 합니다.)",
    "h": "처음 담긴 것: <code>c = 0</code> · <code>m = A[0]</code> · <code>m = x</code>. 여기서 시작하세요."
   },
   {
@@ -2131,11 +2131,11 @@ var BANK = {
    "o": [
     "같다",
     "m 이 비어 있을 때만 갈린다",
-    "m = [[1, 2], [3, 4]] 처럼 줄이 둘 이상이면 갈린다",
+    "<code>m = [[1, 2], [3, 4]]</code> 처럼 <b>마지막 줄 앞의 합이 0 이 아니면</b> 갈린다",
     "m 에 음수가 있을 때 갈린다"
    ],
    "c": 2,
-   "why": "<code>total = 0</code> 이 <b>바깥에 있느냐 안에 있느냐</b>입니다. B 는 <b>줄마다 0 으로 되돌아가</b> 마지막 줄 합계만 남습니다. 줄이 하나면 우연히 같지만, <b>둘 이상이면 갈립니다</b> &mdash; A 는 10, B 는 7.",
+   "why": "<code>total = 0</code> 이 <b>바깥에 있느냐 안에 있느냐</b>입니다. B 는 <b>줄마다 0 으로 되돌아가</b> <b>마지막 줄의 합만</b> 남습니다 &mdash; <code>[[1,2],[3,4]]</code> 에서 A 는 10, B 는 7. <b>「줄이 둘 이상이면 반드시 다르다」는 말은 틀립니다</b> &mdash; <code>[[0,0],[3,4]]</code> 는 둘 다 7 이고, 줄이 하나뿐인 <code>[[5,6]]</code> 도 둘 다 11 입니다. <b>앞줄들의 합이 0 이면 같아집니다.</b>",
    "src": "같은가 · 초기값의 자리",
    "h": "처음 담긴 것: <code>total = 0</code> · <code>total = 0</code>. 여기서 시작하세요."
   },
@@ -2431,12 +2431,12 @@ var BANK = {
    ],
    "o": [
     "j → m → A → 내놓기",
-    "i → m → (j 와 견주며 갱신) → m 이 A[i] 와 자리를 맞바꿈",
+    "i → m → (j 와 견주며 갱신) → 마지막에 <code>A[i]</code> 와 <code>A[m]</code> 의 <b>값</b>을 맞바꿈",
     "A → i → j → 끝",
     "m → j → A[i] → A[m] → i"
    ],
    "c": 1,
-   "why": "<code>m</code> 이 <b>주인공</b>입니다. <code>i</code> 로 시작해 <code>j</code> 와 견주며 바뀌고, 마지막에 <b>그 <code>m</code> 이 자리 맞바꿈에 쓰입니다.</b> <code>m</code> 이 값이 아니라 <b>자리 번호</b>를 들고 다니는 것이 요점이에요.",
+   "why": "<code>m</code> 이 <b>주인공</b>입니다. <code>i</code> 로 시작해 <code>j</code> 와 견주며 바뀌고, 마지막에 <b>그 <code>m</code> 이 자리 맞바꿈에 쓰입니다.</b> <code>m</code> 이 값이 아니라 <b>자리 번호</b>를 들고 다니는 것이 요점이에요. <b>표현에 주의</b> &mdash; 바뀌는 것은 <code>m</code> 이 아니라 <code>A[i]</code> 와 <code>A[m]</code> <b>두 자리에 담긴 값</b>입니다. <code>m</code> 은 자리 번호를 들고 있을 뿐입니다.",
    "h": "처음 담긴 것: <code>m = i</code> · <code>m = j</code>. 여기서 시작하세요."
   },
   {
@@ -2767,7 +2767,7 @@ var BANK = {
   }
  ]
 };
-var META = {"1": ["무엇을 하는가", "코드를 읽고 하는 일을 고릅니다. <b>먼저 스스로 말해 보고</b> 고르세요.", "pick"], "2": ["다섯 곳", "<b>IN · VAR · OUT · LOOP · DEPTH</b>. 다섯 다 숫자로 셉니다. <b>VAR 은 값에 붙는 이름</b> &mdash; <code>=</code> 왼쪽과 <code>for</code> 뒤에 오는 <b>서로 다른 이름의 개수</b>예요. <b>이미 받은 이름이라도 <code>=</code> 왼쪽에 다시 나오면 셉니다</b>(<code>A = A[:]</code> 의 <code>A</code>).", "five"], "3": ["이 덩어리가 하는 일", "<b>먼저 스스로 한 마디로 말해 보고</b> 고르세요. 보기 넷은 <b>서로 한 군데씩만 다릅니다</b> &mdash; 값이냐 자리냐, 값이냐 개수냐, 고르느냐 전부 바꾸느냐. 그 한 군데가 코드의 어느 줄에 있는지 찾으면 답입니다.", "pick"], "4": ["독립된 일이 몇 개", "한 반복 안에 <b>서로 상관없는 일</b>이 몇 가지인지.", "num"], "5": ["else 는 누구의 짝", "줄번호로 답합니다. <b>들여쓰기가 같은 것</b>을 찾으세요.", "num"], "6": ["이름을 지운 판", "<code>f(a, b, c)</code> 뿐입니다. <b>구조만 보고</b> 고릅니다.", "pick"], "7": ["c += 1 이 몇 번 실행되나", "<b>도는 횟수가 아니라 실행되는 횟수</b>를 셉니다 &mdash; <code>c += 1</code> 이 <b>몇 번</b> 실행되는지, 곧 <b><code>c</code> 의 마지막 값</b>을 숫자로. 반복이 겹쳐 있으면 <b>안쪽 줄이 실행된 횟수</b>이고, <code>if</code> 나 <code>continue</code> 가 있으면 <b>걸러지고 남은 횟수</b>입니다.", "num"], "8": ["종합 — 무엇을 하는가", "<b>무엇을 하는 코드인지</b>를 봅니다.", "pick"], "10": ["이 줄은 언제 실행되나", "<b>겹 수를 세는 게 아니라 뜻을 읽습니다.</b> <code># ← 이 줄</code> 로 표시한 줄까지 오려면 <b>어떤 관문을 다 통과해야 하는지</b> 고르세요. 겹이 깊다 = <b>그만큼 드물게 일어난다</b>.", "pick"], "11": ["연결 고르기", "<b>어느 변수에서 어느 변수로 값이 옮겨 가는가.</b> 시범에서 눈으로만 봤던 것을 직접 골라 봅니다. 순서가 아니라 <b>갈래</b>라는 데 주의하세요.", "pick"], "12": ["처음 담긴 것", "<b>반복 안이 가려져 있습니다.</b> 그래도 <b>초기값의 자료형</b>만 보면 이 코드가 내놓을 것의 모양이 정해집니다 &mdash; <code>0</code> 은 수 하나, <code>[]</code> 는 목록, <code>False</code> 는 예/아니오, <code>{}</code> 는 짝, <code>''</code> 는 글자열.", "pick"], "13": ["자료형이 안 맞는 자리", "<b>실행하면 깨지는 곳을 찾습니다.</b> 대개 <b>초기값과 갱신이 짝이 안 맞아서</b>입니다 &mdash; <code>[]</code> 로 시작해 놓고 <code>+= 1</code> 을 한다든가.", "pick"], "9": ["같은가, 다른가", "<b>가장 어려운 유형입니다.</b> 두 코드 A · B 를 견줍니다. <b>같은 일을 하는가, 다르다면 어떤 입력에서 갈리는가.</b> 한 글자 차이로 갈리기도 하고, 달라 보이는데 같기도 합니다.", "pick"]};
+var META = {"1": ["무엇을 하는가", "코드를 읽고 하는 일을 고릅니다. <b>먼저 스스로 말해 보고</b> 고르세요.", "pick"], "2": ["다섯 곳", "<b>IN · VAR · OUT · LOOP · DEPTH</b>. 다섯 다 숫자로 셉니다. <b>VAR 은 값에 붙는 이름</b> &mdash; <code>=</code> 왼쪽과 <code>for</code> 뒤에 오는 <b>서로 다른 이름의 개수</b>예요. <b>이미 받은 이름이라도 <code>=</code> 왼쪽에 다시 나오면 셉니다</b>(<code>A = A[:]</code> 의 <code>A</code>).", "five"], "3": ["이 덩어리가 하는 일", "<b>먼저 스스로 한 마디로 말해 보고</b> 고르세요. 보기 넷은 <b>서로 한 군데씩만 다릅니다</b> &mdash; 값이냐 자리냐, 값이냐 개수냐, 고르느냐 전부 바꾸느냐. 그 한 군데가 코드의 어느 줄에 있는지 찾으면 답입니다.", "pick"], "4": ["독립된 일이 몇 개", "한 반복 안에 <b>서로 상관없는 일</b>이 몇 가지인지.", "num"], "5": ["else 는 누구의 짝", "줄번호로 답합니다. <b>들여쓰기가 같은 줄</b>을 위로 찾으세요. <code>else</code> 는 <code>if</code> 에만 붙는 게 아닙니다 &mdash; <code>for</code> 와 <code>while</code> 에도 붙습니다.", "num"], "6": ["이름을 지운 판", "<code>f(a, b, c)</code> 뿐입니다. <b>구조만 보고</b> 고릅니다.", "pick"], "7": ["c += 1 이 몇 번 실행되나", "<b>도는 횟수가 아니라 실행되는 횟수</b>를 셉니다 &mdash; <code>c += 1</code> 이 <b>몇 번</b> 실행되는지, 곧 <b><code>c</code> 의 마지막 값</b>을 숫자로. 반복이 겹쳐 있으면 <b>안쪽 줄이 실행된 횟수</b>이고, <code>if</code> 나 <code>continue</code> 가 있으면 <b>걸러지고 남은 횟수</b>입니다.", "num"], "8": ["종합 — 무엇을 하는가", "<b>무엇을 하는 코드인지</b>를 봅니다.", "pick"], "10": ["이 줄은 언제 실행되나", "<b>겹 수를 세는 게 아니라 뜻을 읽습니다.</b> <code># ← 이 줄</code> 로 표시한 줄까지 오려면 <b>어떤 관문을 다 통과해야 하는지</b> 고르세요. 관문이 늘수록 <b>조건이 더 많이 겹쳐야</b> 그 줄에 닿습니다.", "pick"], "11": ["연결 고르기", "<b>어느 변수에서 어느 변수로 값이 옮겨 가는가.</b> 시범에서 눈으로만 봤던 것을 직접 골라 봅니다. 순서가 아니라 <b>갈래</b>라는 데 주의하세요.", "pick"], "12": ["처음 담긴 것", "<b>반복 안이 가려져 있습니다.</b> 그래도 <b>초기값의 자료형</b>을 보면 이 코드가 <b>무엇을 쌓으려는지</b> 짐작할 수 있습니다 &mdash; <code>0</code> 은 수 하나, <code>[]</code> 는 목록, <code>False</code> 는 예/아니오, <code>{}</code> 는 짝, <code>''</code> 는 글자열. <b>확정은 아닙니다</b> &mdash; 반복 안을 봐야 무엇을 하는지까지 알 수 있어요.", "pick"], "13": ["자료형이 안 맞는 자리", "<b>실행하면 깨지는 곳을 찾습니다.</b> 대개 <b>초기값과 갱신이 짝이 안 맞아서</b>입니다 &mdash; <code>[]</code> 로 시작해 놓고 <code>+= 1</code> 을 한다든가.", "pick"], "9": ["같은가, 다른가", "<b>가장 어려운 유형입니다.</b> 두 코드 A · B 를 견줍니다. <b>같은 일을 하는가, 다르다면 어떤 입력에서 갈리는가.</b> 한 글자 차이로 갈리기도 하고, 달라 보이는데 같기도 합니다.", "pick"]};
 var HINTS = {
  "1": [
   "반복 <b>안에서 값이 담기는 이름</b>을 먼저 찾으세요. 그 이름이 이 코드의 주인공입니다.",
@@ -2783,7 +2783,7 @@ var HINTS = {
  ],
  "4": [
   "반복 <b>안에서 값이 바뀌는 이름</b>을 모두 찾아 적어 보세요.",
-  "그 이름들이 <b>서로 상관이 있나요?</b> 상관없으면 그만큼이 서로 다른 일입니다. 들여쓰기가 같은 <code>if</code> 둘은 <b>독립</b>입니다."
+  "그 이름들이 <b>서로 상관이 있나요?</b> 한쪽이 바꾼 값을 다른 쪽이 <b>읽지 않으면</b> 서로 다른 일입니다. 들여쓰기가 같다는 것만으로는 알 수 없어요 &mdash; <b>어떤 변수를 읽고 어떤 변수를 바꾸는지</b>로 판단합니다."
  ],
  "5": [
   "이 <code>else</code> 와 <b>들여쓰기가 같은 줄</b>을 위로 훑어 올라가세요.",
@@ -2807,7 +2807,7 @@ var HINTS = {
  ],
  "10": [
   "표시된 줄까지 내려오려면 <b>어떤 <code>if</code> 를 통과해야 하는지</b> 위로 세어 보세요.",
-  "겹이 깊다는 건 <b>그만큼 드물게 일어난다</b>는 뜻입니다. 관문을 <b>모두</b> 통과해야 합니다."
+  "관문을 <b>모두</b> 통과한 입력에서만 그 줄이 실행됩니다. 몇 번 실행되는지는 조건에 달렸습니다."
  ],
  "11": [
   "<b>값이 어디서 나와 어디로 들어가는지</b> 화살표를 그려 보세요.",
@@ -2914,7 +2914,7 @@ function render(){
         }).join("")+'</div>';
     } else {
       var lab = (kind === "num") ? (cur === "5" ? "줄번호" : "숫자") : "한 마디로";
-      var pre = (cur === "5" && it.q) ? '<div style="font-size:12.5px;color:var(--ink-2);margin-bottom:6px">'+it.q+' 는 몇 번 줄 <code>if</code> 의 짝인가?</div>' : "";
+      var pre = (cur === "5" && it.q) ? '<div style="font-size:12.5px;color:var(--ink-2);margin-bottom:6px">'+it.q+' 는 <b>몇 번 줄</b>과 짝인가?</div>' : "";
       h += pre + '<div class="row"><span>'+lab+'</span><input id="in'+id+'" autocomplete="off"></div>';
     }
     h += '<div class="hintbox" id="hb'+id+'"></div>';
@@ -2965,17 +2965,25 @@ function collect(){
   return vals;
 }
 
+/* 숫자 답은 부호를 살려서 견준다. 예전에는 - 까지 지워서 -5 를 5 로 맞다고 했다. */
+function numv(x){
+  var m = String(x == null ? "" : x).replace(/[^0-9\-]/g, "").match(/-?\d+/);
+  if (!m) return "";
+  var n = parseInt(m[0], 10);
+  return isNaN(n) ? "" : String(n);
+}
+
 function judge(t, i, v){
   var it = BANK[t][i], kind = META[t][2];
   if (kind === "pick") return v === it.c;
   if (kind === "five"){
     if (!v) return false;
     return ["IN","VAR","OUT","LOOP","DEPTH"].every(function(f){
-      return String(v[f]).replace(/[^0-9]/g,"") === it.a[f];
+      return numv(v[f]) !== "" && numv(v[f]) === numv(it.a[f]);
     });
   }
   if (kind === "text") return okText(it, v);
-  return String(v).replace(/[^0-9]/g,"") === String(it.a);
+  return numv(v) !== "" && numv(v) === numv(it.a);
 }
 
 function grade(quiet){
@@ -3032,18 +3040,33 @@ function all(){
   var weak = [];
   ORDER.forEach(function(t){
     var st = store[t];
-    var tot = BANK[t].length, got = 0;
-    if (st) BANK[t].forEach(function(it,i){ if (judge(t,i,st.vals[i])) got++; });
-    var pct = Math.round(got/tot*100);
-    if (st && pct < 80) weak.push(t);
-    h += '<div class="mrow'+(st && pct<80 ? " weak":"")+'"><b>'+t+'. '+META[t][0]+'</b>'+
-         '<div class="mbar"><i style="width:'+(st?pct:0)+'%"></i></div>'+
-         '<span style="font-family:var(--f-mono);font-size:12px;min-width:52px;text-align:right">'+
-         (st ? got+"/"+tot : "—")+'</span></div>';
+    var tot = BANK[t].length, got = 0, done = 0, kind = META[t][2];
+    if (st) BANK[t].forEach(function(it,i){
+      var v = st.vals[i];
+      var blank = (v === null || v === "" || v === undefined);
+      if (!blank && kind === "five"){
+        blank = ["IN","VAR","OUT","LOOP","DEPTH"].every(function(f){
+          return !v[f] || String(v[f]).trim() === "";
+        });
+      }
+      if (!blank) done++;
+      if (judge(t,i,v)) got++;
+    });
+    /* 안 푼 문항은 분모에서 뺀다. 예전에는 미응답까지 넣어 「취약」으로 찍혔다.
+       그리고 푼 게 세 문항도 안 되면 판단하지 않는다. */
+    var pct = done ? Math.round(got/done*100) : 0;
+    var isWeak = !!(st && done >= 3 && pct < 80);
+    if (isWeak) weak.push(t);
+    h += '<div class="mrow'+(isWeak ? " weak":"")+'"><b>'+t+'. '+META[t][0]+'</b>'+
+         '<div class="mbar"><i style="width:'+(done?pct:0)+'%"></i></div>'+
+         '<span style="font-family:var(--f-mono);font-size:12px;min-width:78px;text-align:right">'+
+         (st && done ? got+"/"+done+" <span style=\'color:var(--ink-3)\'>／"+tot+"</span>" : "—")+
+         '</span></div>';
   });
   h += '<p class="note">'+(weak.length
-        ? '<b>80% 아래인 유형 — '+weak.map(function(t){return t+"번";}).join(" · ")+'</b>. 거기부터 다시 읽습니다.'
-        : '아직 채점하지 않은 유형이 있거나, 전부 80% 이상입니다.')+
+        ? '<b>80% 아래인 유형 — '+weak.map(function(t){return t+"번";}).join(" · ")+'</b>. 거기부터 다시 읽습니다. '
+          + '<span style="color:var(--ink-3)">(푼 문항만 세었습니다. 세 문항 미만은 판단하지 않습니다.)</span>'
+        : '아직 채점하지 않은 유형이 있거나, 푼 문항 기준으로 전부 80% 이상입니다.')+
        ' 점수는 기록하지 않습니다.</p></div>';
   $("report").innerHTML = h;
   $("report").scrollIntoView({behavior:"smooth", block:"start"});
