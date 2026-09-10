@@ -181,7 +181,7 @@ svg{display:block;width:100%;height:auto}
     </div>
 
     <div class="panel">
-      <div class="phd"><b>그림</b><span>방문한 순서대로 번호가 붙는다</span></div>
+      <div class="phd"><b>그림</b><span>큐에서 꺼낸 순서대로 번호가 붙는다</span></div>
       <div class="figwrap">
         <svg viewBox="0 0 360 300" role="img" aria-label="노드 일곱 개짜리 그래프">
           <g id="edges"></g>
@@ -194,12 +194,12 @@ svg{display:block;width:100%;height:auto}
   <div class="states">
     <div class="st">
       <h3>큐 &nbsp;q</h3>
-      <p class="why">앞으로 볼 것</p>
+      <p class="why">앞으로 꺼내 처리할 곳</p>
       <div class="chips" id="sq"></div>
     </div>
     <div class="st">
-      <h3>방문 &nbsp;seen</h3>
-      <p class="why">이미 본 것 — 다시 넣지 않는다</p>
+      <h3>발견 &nbsp;seen</h3>
+      <p class="why">이미 발견한 곳 — 다시 넣지 않는다</p>
       <div class="chips" id="ss"></div>
     </div>
     <div class="st">
@@ -265,7 +265,7 @@ svg{display:block;width:100%;height:auto}
     }
     snap({line:1, note:"시작 노드를 큐에 넣는다.",
           flow:["start", "q", START]});
-    snap({line:2, note:"시작 노드를 <b>방문했다고 표시</b>한다. 다시 넣지 않으려고.",
+    snap({line:2, note:"시작 노드를 <b>발견했다고 표시</b>한다. 다시 넣지 않으려고.",
           flow:["start", "seen", START]});
     snap({line:3, note:"부모 기록은 아직 비어 있다.", flow:null});
 
@@ -287,10 +287,10 @@ svg{display:block;width:100%;height:auto}
               flow:["G[" + cur + "]", "nxt", nxt]});
         if(seen.indexOf(nxt) < 0){
           snap({line:7, cur:cur, nxt:nxt, live:[cur, nxt],
-                note:"<b>" + nxt + "</b> 은 아직 방문 안 함 — <b>관문 통과</b>.", flow:null});
+                note:"<b>" + nxt + "</b> 은 아직 발견 안 함 — <b>관문 통과</b>.", flow:null});
           seen.push(nxt);
           snap({line:8, cur:cur, nxt:nxt, live:[cur, nxt],
-                note:"방문했다고 표시한다.", flow:["nxt", "seen", nxt]});
+                note:"발견했다고 표시한다.", flow:["nxt", "seen", nxt]});
           came[nxt] = cur;
           snap({line:9, cur:cur, nxt:nxt, tree:[cur, nxt],
                 note:"<b>" + nxt + "</b> 은 <b>" + cur + "</b> 에서 왔다고 기록한다.",
@@ -300,7 +300,7 @@ svg{display:block;width:100%;height:auto}
                 note:"큐 <b>뒤에</b> 넣는다. 나중에 볼 것.", flow:["nxt", "q", nxt]});
         } else {
           snap({line:7, cur:cur, nxt:nxt, live:[cur, nxt], skip:true,
-                note:"<b>" + nxt + "</b> 은 <b>이미 방문</b> — 건너뛴다.", flow:null});
+                note:"<b>" + nxt + "</b> 은 <b>이미 발견함</b> — 건너뛴다.", flow:null});
         }
       }
     }
@@ -393,7 +393,7 @@ svg{display:block;width:100%;height:auto}
     $("step").disabled = (at >= steps.length - 1);
     $("jump").disabled = (at >= steps.length - 1);
     if(at >= 0 && steps[at].done){
-      $("verdict").innerHTML = "방문 순서 <b>" + steps[at].order.join(" → ") + "</b>. " +
+      $("verdict").innerHTML = "꺼낸 순서 <b>" + steps[at].order.join(" → ") + "</b>. " +
         (mode === "bfs"
           ? "가까운 것부터 <b>동심원으로</b> 퍼졌습니다 &mdash; 코드 어디에도 「가까운 것부터」라고 안 적혀 있는데요."
           : "한 줄기로 <b>깊이</b> 내려갔다가 되돌아왔습니다. 바꾼 건 <code>popleft()</code> → <code>pop()</code> <b>한 군데</b>뿐입니다.");

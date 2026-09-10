@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Loops Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F5F6F2; --card:#fff; --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2; --pine:#2C5A4B; --pine-soft:#E4EEE9;
+  --ok:#2C5A4B; --ok-bg:#E4EEE9; --no:#A8452F; --no-bg:#F9EDE9;
+  --code-bg:#1B2420; --code-ink:#DDE4DA; --code-key:#A8D98C; --code-str:#E0C58A; --code-dim:#7C8A82;
+  --f-d:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-b:"IBM Plex Sans KR",system-ui,sans-serif;
+  --f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121714; --card:#1A211D; --ink:#E8EDE8; --ink-2:#A6B0A9; --ink-3:#79837C;
+  --rule:#2E3833; --rule-2:#232C28; --pine:#8FCBB2; --pine-soft:#1E2C26;
+  --ok:#8FCBB2; --ok-bg:#1E2C26; --no:#E3937D; --no-bg:#2C1E1A;}}
+:root[data-theme="dark"]{
+  --paper:#121714; --card:#1A211D; --ink:#E8EDE8; --ink-2:#A6B0A9; --ink-3:#79837C;
+  --rule:#2E3833; --rule-2:#232C28; --pine:#8FCBB2; --pine-soft:#1E2C26;
+  --ok:#8FCBB2; --ok-bg:#1E2C26; --no:#E3937D; --no-bg:#2C1E1A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-b);font-size:14px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 18px 80px}
+.mast{border-bottom:2px solid var(--ink);padding-bottom:12px;display:flex;
+  align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.kick{font-family:var(--f-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pine);font-weight:600}
+h1{font-family:var(--f-d);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em;margin:6px 0 0}
+.sub{color:var(--ink-2);font-size:12.5px;margin:5px 0 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px}
+.tab{border:1px solid var(--rule);background:var(--card);color:var(--ink-2);border-radius:999px;
+  padding:6px 12px;font-size:12px;cursor:pointer;font-family:var(--f-b);white-space:nowrap}
+.tab:hover{border-color:var(--pine);color:var(--ink)}
+.tab.on{background:var(--pine);border-color:var(--pine);color:#fff;font-weight:600}
+.tab .dot{display:inline-block;width:6px;height:6px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.tab .dot.g{background:var(--ok)} .tab .dot.r{background:var(--no)}
+.head2{margin:20px 0 6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.head2 h2{font-family:var(--f-d);font-size:21px;margin:0}
+.head2 .n{font-family:var(--f-m);font-size:11px;color:var(--pine);font-weight:600}
+.lede{color:var(--ink-2);font-size:12.5px;margin:2px 0 10px}
+.trap{background:var(--no-bg);border-left:3px solid var(--no);padding:9px 12px;border-radius:0 6px 6px 0;
+  font-size:12.5px;margin:10px 0 14px}
+.trap b{color:var(--no)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px}
+.q{background:var(--card);border:1px solid var(--rule-2);border-radius:8px;padding:10px 11px 11px}
+.q.ok{border-color:var(--ok);background:var(--ok-bg)}
+.q.no{border-color:var(--no);background:var(--no-bg)}
+.qn{font-family:var(--f-m);font-size:10.5px;color:var(--ink-3);font-weight:600;margin-bottom:6px}
+pre{font-family:var(--f-m);font-size:12px;line-height:1.55;background:var(--code-bg);color:var(--code-ink);
+  padding:9px 10px;border-radius:6px;margin:0 0 8px;overflow-x:auto;white-space:pre}
+pre .k{color:var(--code-key)} pre .s{color:var(--code-str)} pre .c{color:var(--code-dim)}
+.expr{font-family:var(--f-m);font-size:13px;background:var(--rule-2);padding:7px 9px;border-radius:6px;margin:0 0 8px}
+.txt{font-size:13px;margin:0 0 8px}
+.row{display:flex;align-items:center;gap:8px}
+.row span{font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+input{flex:1;min-width:0;font-family:var(--f-m);font-size:13px;padding:5px 8px;border:1px solid var(--rule);
+  border-radius:5px;background:var(--paper);color:var(--ink)}
+input:focus{outline:2px solid var(--pine);outline-offset:-1px}
+.fb{font-size:11.5px;margin-top:6px;min-height:0}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--no)}
+.bar{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--rule);
+  padding:12px 0 14px;margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{font-family:var(--f-b);font-size:13px;font-weight:600;padding:8px 16px;border-radius:7px;
+  border:1px solid var(--pine);background:var(--pine);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--pine)}
+button:hover{filter:brightness(1.08)}
+.report{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;margin:16px 0}
+.report h3{font-family:var(--f-d);font-size:16px;margin:0 0 10px}
+.mrow{display:grid;grid-template-columns:130px 1fr 54px;gap:9px;align-items:center;margin:5px 0;font-size:12.5px}
+.mbar{height:9px;background:var(--rule-2);border-radius:99px;overflow:hidden}
+.mbar i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.mrow.weak .mbar i{background:var(--no)}
+.mrow.weak b{color:var(--no)}
+.rx{margin-top:12px;padding-top:11px;border-top:1px solid var(--rule-2);font-size:13px}
+.pill{display:inline-block;border:1px solid var(--pine);color:var(--pine);border-radius:999px;
+  padding:3px 11px;font-size:12px;margin:4px 5px 0 0;cursor:pointer;background:transparent}
+.pill:hover{background:var(--pine);color:#fff}
+.note{color:var(--ink-3);font-size:11.5px;margin-top:10px}
+.w11{background:var(--pine-soft);border-left:3px solid var(--pine);border-radius:0 3px 3px 0;
+  padding:12px 15px;margin:0 0 14px;font-size:13px;line-height:1.65}
+.w11b{display:inline-block;margin-top:9px;background:var(--pine);color:#fff;text-decoration:none;
+  font-weight:600;font-size:13px;padding:9px 18px;border-radius:2px}
+
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two>*{min-width:0}
+.expr{font-size:14px;padding:9px 11px}
+.why{font-size:11.5px;color:var(--ink-2);margin-top:5px;line-height:1.55}
+.tagp{display:inline-block;font-family:var(--f-m);font-size:10px;letter-spacing:.08em;
+      padding:2px 8px;border:1px solid var(--rule);border-radius:99px;color:var(--ink-3)}
+.tagp.star{border-color:var(--pine);color:var(--pine);font-weight:600}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="mast">
+  <div>
+    <div class="kick">Conditionals &amp; Loops 1 &middot; Day 2</div>
+    <h1>Loops Console</h1>
+    <p class="sub">Loops Rx 에 손으로 쓴 답을 옮겨 적고 채점합니다. 종이가 먼저입니다.</p>
+  </div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div id="pane"></div>
+
+<div class="bar">
+  <button onclick="grade()">이 유형 채점</button>
+  <button class="ghost" onclick="gradeAll()">전체 채점하고 처방받기</button>
+  <button class="ghost" onclick="clearAll()">지우기</button>
+  <span id="hint" style="font-size:12px;color:var(--ink-3)"></span>
+</div>
+
+<div id="report"></div>
+</div>
+
+<script>
+var DATA = {"bank": [{"t": 1, "title": "몇 번 도는가", "star": true, "lede": "돌아가는 횟수와 그때의 값들을 씁니다.", "trap": "range(a, b) 의 횟수는 b - a. 끝값은 포함하지 않습니다.", "items": [{"n": "1-1", "kind": "range", "expr": "range(5)", "a": ["5"], "a2": ["0 1 2 3 4"], "out": "5번 · 0 1 2 3 4", "why": "range(n) 은 0부터 n-1 까지. n 번."}, {"n": "1-2", "kind": "range", "expr": "range(1, 5)", "a": ["4"], "a2": ["1 2 3 4"], "out": "4번 · 1 2 3 4", "why": "끝의 5는 포함하지 않는다. 5 - 1 = 4번."}, {"n": "1-3", "kind": "range", "expr": "range(1, 6)", "a": ["5"], "a2": ["1 2 3 4 5"], "out": "5번 · 1 2 3 4 5", "why": "1부터 5까지 다섯 개. 1~n 을 돌리려면 range(1, n+1)."}, {"n": "1-4", "kind": "range", "expr": "range(0, 10, 2)", "a": ["5"], "a2": ["0 2 4 6 8"], "out": "5번 · 0 2 4 6 8", "why": "0,2,4,6,8 — 2씩 뛰면 개수는 절반."}, {"n": "1-5", "kind": "range", "expr": "range(2, 10, 3)", "a": ["3"], "a2": ["2 5 8"], "out": "3번 · 2 5 8", "why": "2,5,8 — 10은 포함하지 않는다."}, {"n": "1-6", "kind": "range", "expr": "range(1, 10, 4)", "a": ["3"], "a2": ["1 5 9"], "out": "3번 · 1 5 9", "why": "1,5,9 — 4씩 뛰어 셋."}, {"n": "1-7", "kind": "range", "expr": "range(10, 0, -1)", "a": ["10"], "a2": ["10 9 8 7 6 5 4 3 2 1"], "out": "10번 · 10 9 8 7 6 5 4 3 2 1", "why": "10부터 1까지 거꾸로 열 번. 끝의 0은 빠진다."}, {"n": "1-8", "kind": "range", "expr": "range(5, 5)", "a": ["0"], "a2": ["없음", "-", ""], "out": "0번 · 없음", "why": "시작과 끝이 같으면 한 번도 돌지 않는다."}, {"n": "1-9", "kind": "range", "expr": "range(3, 0)", "a": ["0"], "a2": ["없음", "-", ""], "out": "0번 · 없음", "why": "시작이 끝보다 크다. 걸음이 +1 이므로 한 번도 돌지 않는다. 오류가 아니다."}]}, {"t": 2, "title": "출력 결과 쓰기", "star": true, "lede": "출력되는 것을 그대로 씁니다.", "trap": "print 가 반복 안인지 밖인지, end 가 붙었는지부터 봅니다.", "items": [{"n": "2-1", "kind": "out", "code": ["for i in range(3):", "    print(i)"], "a": ["0 / 1 / 2", "0\n1\n2", "0 1 2", "012"], "out": "0 / 1 / 2", "why": "i 는 0부터 시작한다. 줄바꿈 print 라 세 줄."}, {"n": "2-2", "kind": "out", "code": ["for i in range(1,4):", "    print(i, end=' ')"], "a": ["1 2 3 ", "1 2 3 ", "1 2 3 ", "1 2 3 "], "out": "1 2 3 ", "why": "i 가 1,2,3. end=' ' 라 한 줄에 이어 붙는다."}, {"n": "2-3", "kind": "out", "code": ["for i in range(3):", "    print('*', end='')"], "a": ["***", "***", "***", "***"], "out": "***", "why": "end='' 는 붙여서 출력. 세 번 도니 별 셋."}, {"n": "2-4", "kind": "out", "code": ["for c in 'abc':", "    print(c, end=' ')"], "a": ["a b c ", "a b c ", "a b c ", "a b c "], "out": "a b c ", "why": "문자열은 글자 하나씩 돈다."}, {"n": "2-5", "kind": "out", "code": ["for x in [10,20,30]:", "    print(x, end=' ')"], "a": ["10 20 30 ", "10 20 30 ", "10 20 30 ", "10 20 30 "], "out": "10 20 30 ", "why": "x 에는 자리 번호가 아니라 값이 들어온다."}, {"n": "2-6", "kind": "out", "code": ["for i in range(3,0,-1):", "    print(i, end=' ')"], "a": ["3 2 1 ", "3 2 1 ", "3 2 1 ", "3 2 1 "], "out": "3 2 1 ", "why": "3,2,1 — 0은 포함하지 않는다."}]}, {"t": 3, "title": "반복의 범위", "star": true, "lede": "들여쓰기가 어디까지인지가 답을 정합니다.", "trap": "초기화는 반복 밖, 누적은 반복 안. 이 한 줄이 반복문의 절반입니다.", "items": [{"n": "3-1", "kind": "out", "code": ["for i in range(3):", "    print(i, end=' ')", "print('끝')"], "a": ["0 1 2 끝", "0 1 2 끝", "0 1 2 끝", "0 1 2 끝"], "out": "0 1 2 끝", "why": "print('끝') 이 반복 밖이라 한 번만."}, {"n": "3-2", "kind": "out", "code": ["for i in range(3):", "    print(i, end=' ')", "    print('끝', end=' ')"], "a": ["0 끝 1 끝 2 끝 ", "0 끝 1 끝 2 끝 ", "0 끝 1 끝 2 끝 ", "0 끝 1 끝 2 끝 "], "out": "0 끝 1 끝 2 끝 ", "why": "'끝' 이 반복 안이라 세 번 나온다. 들여쓰기 한 칸 차이."}, {"n": "3-3", "kind": "out", "code": ["total = 0", "for i in range(1,6):", "    total += i", "print(total)"], "a": ["15", "15", "15", "15"], "out": "15", "why": "초기화가 반복 밖 — 1+2+3+4+5 가 그대로 쌓여 15."}, {"n": "3-4", "kind": "out", "code": ["for i in range(1,6):", "    total = 0", "    total += i", "print(total)"], "a": ["5", "5", "5", "5"], "out": "5", "why": "초기화가 반복 안 — 매번 0으로 지워지고 마지막 5만 남는다."}, {"n": "3-5 ☆", "kind": "out", "code": ["for i in range(1,4):", "    for j in range(2):", "        print(i, j, end='  ')"], "a": ["1 0  1 1  2 0  2 1  3 0  3 1  ", "1 0  1 1  2 0  2 1  3 0  3 1  ", "1 0  1 1  2 0  2 1  3 0  3 1  ", "1 0  1 1  2 0  2 1  3 0  3 1  "], "out": "1 0  1 1  2 0  2 1  3 0  3 1  ", "why": ""}]}, {"t": 4, "title": "누적", "star": true, "lede": "변수가 매 바퀴 어떻게 변해가는지 추적표를 그리고 푸세요.", "trap": "total += i 는 기존 값에 더해 다시 넣는 것. total = i 는 덮어쓰기입니다.", "items": [{"n": "4-1", "kind": "out", "code": ["total = 0", "for i in range(1,11):", "    total += i", "print(total)"], "a": ["55", "55", "55", "55"], "out": "55", "why": "1부터 10까지의 합."}, {"n": "4-2", "kind": "out", "code": ["c = 0", "for i in range(1,21):", "    if i % 3 == 0:", "        c += 1", "print(c)"], "a": ["6", "6", "6", "6"], "out": "6", "why": "1~20 중 3의 배수는 3,6,9,12,15,18 여섯 개."}, {"n": "4-3", "kind": "out", "code": ["lst = [3,9,1,7,5]", "best = lst[0]", "for x in lst:", "    if x > best:", "        best = x", "print(best)"], "a": ["9", "9", "9", "9"], "out": "9", "why": "최댓값 찾기의 기본형. 첫 원소로 시작해 더 큰 것을 만나면 갈아 끼운다."}, {"n": "4-4", "kind": "out", "code": ["p = 1", "for i in range(1,6):", "    p *= i", "print(p)"], "a": ["120", "120", "120", "120"], "out": "120", "why": "곱의 초기값은 1. 1x2x3x4x5."}, {"n": "4-5", "kind": "out", "code": ["s = ''", "for c in 'abc':", "    s += c + '-'", "print(s)"], "a": ["a-b-c-", "a-b-c-", "a-b-c-", "a-b-c-"], "out": "a-b-c-", "why": "문자열도 += 로 이어 붙는다."}, {"n": "4-6", "kind": "out", "code": ["total = 0", "for i in range(1,6):", "    total = i", "print(total)"], "a": ["5", "5", "5", "5"], "out": "5", "why": "total = i 는 더하기가 아니라 덮어쓰기. 마지막 값만 남는다."}]}, {"t": 5, "title": "반복 + 조건", "star": true, "lede": "반복 안에 조건이 들어간 경우입니다.", "trap": "continue 는 이번 바퀴만 건너뛰고, break 는 반복을 통째로 그만둡니다.", "items": [{"n": "5-1", "kind": "out", "code": ["for i in range(1,11):", "    if i % 3 == 0:", "        print(i, end=' ')"], "a": ["3 6 9 ", "3 6 9 ", "3 6 9 ", "3 6 9 "], "out": "3 6 9 ", "why": "1~10 중 3의 배수."}, {"n": "5-2", "kind": "out", "code": ["for i in range(1,11):", "    if i % 2 == 0:", "        continue", "    print(i, end=' ')"], "a": ["1 3 5 7 9 ", "1 3 5 7 9 ", "1 3 5 7 9 ", "1 3 5 7 9 "], "out": "1 3 5 7 9 ", "why": "continue 는 그 바퀴만 건너뛴다. 짝수만 빠지고 홀수는 다 나온다."}, {"n": "5-3", "kind": "out", "code": ["for i in range(1,11):", "    if i > 5:", "        break", "    print(i, end=' ')"], "a": ["1 2 3 4 5 ", "1 2 3 4 5 ", "1 2 3 4 5 ", "1 2 3 4 5 "], "out": "1 2 3 4 5 ", "why": "break 는 반복을 통째로 끝낸다. 6은 출력되지 않는다."}, {"n": "5-4", "kind": "out", "code": ["for i in range(1,31):", "    if i%3==0 and i%5==0:", "        print(i, end=' ')"], "a": ["15 30 ", "15 30 ", "15 30 ", "15 30 "], "out": "15 30 ", "why": "3의 배수이면서 5의 배수 — 15와 30."}]}, {"t": 6, "title": "while과 종료 조건", "star": true, "lede": "무한 반복이 의심되면 실행하지 말고 눈으로 판정합니다.", "trap": "while 은 셋이 다 있어야 멈춥니다 — 시작값 · 멈출 조건 · 값을 바꾸는 줄.", "items": [{"n": "6-1", "kind": "out", "code": ["n = 5", "while n > 0:", "    print(n, end=' ')", "    n -= 1"], "a": ["5 4 3 2 1 ", "5 4 3 2 1 ", "5 4 3 2 1 ", "5 4 3 2 1 "], "out": "5 4 3 2 1 ", "why": "5부터 1까지. 0이 되면 조건이 거짓."}, {"n": "6-2", "kind": "out", "code": ["n = 1", "while n < 100:", "    n *= 2", "print(n)"], "a": ["128", "128", "128", "128"], "out": "128", "why": "64까지는 조건이 참. 128이 되어 멈춘다. 멈춘 값은 조건을 넘어선 값이다."}, {"n": "6-3", "kind": "out", "code": ["n = 10", "while n > 0:", "    n -= 3", "print(n)"], "a": ["-2", "-2", "-2", "-2"], "out": "-2", "why": "10,7,4,1 까지 참. -2 가 되어 멈춘다."}, {"n": "6-4", "kind": "out", "code": ["t = 0", "n = 1", "while n <= 10:", "    t += n", "    n += 1", "print(t)"], "a": ["55", "55", "55", "55"], "out": "55", "why": "1부터 10까지의 합."}]}, {"t": 7, "title": "중첩 반복", "star": true, "lede": "반복 안에 반복이 들어간 경우입니다.", "trap": "break 는 자기가 들어 있는 반복 하나만 빠져나옵니다. 초기화를 어느 반복 안에 두었는지도 보세요.", "items": [{"n": "7-1", "kind": "out", "code": ["c = 0", "for i in range(3):", "    for j in range(4):", "        c += 1", "print(c)"], "a": ["12", "12", "12", "12"], "out": "12", "why": "3 x 4 = 12. 바깥 한 바퀴마다 안쪽이 네 번 다 돈다."}, {"n": "7-2", "kind": "out", "code": ["c = 0", "for i in range(3):", "    for j in range(i+1):", "        c += 1", "print(c)"], "a": ["6", "6", "6", "6"], "out": "6", "why": "1+2+3 = 6. 안쪽 횟수가 i 에 따라 달라지면 곱셈이 아니라 더하기."}, {"n": "7-3", "kind": "out", "code": ["c = 0", "for i in range(4):", "    for j in range(i):", "        c += 1", "print(c)"], "a": ["6", "6", "6", "6"], "out": "6", "why": "0+1+2+3 = 6. i=0 일 때는 안쪽이 한 번도 안 돈다."}, {"n": "7-4", "kind": "out", "code": ["c = 0", "for i in range(5):", "    for j in range(i+1, 5):", "        c += 1", "print(c)"], "a": ["10", "10", "10", "10"], "out": "10", "why": "4+3+2+1 = 10. 서로 다른 두 자리를 고르는 반복이 이 삼각형 모양이다."}, {"n": "7-5", "kind": "out", "code": ["for i in range(2):", "    for j in range(2):", "        print(i, j)"], "a": ["0 0 / 0 1 / 1 0 / 1 1", "0 0\n0 1\n1 0\n1 1", "0 0 0 1 1 0 1 1", "0 00 11 01 1"], "out": "0 0 / 0 1 / 1 0 / 1 1", "why": "바깥이 한 바퀴 도는 동안 안쪽이 처음부터 끝까지 다 돈다."}, {"n": "7-6", "kind": "out", "code": ["for i in range(1, 4):", "    s = ''", "    for j in range(i):", "        s += '*'", "    print(s)"], "a": ["* / ** / ***", "*\n**\n***", "* ** ***", "******"], "out": "* / ** / ***", "why": "s 초기화가 바깥 반복 안이라 줄마다 새로 시작한다. 밖이었다면 * / *** / ****** 가 된다."}, {"n": "7-7", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if j == 1:", "            break", "        print(i, j)"], "a": ["0 0 / 1 0 / 2 0", "0 0\n1 0\n2 0", "0 0 1 0 2 0", "0 01 02 0"], "out": "0 0 / 1 0 / 2 0", "why": "break 는 안쪽 반복만 빠져나온다. 바깥은 계속 돈다. 여기서 제일 많이 틀린다."}, {"n": "7-8", "kind": "out", "code": ["for i in range(3):", "    if i == 1:", "        break", "    for j in range(2):", "        print(i, j)"], "a": ["0 0 / 0 1", "0 0\n0 1", "0 0 0 1", "0 00 1"], "out": "0 0 / 0 1", "why": "이번 break 는 바깥에 걸려 있어 통째로 끝난다. 7-7 과 견주어 보라."}, {"n": "7-9", "kind": "out", "code": ["total = 0", "for i in range(3):", "    for j in range(3):", "        total += 1", "print(total)"], "a": ["9", "9", "9", "9"], "out": "9", "why": "초기화가 두 반복 다 밖 — 아홉 번이 모두 쌓인다."}, {"n": "7-10", "kind": "out", "code": ["for i in range(3):", "    c = 0", "    for j in range(4):", "        c += 1", "print(c)"], "a": ["4", "4", "4", "4"], "out": "4", "why": "초기화가 바깥 반복 안 — 행마다 지워지고 마지막 행의 4만 남는다."}, {"n": "7-11", "kind": "out", "code": ["for i in range(2, 4):", "    for j in range(1, 3):", "        print(i * j)"], "a": ["2 / 4 / 3 / 6", "2\n4\n3\n6", "2 4 3 6", "2436"], "out": "2 / 4 / 3 / 6", "why": "구구단 2단과 3단의 앞부분."}, {"n": "7-12", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if i == j:", "            continue", "        print(i, j)"], "a": ["0 1 / 0 2 / 1 0 / 1 2 / 2 0 / 2 1", "0 1\n0 2\n1 0\n1 2\n2 0\n2 1", "0 1 0 2 1 0 1 2 2 0 2 1", "0 10 21 01 22 02 1"], "out": "0 1 / 0 2 / 1 0 / 1 2 / 2 0 / 2 1", "why": "i 와 j 가 같은 세 쌍을 건너뛰어 아홉에서 셋을 뺀 여섯 쌍."}]}, {"t": 8, "title": "무한루프 찾기", "star": false, "lede": "멈추는지 안 멈추는지만 씁니다. 실행하지 말고 눈으로 판정하세요.", "trap": "실수로 돌렸다면 코랩 왼쪽의 정지 버튼(■). 컴퓨터가 고장 난 게 아닙니다.", "items": [{"n": "8-1", "kind": "halt", "code": ["n = 1", "while n <= 5:", "    print(n)"], "a": ["안 멈춤", "안멈춤", "무한", "무한루프", "x", "ㄴ", "아니오"], "out": "안 멈춤", "why": "n 을 바꾸는 줄이 없다. n 은 영원히 1."}, {"n": "8-2", "kind": "halt", "code": ["n = 1", "while n > 0:", "    n += 1"], "a": ["안 멈춤", "안멈춤", "무한", "무한루프", "x", "ㄴ", "아니오"], "out": "안 멈춤", "why": "n 이 계속 커지므로 n > 0 이 늘 참."}, {"n": "8-3", "kind": "halt", "code": ["n = 10", "while n != 0:", "    n -= 3"], "a": ["안 멈춤", "안멈춤", "무한", "무한루프", "x", "ㄴ", "아니오"], "out": "안 멈춤", "why": "10,7,4,1,-2 ... 0을 정확히 밟지 않는다. n > 0 이었다면 멈춘다."}, {"n": "8-4", "kind": "halt", "code": ["n = 5", "while n > 0:", "    n -= 1"], "a": ["멈춤", "멈춘다", "o", "ㅇ", "예"], "out": "멈춤", "why": "1씩 줄어 다섯 번 만에 0이 되어 멈춘다."}, {"n": "8-5", "kind": "halt", "code": ["while True:", "    print('안녕')"], "a": ["안 멈춤", "안멈춤", "무한", "무한루프", "x", "ㄴ", "아니오"], "out": "안 멈춤", "why": "조건 자리가 True 다. break 가 없으면 출구가 없다."}]}], "triage": {"items": [{"n": "D1", "kind": "num", "ask": "몇 번", "code": ["c = 0", "for i in range(1, 5):", "    c += 1", "print(c)"], "trap": "① 횟수", "rx": 1, "why": "1,2,3,4 — 5는 포함하지 않는다.", "a": ["4"], "out": "4"}, {"n": "D2", "kind": "num", "ask": "출력", "code": ["for i in range(1, 6):", "    total = 0", "    total += i", "print(total)"], "trap": "② 범위", "rx": 3, "why": "초기화가 반복 안이라 매번 지워지고 마지막 5만 남는다.", "a": ["5"], "out": "5"}, {"n": "D3", "kind": "halt", "ask": "멈추나", "code": ["n = 10", "while n != 0:", "    n -= 3"], "trap": "④ 종료", "rx": 6, "why": "10,7,4,1,-2 ... 0을 정확히 밟지 않는다.", "a": ["안 멈춤", "안멈춤", "무한", "무한루프", "x", "아니오"], "out": "안 멈춤"}, {"n": "D4", "kind": "num", "ask": "출력", "code": ["c = 0", "for i in range(3):", "    for j in range(4):", "        c += 1", "print(c)"], "trap": "⑤ 중첩", "rx": 7, "why": "3 x 4 = 12.", "a": ["12"], "out": "12"}]}};
+var BANK = DATA.bank, TRI = DATA.triage.items;
+var cur = BANK[0].t, mode = "triage";
+var store = {};
+
+function $(id){ return document.getElementById(id); }
+function norm(s){
+  s = String(s == null ? "" : s).trim().toLowerCase();
+  s = s.replace(/[\u2018\u2019\u201c\u201d'"`]/g, "");
+  s = s.replace(/[\s\/,·]/g, "");
+  s = s.replace(/번$/, "");
+  return s;
+}
+function hit(v, list){
+  var x = norm(v);
+  if (x === "") return false;
+  for (var i=0;i<list.length;i++){ if (norm(list[i]) === x) return true; }
+  return false;
+}
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function hl(lines){
+  return lines.map(function(l){
+    var s = esc(l);
+    s = s.replace(/\b(for|while|if|elif|else|in|range|print|break|continue|not|and|or|len|True|False|end)\b/g,
+                  '<span class="k">$1</span>');
+    s = s.replace(/(&#39;|')([^']*)(&#39;|')/g, '<span class="s">\'$2\'</span>');
+    s = s.replace(/(#.*)$/, '<span class="c">$1</span>');
+    return s;
+  }).join("\n");
+}
+function sec(t){ for (var i=0;i<BANK.length;i++) if (BANK[i].t===t) return BANK[i]; }
+function items(){ return mode === "triage" ? TRI : sec(cur).items; }
+function keyOf(){ return mode === "triage" ? "tri" : "b" + cur; }
+
+function tabs(){
+  var st0 = store["tri"];
+  var h = '<button class="tab' + (mode==="triage"?" on":"") + '" onclick="goTri()" style="border-width:2px">진단' +
+          ((st0 && st0.done) ? '<span class="dot ' + (st0.weak?"r":"g") + '"></span>' : "") + '</button>' +
+          '<span style="width:8px"></span>';
+  for (var i=0;i<BANK.length;i++){
+    var b = BANK[i], st = store["b"+b.t];
+    h += '<button class="tab' + (b.t===cur && mode==="bank" ? " on":"") + '" onclick="go(' + b.t + ')">유형 ' +
+         b.t + ((st && st.done) ? '<span class="dot ' + (st.weak?"r":"g") + '"></span>' : "") + '</button>';
+  }
+  $("tabs").innerHTML = h;
+}
+
+function askLabel(it){
+  if (it.kind === "halt") return "멈추나";
+  if (it.kind === "range") return "몇 번";
+  return it.ask || "출력";
+}
+
+function render(){
+  var its = items(), key = keyOf(), h;
+  if (mode === "triage"){
+    h = '<div class="head2"><span class="n">DIAGNOSTIC</span><h2>진단</h2></div>' +
+        '<p class="lede">네 문제입니다. 점수는 걷지 않습니다 — 지금 어디가 약한지만 봅니다.</p>';
+  } else {
+    var b = sec(cur);
+    h = '<div class="head2"><span class="n">유형 ' + b.t + '</span><h2>' + esc(b.title) + '</h2>' +
+        (b.star ? '<span class="tagp star">필수</span>' : '<span class="tagp">추가</span>') + '</div>' +
+        '<p class="lede">' + esc(b.lede) + '</p>' +
+        '<div class="trap"><b>함정</b> ' + esc(b.trap) + '</div>';
+  }
+  h += '<p class="note">출력이 <b>두 줄 이상</b>이면 <b>/</b> 로 나눠 쓰세요. 띄어쓰기는 무시합니다.</p><div class="grid">';
+  for (var q=0;q<its.length;q++){
+    var it = its[q], id = key + "-" + q;
+    h += '<div class="q" id="q' + id + '"><div class="qn">' + esc(it.n) +
+         (it.trap ? '<span style="float:right;color:var(--ink-3)">' + esc(it.trap) + '</span>' : "") + '</div>';
+    if (it.kind === "range") h += '<div class="expr">' + esc(it.expr) + '</div>';
+    else h += '<pre>' + hl(it.code) + '</pre>';
+    if (it.kind === "range"){
+      h += '<div class="two"><div class="row"><span>몇 번</span><input id="in' + id + '" autocomplete="off"></div>' +
+           '<div class="row"><span>값들</span><input id="i2' + id + '" autocomplete="off"></div></div>';
+    } else {
+      h += '<div class="row"><span>' + askLabel(it) + '</span><input id="in' + id + '" autocomplete="off"></div>';
+    }
+    h += '<div class="fb" id="fb' + id + '"></div></div>';
+  }
+  h += '</div>';
+  $("pane").innerHTML = h;
+  var st = store[key];
+  if (st && st.vals) for (var w=0;w<st.vals.length;w++){
+    var e1 = $("in" + key + "-" + w); if (e1) e1.value = st.vals[w][0];
+    var e2 = $("i2" + key + "-" + w); if (e2) e2.value = st.vals[w][1] || "";
+  }
+  $("hint").textContent = "";
+  window.scrollTo(0,0);
+}
+
+function go(t){ cur = t; mode = "bank"; tabs(); render(); }
+function goTri(){ mode = "triage"; tabs(); render(); }
+
+function grade(){
+  var its = items(), key = keyOf(), got = 0, done = 0, vals = [];
+  for (var q=0;q<its.length;q++){
+    var it = its[q], id = key + "-" + q;
+    var v1 = ($("in"+id) || {}).value || "";
+    var v2 = ($("i2"+id) ? $("i2"+id).value : "");
+    vals.push([v1, v2]);
+    var typed = norm(v1) !== "" || (it.kind === "range" && norm(v2) !== "");
+    var ok = hit(v1, it.a) && (it.kind !== "range" ? true : hit(v2, it.a2));
+    if (typed) done++;
+    if (ok) got++;
+    var fb = $("fb"+id), card = $("q"+id);
+    card.className = "q " + (ok ? "ok" : (typed ? "no" : ""));
+    fb.className = "fb " + (ok ? "ok" : "no");
+    fb.innerHTML = (ok ? "맞음" : "답 · <b>" + esc(it.out) + "</b>") +
+                   (it.why ? '<div class="why">' + esc(it.why) + '</div>' : "");
+  }
+  var pct = done ? Math.round(got/done*100) : 0;
+  store[key] = {done: done > 0, got: got, n: its.length, ans: done, vals: vals,
+                weak: (done >= 3 && pct < 80)};
+  $("hint").textContent = its.length + "문항 중 " + got + "개 맞음" +
+    (done < its.length ? " (푼 것 " + done + "개 기준 " + pct + "%)" : "");
+  tabs();
+}
+
+function gradeAll(){
+  var save = [mode, cur], rows = [], weak = [];
+  for (var i=0;i<BANK.length;i++){
+    mode = "bank"; cur = BANK[i].t;
+    var key = "b"+BANK[i].t;
+    if (!store[key]) continue;
+    var st = store[key];
+    var pct = st.ans ? Math.round(st.got/st.ans*100) : 0;
+    rows.push([BANK[i].t, BANK[i].title, st.got, st.ans, pct]);
+    if (st.ans >= 3 && pct < 80) weak.push(BANK[i].t);
+  }
+  mode = save[0]; cur = save[1];
+  if (!rows.length){ $("hint").textContent = "먼저 유형별로 채점하세요."; return; }
+  var h = '<div class="report"><h3>처방</h3>' +
+          '<p class="lede">푼 문항만 셉니다. 안 푼 것은 분모에 넣지 않습니다.</p>';
+  for (var r=0;r<rows.length;r++){
+    var x = rows[r], w = (x[3] >= 3 && x[4] < 80) ? " weak" : "";
+    h += '<div class="mrow' + w + '"><b>유형 ' + x[0] + ' · ' + esc(x[1]) + '</b>' +
+         '<div class="mbar"><i style="width:' + x[4] + '%"></i></div>' +
+         '<span>' + x[2] + '/' + x[3] + '</span></div>';
+  }
+  h += weak.length
+     ? '<div class="rx"><b>더 볼 유형</b> — ' + weak.map(function(t){return "유형 " + t;}).join(" · ") +
+       '. 학습지의 그 유형을 다시 풀고, 틀린 문제는 추적표를 손으로 그려 확인하세요.</div>'
+     : '<div class="rx">약한 유형이 없습니다. 학습지 유형 8 · 9 · 10 으로 넘어가세요.</div>';
+  h += '</div>';
+  $("report").innerHTML = h;
+  $("report").scrollIntoView({behavior:"smooth"});
+}
+
+function clearAll(){
+  store = {}; $("report").innerHTML = ""; tabs(); render();
+}
+
+tabs(); render();
+</script>
+
+</body>
+</html>
