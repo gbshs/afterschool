@@ -208,7 +208,7 @@ footer{margin-top:50px;padding-top:14px;border-top:1px solid var(--rule);
 print(total)</pre>
       <div class="q-a"><span>내 예측</span><i></i></div>
       <div class="q-a"><span>실제</span><i></i></div></div>
-    <div class="q"><div class="q-n">예측 3</div>
+    <div class="q"><div class="q-n">예측 3 · 멈출까요?</div>
       <pre>n = <span class="s">10</span>
 <span class="k">while</span> n != <span class="s">0</span>:
     n -= <span class="s">3</span>
@@ -239,7 +239,7 @@ print(n)</pre>
     다 적은 뒤에 함께 맞춰 봅니다. 틀려도 됩니다 — 틀린 자리가 그 유형에서 조심할 곳입니다.</p>
   <table class="tbl">
     <tr><th>#</th><th>무엇</th><th>화면에 뜬 문제</th><th class="w">내 답</th></tr>
-    <tr><td class="n">1</td><td>몇 번 도는가</td><td class="c">range(1, 5)</td><td class="w"></td></tr>
+    <tr><td class="n">1</td><td>몇 번 도는가</td><td class="c">for i in range(2, 10, 3)</td><td class="w"></td></tr>
     <tr><td class="n">2</td><td>출력 결과 쓰기</td><td class="c">for i in range(3): print(i)</td><td class="w"></td></tr>
     <tr><td class="n">3</td><td>반복의 범위</td><td class="c">total = 0 이 반복 <b>안</b>에</td><td class="w"></td></tr>
     <tr><td class="n">4</td><td>누적</td><td class="c">total = i (+= 가 아님)</td><td class="w"></td></tr>
@@ -268,7 +268,7 @@ print(n)</pre>
   </div>
   <div class="trap"><b>함정</b>걸음이 <code>+1</code> 일 때, <b>시작이 끝보다 작으면</b> 횟수는
     <b>b - a</b> 입니다. <b>그렇지 않으면 0번</b> — 아래 표의 8·9번이 그것입니다.
-    <code>range(n)</code> 은 <code>0</code>부터 <code>n-1</code>까지 <b>n번</b>.
+    <code>range(n)</code> 은 <code>0</code>부터 <code>n-1</code>까지 <b>n번</b> (<code>n</code> 이 0 이하면 0번).
     헷갈리면 <b>작은 수로 손으로 써 보세요.</b></div>
   <table class="tbl">
     <tr><th>번호</th><th>식</th><th class="w">몇 번</th><th class="w">어떤 값들</th></tr>
@@ -407,7 +407,7 @@ print(total)</pre><div class="q-a"><span>출력</span><i></i></div></div>
 <section class="sec">
   <div class="sec-head"><div class="sec-num">유형 5</div><h2>반복 + 조건</h2><span class="must">★ 필수</span></div>
   <div class="trap"><b>함정</b><code>continue</code> 는 <b>이번 바퀴만 건너뛰고 계속</b>,
-    <code>break</code> 는 <b>반복을 통째로 그만둡니다.</b> 둘을 바꿔 쓰면 결과가 완전히 달라집니다.</div>
+    <code>break</code> 는 <b>자기가 들어 있는 반복을 끝냅니다.</b> 둘을 바꿔 쓰면 결과가 완전히 달라집니다.</div>
   <div class="qs">
     <div class="q"><div class="q-n">5-1</div><pre><span class="k">for</span> i <span class="k">in</span> range(<span class="s">1</span>,<span class="s">11</span>):
     <span class="k">if</span> i % <span class="s">3</span> == <span class="s">0</span>:
@@ -441,7 +441,7 @@ print(total)</pre><div class="q-a"><span>출력</span><i></i></div></div>
         <code>break</code> 를 만나야 끝납니다. 그래서 셋을 봅니다 —
         <b>①</b> 시작값 <code>n = 1</code> · <b>②</b> <b>반복할 조건</b> <code>n &lt;= 5</code> ·
         <b>③</b> 그 조건을 <b>언젠가 거짓으로 만들 줄</b> <code>n += 1</code>.<br>
-        <b>③이 빠지면 영원히 돕니다.</b></div>
+        이 예제에서 <code>n += 1</code> 이 빠지면 조건이 계속 참이라 <b>멈추지 않습니다.</b></div>
     </div>
   </div>
   <div class="qs">
