@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Loops Advanced Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F5F6F2; --card:#fff; --ink:#17201C; --ink-2:#5D6862; --ink-3:#8A938D;
+  --rule:#D5D9D0; --rule-2:#E6E9E2; --pine:#2C5A4B; --pine-soft:#E4EEE9;
+  --ok:#2C5A4B; --ok-bg:#E4EEE9; --no:#A8452F; --no-bg:#F9EDE9;
+  --code-bg:#1B2420; --code-ink:#DDE4DA; --code-key:#A8D98C; --code-str:#E0C58A; --code-dim:#7C8A82;
+  --f-d:"Bricolage Grotesque","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-b:"IBM Plex Sans KR",system-ui,sans-serif;
+  --f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121714; --card:#1A211D; --ink:#E8EDE8; --ink-2:#A6B0A9; --ink-3:#79837C;
+  --rule:#2E3833; --rule-2:#232C28; --pine:#8FCBB2; --pine-soft:#1E2C26;
+  --ok:#8FCBB2; --ok-bg:#1E2C26; --no:#E3937D; --no-bg:#2C1E1A;}}
+:root[data-theme="dark"]{
+  --paper:#121714; --card:#1A211D; --ink:#E8EDE8; --ink-2:#A6B0A9; --ink-3:#79837C;
+  --rule:#2E3833; --rule-2:#232C28; --pine:#8FCBB2; --pine-soft:#1E2C26;
+  --ok:#8FCBB2; --ok-bg:#1E2C26; --no:#E3937D; --no-bg:#2C1E1A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-b);font-size:14px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 18px 80px}
+.mast{border-bottom:2px solid var(--ink);padding-bottom:12px;display:flex;
+  align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.kick{font-family:var(--f-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pine);font-weight:600}
+h1{font-family:var(--f-d);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em;margin:6px 0 0}
+.sub{color:var(--ink-2);font-size:12.5px;margin:5px 0 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px}
+.tab{border:1px solid var(--rule);background:var(--card);color:var(--ink-2);border-radius:999px;
+  padding:6px 12px;font-size:12px;cursor:pointer;font-family:var(--f-b);white-space:nowrap}
+.tab:hover{border-color:var(--pine);color:var(--ink)}
+.tab.on{background:var(--pine);border-color:var(--pine);color:#fff;font-weight:600}
+.tab .dot{display:inline-block;width:6px;height:6px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.tab .dot.g{background:var(--ok)} .tab .dot.r{background:var(--no)}
+.head2{margin:20px 0 6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.head2 h2{font-family:var(--f-d);font-size:21px;margin:0}
+.head2 .n{font-family:var(--f-m);font-size:11px;color:var(--pine);font-weight:600}
+.lede{color:var(--ink-2);font-size:12.5px;margin:2px 0 10px}
+.trap{background:var(--no-bg);border-left:3px solid var(--no);padding:9px 12px;border-radius:0 6px 6px 0;
+  font-size:12.5px;margin:10px 0 14px}
+.trap b{color:var(--no)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px}
+.q{background:var(--card);border:1px solid var(--rule-2);border-radius:8px;padding:10px 11px 11px}
+.q.ok{border-color:var(--ok);background:var(--ok-bg)}
+.q.no{border-color:var(--no);background:var(--no-bg)}
+.qn{font-family:var(--f-m);font-size:10.5px;color:var(--ink-3);font-weight:600;margin-bottom:6px}
+pre{font-family:var(--f-m);font-size:12px;line-height:1.55;background:var(--code-bg);color:var(--code-ink);
+  padding:9px 10px;border-radius:6px;margin:0 0 8px;overflow-x:auto;white-space:pre}
+pre .k{color:var(--code-key)} pre .s{color:var(--code-str)} pre .c{color:var(--code-dim)}
+.expr{font-family:var(--f-m);font-size:13px;background:var(--rule-2);padding:7px 9px;border-radius:6px;margin:0 0 8px}
+.txt{font-size:13px;margin:0 0 8px}
+.row{display:flex;align-items:center;gap:8px}
+.row span{font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+input{flex:1;min-width:0;font-family:var(--f-m);font-size:13px;padding:5px 8px;border:1px solid var(--rule);
+  border-radius:5px;background:var(--paper);color:var(--ink)}
+input:focus{outline:2px solid var(--pine);outline-offset:-1px}
+.fb{font-size:11.5px;margin-top:6px;min-height:0}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--no)}
+.bar{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--rule);
+  padding:12px 0 14px;margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{font-family:var(--f-b);font-size:13px;font-weight:600;padding:8px 16px;border-radius:7px;
+  border:1px solid var(--pine);background:var(--pine);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--pine)}
+button:hover{filter:brightness(1.08)}
+.report{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;margin:16px 0}
+.report h3{font-family:var(--f-d);font-size:16px;margin:0 0 10px}
+.mrow{display:grid;grid-template-columns:130px 1fr 54px;gap:9px;align-items:center;margin:5px 0;font-size:12.5px}
+.mbar{height:9px;background:var(--rule-2);border-radius:99px;overflow:hidden}
+.mbar i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.mrow.weak .mbar i{background:var(--no)}
+.mrow.weak b{color:var(--no)}
+.rx{margin-top:12px;padding-top:11px;border-top:1px solid var(--rule-2);font-size:13px}
+.pill{display:inline-block;border:1px solid var(--pine);color:var(--pine);border-radius:999px;
+  padding:3px 11px;font-size:12px;margin:4px 5px 0 0;cursor:pointer;background:transparent}
+.pill:hover{background:var(--pine);color:#fff}
+.note{color:var(--ink-3);font-size:11.5px;margin-top:10px}
+.w11{background:var(--pine-soft);border-left:3px solid var(--pine);border-radius:0 3px 3px 0;
+  padding:12px 15px;margin:0 0 14px;font-size:13px;line-height:1.65}
+.w11b{display:inline-block;margin-top:9px;background:var(--pine);color:#fff;text-decoration:none;
+  font-weight:600;font-size:13px;padding:9px 18px;border-radius:2px}
+
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two>*{min-width:0}
+.expr{font-size:13.5px;padding:9px 11px;font-family:var(--f-m);background:var(--code-bg);
+ color:var(--code-ink);border-radius:6px;margin-bottom:7px}
+.expr b{color:var(--code-key);font-weight:500}
+.why{font-size:11.5px;color:var(--ink-2);margin-top:5px;line-height:1.55}
+.tagp{display:inline-block;font-family:var(--f-m);font-size:10px;letter-spacing:.08em;
+ padding:2px 8px;border:1px solid var(--rule);border-radius:99px;color:var(--ink-2)}
+.tagp.star{border-color:var(--pine);color:var(--pine);font-weight:600}
+.note{color:var(--ink-2)}
+.note b{color:var(--ink)}
+.row span{color:var(--ink-2)}
+.dayl{align-self:center;font-family:var(--f-m);font-size:10px;letter-spacing:.1em;
+ color:var(--ink-2);margin:0 4px 0 10px}
+.ver{font-family:var(--f-m);font-size:10px;color:var(--ink-2);margin:4px 0 0;letter-spacing:.06em}
+/* 격자 */
+table.gr{border-collapse:collapse;margin:8px auto 4px;user-select:none}
+table.gr td{width:30px;height:30px;border:1px solid var(--rule);cursor:pointer;
+ background:var(--card);transition:background .08s}
+table.gr td:hover{background:var(--rule-2)}
+table.gr td.on{background:var(--pine)}
+table.gr td.on:hover{background:var(--pine)}
+table.gr th{width:30px;height:22px;font-family:var(--f-m);font-size:10px;color:var(--ink-2);
+ font-weight:400}
+table.gr.key td{width:17px;height:17px;cursor:default}
+table.gr.key th{width:17px;height:14px;font-size:8px}
+table.gr.key td:hover{background:var(--card)}
+table.gr.key td.on:hover{background:var(--pine)}
+.gwrap{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.gclear{font:inherit;font-size:11px;padding:3px 9px;border:1px solid var(--rule);
+ background:var(--card);color:var(--ink-2);border-radius:99px;cursor:pointer}
+/* 다크에서 --pine 은 밝은 민트다. 그 위에 흰 글자를 얹으면 묻힌다. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tab.on,
+  :root:not([data-theme="light"]) .bar button:not(.ghost){color:#121714}}
+:root[data-theme="dark"] .tab.on,
+:root[data-theme="dark"] .bar button:not(.ghost){color:#121714}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="mast">
+  <div>
+    <div class="kick">Loops Advanced &middot; 하루 3차시</div>
+    <h1>Loops Console II</h1>
+    <p class="sub">종이에 먼저 쓰고, 다 쓴 뒤에 여기로 옮겨 채점합니다.</p>
+    <p class="ver">2026-09-11 · 146문항 · 3f17730</p>
+  </div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div id="pane"></div>
+
+<div class="bar">
+  <button onclick="grade()">이 유형 채점</button>
+  <button class="ghost" onclick="gradeAll()">전체 채점하고 처방받기</button>
+  <button class="ghost" onclick="clearAll()">지우기</button>
+  <span id="hint" style="font-size:12px;color:var(--ink-2)"></span>
+</div>
+
+<div id="report"></div>
+</div>
+
+<script>
+var DATA = {"n": 5, "triage": {"items": [{"n": "예측 1", "kind": "out", "code": ["c = 0", "for i in range(4):", "    for j in range(5):", "        c += 1", "print(c)"], "a": ["20"], "out": "20", "aim": "총 횟수"}, {"n": "예측 2", "kind": "out", "code": ["c = 0", "for i in range(4):", "    for j in range(i + 1):", "        c += 1", "print(c)"], "a": ["10"], "out": "10", "aim": "영역"}, {"n": "예측 3", "kind": "out", "code": ["c = 0", "for i in range(4):", "    for j in range(4):", "        for k in range(4):", "            c += 1", "print(c)"], "a": ["64"], "out": "64", "aim": "3중"}]}, "bank": [{"day": 1, "t": 1, "paper": true, "title": "총 몇 번 도는가", "star": true, "lede": "안쪽 range 안에 i 가 들어 있으면 곱셈이 아닙니다. 한 줄씩 세어 더해야 합니다.", "trap": "range(0) 이면 바깥이 아무리 돌아도 안쪽 본문은 한 번도 실행되지 않습니다.", "items": [{"n": "1-1", "kind": "count", "loops": ["range(3)", "range(4)"], "code": ["c = 0", "for i in range(3):", "    for j in range(4):", "        c += 1", "print(c)"], "a": ["12"], "out": "12", "expr": "3 × 4", "why": "안쪽이 i 와 무관하면 곱셈. 3 × 4."}, {"n": "1-2", "kind": "count", "loops": ["range(5)", "range(5)"], "code": ["c = 0", "for i in range(5):", "    for j in range(5):", "        c += 1", "print(c)"], "a": ["25"], "out": "25", "expr": "5 × 5", "why": "5 × 5. 정사각형 전체."}, {"n": "1-3", "kind": "count", "loops": ["range(5)", "range(i)"], "code": ["c = 0", "for i in range(5):", "    for j in range(i):", "        c += 1", "print(c)"], "a": ["10"], "out": "10", "expr": "0+1+2+3+4", "why": "안쪽 횟수가 i 마다 다르다 — 0+1+2+3+4. 대각선 아래."}, {"n": "1-4", "kind": "count", "loops": ["range(5)", "range(i+1)"], "code": ["c = 0", "for i in range(5):", "    for j in range(i+1):", "        c += 1", "print(c)"], "a": ["15"], "out": "15", "expr": "1+2+3+4+5", "why": "1+2+3+4+5. 대각선까지 포함해서 아래."}, {"n": "1-5", "kind": "count", "loops": ["range(5)", "range(i+1, 5)"], "code": ["c = 0", "for i in range(5):", "    for j in range(i+1, 5):", "        c += 1", "print(c)"], "a": ["10"], "out": "10", "expr": "4+3+2+1+0", "why": "4+3+2+1+0. 대각선 위. 1-3 과 개수가 같다."}, {"n": "1-6", "kind": "count", "loops": ["range(5)", "range(i, 5)"], "code": ["c = 0", "for i in range(5):", "    for j in range(i, 5):", "        c += 1", "print(c)"], "a": ["15"], "out": "15", "expr": "5+4+3+2+1", "why": "5+4+3+2+1. 대각선까지 포함해서 위."}, {"n": "1-7", "kind": "count", "loops": ["range(5)", "range(0)"], "code": ["c = 0", "for i in range(5):", "    for j in range(0):", "        c += 1", "print(c)"], "a": ["0"], "out": "0", "expr": "안쪽이 한 번도 안 돔", "why": "바깥이 5번 돌아도 안쪽 본문은 한 번도 실행되지 않는다."}, {"n": "1-8", "kind": "count", "loops": ["range(2,5)", "range(i)"], "code": ["c = 0", "for i in range(2,5):", "    for j in range(i):", "        c += 1", "print(c)"], "a": ["9"], "out": "9", "expr": "1+2+3", "why": "바깥이 2,3,4 이고 안쪽이 range(i) 라 1+2+3."}, {"n": "1-9", "kind": "count", "loops": ["range(6)", "range(i)"], "code": ["c = 0", "for i in range(6):", "    for j in range(i):", "        c += 1", "print(c)"], "a": ["15"], "out": "15", "expr": "0+1+2+3+4+5", "why": "0+1+2+3+4+5. n 이 하나 커지면 삼각형이 한 줄 길어진다."}, {"n": "1-10", "kind": "count", "loops": ["range(4)", "range(2*i)"], "code": ["c = 0", "for i in range(4):", "    for j in range(2*i):", "        c += 1", "print(c)"], "a": ["12"], "out": "12", "expr": "0+2+4+6", "why": "안쪽이 range(2*i) — 0+2+4+6. 걸음이 아니라 끝값이 두 배다."}, {"n": "1-11", "kind": "count", "loops": ["range(1,5)", "range(i, 5)"], "code": ["c = 0", "for i in range(1,5):", "    for j in range(i, 5):", "        c += 1", "print(c)"], "a": ["10"], "out": "10", "expr": "4+3+2+1", "why": "바깥이 1부터라 4+3+2+1."}, {"n": "1-12", "kind": "count", "loops": ["range(5)", "range(0, i, 2)"], "code": ["c = 0", "for i in range(5):", "    for j in range(0, i, 2):", "        c += 1", "print(c)"], "a": ["6"], "out": "6", "expr": "i 마다 0,1,1,2,2", "why": "range(0, i, 2) 는 i 가 0,1,2,3,4 일 때 각각 0,1,1,2,2 번."}, {"n": "1-13", "kind": "count", "loops": ["range(3)", "range(3, 0, -1)"], "code": ["c = 0", "for i in range(3):", "    for j in range(3, 0, -1):", "        c += 1", "print(c)"], "a": ["9"], "out": "9", "expr": "3 × 3 — 거꾸로 가도 횟수는 같다", "why": "거꾸로 가는 range 도 횟수는 세 번. 방향은 횟수와 무관하다."}, {"n": "1-14", "kind": "count", "loops": ["range(0,10,3)", "range(2)"], "code": ["c = 0", "for i in range(0,10,3):", "    for j in range(2):", "        c += 1", "print(c)"], "a": ["8"], "out": "8", "expr": "4 × 2", "why": "바깥이 0,3,6,9 로 네 번. 4 × 2."}, {"n": "1-15", "kind": "count", "loops": ["range(5)", "range(5-i)"], "code": ["c = 0", "for i in range(5):", "    for j in range(5-i):", "        c += 1", "print(c)"], "a": ["15"], "out": "15", "expr": "5+4+3+2+1", "why": "range(5-i) — 5+4+3+2+1. 1-6 과 답이 같지만 지나가는 칸이 다르다."}, {"n": "1-16", "kind": "count", "loops": ["range(5)", "range(i-1)"], "code": ["c = 0", "for i in range(5):", "    for j in range(i-1):", "        c += 1", "print(c)"], "a": ["6"], "out": "6", "expr": "음수면 0번 — 0+0+1+2+3", "why": "i-1 이 음수면 range 가 비어 0번. 0+0+1+2+3."}]}, {"day": 1, "t": 2, "title": "영역 그리기", "star": true, "paper": false, "lede": "i 는 행, j 는 열입니다. 반복이 지나가는 칸을 눌러 칠하세요. n = 5.", "trap": "range(i) 와 range(i+1) 은 대각선 한 줄 차이입니다.", "items": [{"n": "2-1", "kind": "grid", "label": "for j in range(i):", "code": ["for i in range(n):", "    for j in range(i):"], "cells": [5, 10, 11, 15, 16, 17, 20, 21, 22, 23], "out": "10칸", "why": "j 가 0부터 i-1 까지. 대각선 아래만."}, {"n": "2-2", "kind": "grid", "label": "for j in range(i+1, n):", "code": ["for i in range(n):", "    for j in range(i+1, n):"], "cells": [1, 2, 3, 4, 7, 8, 9, 13, 14, 19], "out": "10칸", "why": "j 가 i+1 부터. 대각선 위만."}, {"n": "2-3", "kind": "grid", "label": "for j in range(i, n):", "code": ["for i in range(n):", "    for j in range(i, n):"], "cells": [0, 1, 2, 3, 4, 6, 7, 8, 9, 12, 13, 14, 18, 19, 24], "out": "15칸", "why": "j 가 i 부터. 대각선까지 포함한 위."}, {"n": "2-4", "kind": "grid", "label": "for j in range(n):  if i == j:", "code": ["for i in range(n):", "    for j in range(n):", "        if i == j:"], "cells": [0, 6, 12, 18, 24], "out": "5칸", "why": "i 와 j 가 같은 칸 — 왼쪽 위에서 오른쪽 아래로 가는 대각선."}, {"n": "2-5", "kind": "grid", "label": "for j in range(n):  if i + j == n-1:", "code": ["for i in range(n):", "    for j in range(n):", "        if i + j == n-1:"], "cells": [4, 8, 12, 16, 20], "out": "5칸", "why": "i + j 가 n-1 인 칸 — 반대쪽 대각선."}, {"n": "2-6", "kind": "grid", "label": "for j in range(n):  if abs(i-j) <= 1:", "code": ["for i in range(n):", "    for j in range(n):", "        if abs(i-j) <= 1:"], "cells": [0, 1, 5, 6, 7, 11, 12, 13, 17, 18, 19, 23, 24], "out": "13칸", "why": "자기 칸과 좌우 한 칸. 가운데 띠 모양."}, {"n": "2-7", "kind": "grid", "label": "for j in range(n):  if j % 2 == 0:", "code": ["for i in range(n):", "    for j in range(n):", "        if j % 2 == 0:"], "cells": [0, 2, 4, 5, 7, 9, 10, 12, 14, 15, 17, 19, 20, 22, 24], "out": "15칸", "why": "짝수 열만 — 세로 줄무늬."}, {"n": "2-8", "kind": "grid", "label": "for j in range(n):  if i % 2 == 0:", "code": ["for i in range(n):", "    for j in range(n):", "        if i % 2 == 0:"], "cells": [0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 20, 21, 22, 23, 24], "out": "15칸", "why": "짝수 행만 — 가로 줄무늬."}, {"n": "2-9", "kind": "grid", "label": "for j in range(n):  if (i+j) % 2 == 0:", "code": ["for i in range(n):", "    for j in range(n):", "        if (i+j) % 2 == 0:"], "cells": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24], "out": "13칸", "why": "i+j 가 짝수인 칸 — 체크무늬."}, {"n": "2-10", "kind": "grid", "label": "for j in range(n):  if i==0 or i==n-1 or j==0 or j==n-1:", "code": ["for i in range(n):", "    for j in range(n):", "        if i==0 or i==n-1 or j==0 or j==n-1:"], "cells": [0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24], "out": "16칸", "why": "가장자리 한 줄 — 테두리."}, {"n": "2-11", "kind": "grid", "label": "for j in range(i+1):", "code": ["for i in range(n):", "    for j in range(i+1):"], "cells": [0, 5, 6, 10, 11, 12, 15, 16, 17, 18, 20, 21, 22, 23, 24], "out": "15칸", "why": "range(i+1) — 대각선까지 포함한 아래 삼각형."}, {"n": "2-12", "kind": "grid", "label": "for j in range(n):  if i <= j and i + j <= n-1:", "code": ["for i in range(n):", "    for j in range(n):", "        if i <= j and i + j <= n-1:"], "cells": [0, 1, 2, 3, 4, 6, 7, 8, 12], "out": "9칸", "why": "위쪽으로 뾰족한 삼각형. 조건이 둘이라 겹치는 칸만 남는다."}, {"n": "2-13", "kind": "grid", "label": "for j in range(1, n, 2):", "code": ["for i in range(n):", "    for j in range(1, n, 2):"], "cells": [1, 3, 6, 8, 11, 13, 16, 18, 21, 23], "out": "10칸", "why": "홀수 열만. 2-7 과 한 칸씩 어긋난 줄무늬."}, {"n": "2-14", "kind": "grid", "label": "for j in range(n):  if j < i and i + j >= n-1:", "code": ["for i in range(n):", "    for j in range(n):", "        if j < i and i + j >= n-1:"], "cells": [16, 17, 20, 21, 22, 23], "out": "6칸", "why": "왼쪽 아래 구석. 조건 둘이 겹치는 자리."}, {"n": "2-15", "kind": "grid", "label": "for j in range(n):  if i*j >= n:", "code": ["for i in range(n):", "    for j in range(n):", "        if i*j >= n:"], "cells": [13, 14, 17, 18, 19, 22, 23, 24], "out": "8칸", "why": "i × j 가 5 이상인 칸. 오른쪽 아래로 갈수록 넓어진다."}, {"n": "2-16", "kind": "grid", "label": "for j in range(i, n, 2):", "code": ["for i in range(n):", "    for j in range(i, n, 2):"], "cells": [0, 2, 4, 6, 8, 12, 14, 18, 24], "out": "9칸", "why": "i 부터 두 칸씩 — 행마다 시작점이 달라진다."}]}, {"day": 1, "t": 3, "paper": true, "title": "중첩 반복 출력", "star": true, "lede": "print 가 어느 반복 안에 있는지로 줄바꿈 자리가 정해집니다.", "trap": "안쪽에 있으면 한 줄로 이어지고, 바깥에 있으면 행마다 줄이 바뀝니다.", "items": [{"n": "3-1", "kind": "out", "code": ["for i in range(3):", "    for j in range(2):", "        print(i, j, end='  ')"], "a": ["0 0  0 1  1 0  1 1  2 0  2 1  "], "out": "0 0  0 1  1 0  1 1  2 0  2 1  ", "why": "print 가 안쪽에 있어 줄이 안 바뀐다."}, {"n": "3-2", "kind": "out", "code": ["for i in range(1, 4):", "    for j in range(1, 4):", "        print(i*j, end=' ')", "    print()"], "a": ["1 2 3  / 2 4 6  / 3 6 9 "], "out": "1 2 3  / 2 4 6  / 3 6 9 ", "why": "print() 가 바깥에 있어 행마다 줄이 바뀐다. 구구단 표 모양."}, {"n": "3-3", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if j > i:", "            print(i, j, end='  ')"], "a": ["0 1  0 2  1 2  "], "out": "0 1  0 2  1 2  ", "why": "j > i 인 칸만 — 대각선 위."}, {"n": "3-4", "kind": "out", "code": ["for i in range(4):", "    for j in range(i):", "        print('*', end='')", "    print()"], "a": ["* / ** / ***"], "out": "* / ** / ***", "why": "i=0 일 때 별이 0개라 첫 줄은 빈 줄이다."}, {"n": "3-5", "kind": "out", "code": ["for i in range(4):", "    print(' ' * (3-i) + '*' * (i+1))"], "a": ["   * /   ** /  *** / ****"], "out": "   * /   ** /  *** / ****", "why": "앞에 공백을 붙여 오른쪽으로 밀었다."}, {"n": "3-6", "kind": "out", "code": ["c = 0", "for i in range(2):", "    for j in range(2):", "        for k in range(3):", "            c += 1", "            last = (i, j, k)", "print(c, last)"], "a": ["12 (1, 1, 2)"], "out": "12 (1, 1, 2)", "why": "2 × 2 × 3 = 12. 마지막 값은 각 반복의 끝값."}, {"n": "3-7", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if i == j:", "            print('#', end='')", "        else:", "            print('.', end='')", "    print()"], "a": ["#.. / .#. / ..#"], "out": "#.. / .#. / ..#", "why": "i 와 j 가 같은 칸에만 # 을 찍었다 — 대각선."}, {"n": "3-8", "kind": "out", "code": ["for i in range(4):", "    for j in range(4):", "        print(i*4 + j, end=' ')", "    print()"], "a": ["0 1 2 3  / 4 5 6 7  / 8 9 10 11  / 12 13 14 15 "], "out": "0 1 2 3  / 4 5 6 7  / 8 9 10 11  / 12 13 14 15 ", "why": "i*4 + j — 0부터 15까지 차례로. 이차원을 일차원 번호로 바꾸는 식."}, {"n": "3-9", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if j < i:", "            print(' ', end='')", "        else:", "            print('*', end='')", "    print()"], "a": ["*** /  ** /   *"], "out": "*** /  ** /   *", "why": "j < i 이면 공백, 아니면 별. 오른쪽으로 밀린 삼각형."}, {"n": "3-10", "kind": "out", "code": ["for i in range(1, 4):", "    for j in range(3, 0, -1):", "        print(i*j, end=' ')", "    print()"], "a": ["3 2 1  / 6 4 2  / 9 6 3 "], "out": "3 2 1  / 6 4 2  / 9 6 3 ", "why": "안쪽이 거꾸로 돌아 곱이 큰 것부터 나온다."}, {"n": "3-11", "kind": "out", "code": ["s = ''", "for i in range(4):", "    for j in range(i):", "        s += str(j)", "print(s)"], "a": ["001012"], "out": "001012", "why": "줄을 안 바꾸고 글자를 이어 붙였다. 0 / 01 / 012 가 붙은 모양."}, {"n": "3-12", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        for k in range(3):", "            if i + j + k == 2:", "                print(i, j, k, end='  ')"], "a": ["0 0 2  0 1 1  0 2 0  1 0 1  1 1 0  2 0 0  "], "out": "0 0 2  0 1 1  0 2 0  1 0 1  1 1 0  2 0 0  ", "why": "3중 반복 안의 조건. i+j+k 가 2 인 짝만 남는다."}]}, {"day": 1, "t": 4, "paper": true, "title": "이차원 리스트", "star": true, "lede": "m[i][j] 에서 i 가 행, j 가 열입니다.", "trap": "바깥 반복이 행이냐 열이냐로 지나가는 순서가 갈립니다.", "items": [{"n": "4-1", "kind": "out", "code": ["m = [[1,2,3],[4,5,6]]", "for row in m:", "    for x in row:", "        print(x, end=' ')"], "a": ["1 2 3 4 5 6 "], "out": "1 2 3 4 5 6 ", "why": "행 하나를 다 지나간 뒤 다음 행으로 간다."}, {"n": "4-2", "kind": "out", "code": ["m = [[1,2,3],[4,5,6]]", "for j in range(3):", "    for i in range(2):", "        print(m[i][j], end=' ')"], "a": ["1 4 2 5 3 6 "], "out": "1 4 2 5 3 6 ", "why": "바깥이 열이라 세로로 먼저 간다."}, {"n": "4-3", "kind": "out", "code": ["m = [[1,2,3],[4,5,6],[7,8,9]]", "for i in range(3):", "    for j in range(3):", "        if i == j:", "            print(m[i][j], end=' ')"], "a": ["1 5 9 "], "out": "1 5 9 ", "why": "i 와 j 가 같은 칸 — 대각선."}, {"n": "4-4", "kind": "out", "code": ["m = [[1,2,3],[4,5,6],[7,8,9]]", "s = 0", "for i in range(3):", "    for j in range(i+1, 3):", "        s += m[i][j]", "print(s)"], "a": ["11"], "out": "11", "why": "j 가 i+1 부터 — 대각선 위의 합. 2+3+6 = 11."}, {"n": "4-5", "kind": "out", "code": ["m = [[1,2],[3,4],[5,6]]", "for i in range(3):", "    for j in range(2):", "        print(m[i][j], end='')", "    print()"], "a": ["12 / 34 / 56"], "out": "12 / 34 / 56", "why": "print() 가 바깥에 있어 행마다 줄이 바뀐다."}, {"n": "4-6", "kind": "out", "code": ["m = [[1,2,3],[4,5,6],[7,8,9]]", "for i in range(3):", "    print(m[i][2-i], end=' ')"], "a": ["3 5 7 "], "out": "3 5 7 ", "why": "m[i][2-i] — 반대쪽 대각선."}, {"n": "4-7", "kind": "out", "code": ["m = [[1,2,3],[4,5,6],[7,8,9]]", "s = 0", "for i in range(3):", "    for j in range(3):", "        if i + j == 2:", "            s += m[i][j]", "print(s)"], "a": ["15"], "out": "15", "why": "i+j 가 2 인 칸 — 반대쪽 대각선의 합. 3+5+7 = 15."}, {"n": "4-8", "kind": "out", "code": ["m = [[1,2,3],[4,5,6],[7,8,9]]", "t = [[0]*3 for _ in range(3)]", "for i in range(3):", "    for j in range(3):", "        t[j][i] = m[i][j]", "print(t[0])"], "a": ["[1, 4, 7]"], "out": "[1, 4, 7]", "why": "t[j][i] = m[i][j] — 행과 열을 맞바꾼다. 첫 행은 원래의 첫 열."}, {"n": "4-9", "kind": "out", "code": ["m = [[1,2],[3,4],[5,6]]", "s = 0", "for row in m:", "    s += row[0]", "print(s)"], "a": ["9"], "out": "9", "why": "각 행의 첫 칸만 더한다. 1+3+5 = 9."}, {"n": "4-10", "kind": "out", "code": ["m = [[3,1,4],[1,5,9],[2,6,5]]", "best = m[0][0]", "r = 0", "c = 0", "for i in range(3):", "    for j in range(3):", "        if m[i][j] > best:", "            best = m[i][j]", "            r = i", "            c = j", "print(best, r, c)"], "a": ["9 1 2"], "out": "9 1 2", "why": "최댓값과 그 위치를 같이 갱신한다. 9 는 (1,2)."}, {"n": "4-11", "kind": "out", "code": ["m = [[1,2,3],[4,5,6],[7,8,9]]", "for i in range(3):", "    s = 0", "    for j in range(3):", "        s += m[j][i]", "    print(s, end=' ')"], "a": ["12 15 18 "], "out": "12 15 18 ", "why": "m[j][i] — 바깥이 열이라 열마다의 합이 나온다."}, {"n": "4-12", "kind": "out", "code": ["m = [[1,0,1],[0,1,0],[1,1,1]]", "c = 0", "for i in range(3):", "    for j in range(3):", "        if m[i][j] == 1 and i != j:", "            c += 1", "print(c)"], "a": ["3"], "out": "3", "why": "1 이면서 대각선이 아닌 칸. 대각선의 1 두 개가 빠진다."}]}, {"day": 1, "t": 91, "label": "도전", "title": "도전", "star": false, "paper": true, "lede": "한 문항에 오 분은 걸립니다. 추적표를 그리지 않으면 못 풉니다.", "trap": "변수가 여럿입니다. 어느 줄이 어느 변수를 바꾸는지 먼저 표시하세요.", "items": [{"n": "H-1", "kind": "out", "code": ["m = [[1, 2, 3, 4],", "     [5, 6, 7, 8],", "     [9, 10, 11, 12],", "     [13, 14, 15, 16]]", "", "s = 0", "d = 0", "for i in range(4):", "    for j in range(4):", "        if i < j:", "            s += m[i][j]", "        elif i > j:", "            d += m[i][j]", "print(s, d)", "print(s - d)"], "a": ["36 66 / -30"], "out": "36 66 / -30", "why": "i<j 는 위 삼각형, i>j 는 아래 삼각형. 대각선은 어느 쪽에도 안 들어간다.", "title": "위 삼각형 합과 아래 삼각형 합"}, {"n": "H-2", "kind": "out", "code": ["m = [[1, 2, 3],", "     [4, 5, 6],", "     [7, 8, 9]]", "", "for k in range(3):", "    for i in range(3):", "        for j in range(3):", "            if i + j == k:", "                print(m[i][j], end=' ')", "    print()"], "a": ["1  / 2 4  / 3 5 7 "], "out": "1  / 2 4  / 3 5 7 ", "why": "i+j 가 같은 칸이 한 대각선. k 를 0,1,2 로 바꾸며 줄을 나눈다.", "title": "대각선 줄마다 나눠 찍기"}]}, {"day": 2, "t": 5, "paper": true, "title": "중첩 안의 break", "star": true, "lede": "break 는 자기가 들어 있는 반복 하나만 끝냅니다. 어느 for 아래에 있는지 먼저 찾으세요.", "trap": "for 에 붙은 else 는 break 없이 끝까지 돌았을 때만 실행됩니다.", "items": [{"n": "5-1", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if j == 1:", "            break", "        print(i, j, end='  ')"], "a": ["0 0  1 0  2 0  "], "out": "0 0  1 0  2 0  ", "why": "break 가 안쪽 반복 안. 바깥은 계속 돈다."}, {"n": "5-2", "kind": "out", "code": ["for i in range(3):", "    if i == 1:", "        break", "    for j in range(3):", "        print(i, j, end='  ')"], "a": ["0 0  0 1  0 2  "], "out": "0 0  0 1  0 2  ", "why": "break 가 바깥 반복 안. i=1 에서 통째로 끝난다."}, {"n": "5-3", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if i == 1:", "            break", "        print(i, j, end='  ')"], "a": ["0 0  0 1  0 2  2 0  2 1  2 2  "], "out": "0 0  0 1  0 2  2 0  2 1  2 2  ", "why": "break 가 안쪽에 있지만 조건은 i. i=1 만 통째로 빠지고 i=2 는 돌아온다."}, {"n": "5-4", "kind": "out", "code": ["for i in range(1, 6):", "    if i == 3:", "        break", "    print(i, end=' ')", "else:", "    print('끝까지')"], "a": ["1 2 "], "out": "1 2 ", "why": "break 가 걸리면 for-else 의 else 는 실행되지 않는다."}, {"n": "5-5", "kind": "out", "code": ["for i in range(1, 6):", "    if i == 99:", "        break", "    print(i, end=' ')", "else:", "    print('끝까지')"], "a": ["1 2 3 4 5 끝까지"], "out": "1 2 3 4 5 끝까지", "why": "break 가 한 번도 안 걸려 else 가 실행된다."}, {"n": "5-6", "kind": "out", "code": ["found = False", "for i in range(3):", "    for j in range(3):", "        if i * j == 2:", "            found = True", "            break", "    if found:", "        break", "print(i, j)"], "a": ["1 2"], "out": "1 2", "why": "안쪽에서 break 한 뒤 바깥에서도 한 번 더 검사해야 완전히 빠져나온다."}, {"n": "5-7", "kind": "out", "code": ["for i in range(4):", "    for j in range(4):", "        if i + j == 3:", "            break", "        print(i+j, end=' ')"], "a": ["0 1 2 1 2 2 "], "out": "0 1 2 1 2 2 ", "why": "i+j 가 3 이 되는 자리에서 안쪽만 끊긴다. 행마다 길이가 줄어든다."}, {"n": "5-8", "kind": "out", "code": ["n = 0", "for i in range(4):", "    for j in range(4):", "        if j == i:", "            break", "        n += 1", "print(n)"], "a": ["6"], "out": "6", "why": "j == i 에서 끊기니 행마다 i 번. 0+1+2+3 = 6."}, {"n": "5-9", "kind": "out", "code": ["for i in range(3):", "    for j in range(3):", "        if j == 2:", "            continue", "        if i == 2:", "            break", "        print(i, j, end='  ')"], "a": ["0 0  0 1  1 0  1 1  "], "out": "0 0  0 1  1 0  1 1  ", "why": "continue 와 break 가 한 반복 안에 같이 있다. i=2 는 통째로 빠진다."}, {"n": "5-10", "kind": "out", "code": ["a = [[1,2],[3,4],[5,6]]", "for row in a:", "    for x in row:", "        if x > 3:", "            break", "    else:", "        continue", "    break", "print(x)"], "a": ["4"], "out": "4", "why": "for-else 로 바깥까지 빠져나오는 짜임. break 를 두 번 쓴다."}]}, {"day": 2, "t": 6, "paper": true, "title": "흔적 남기기", "star": true, "lede": "반복이 끝난 뒤에도 남는 변수가 필요합니다. 못 찾았을 때의 값을 먼저 정하세요.", "trap": "빈 리스트가 들어오면 반복이 한 번도 안 돕니다. 그때 무엇이 출력될지 보세요.", "items": [{"n": "6-1", "kind": "out", "code": ["lst = [3, 9, 1, 7, 5]", "found = False", "for x in lst:", "    if x == 7:", "        found = True", "print(found)"], "a": ["True"], "out": "True", "why": "break 가 없어도 끝까지 돌면서 True 를 남긴다."}, {"n": "6-2", "kind": "out", "code": ["lst = [4, 8, 2]", "best = lst[0]", "pos = 0", "for i in range(len(lst)):", "    if lst[i] > best:", "        best = lst[i]", "        pos = i", "print(best, pos)"], "a": ["8 1"], "out": "8 1", "why": "best 와 pos 를 같이 갱신해야 위치를 안다."}, {"n": "6-3", "kind": "out", "code": ["lst = [3, 9, 1, 7, 5]", "pos = -1", "for i in range(len(lst)):", "    if lst[i] == 2:", "        pos = i", "print(pos)"], "a": ["-1"], "out": "-1", "why": "못 찾으면 시작값 -1 이 그대로 남는다. 그래서 -1 로 시작한다."}, {"n": "6-4", "kind": "out", "code": ["lst = [2, 4, 6, 8]", "allpos = True", "for x in lst:", "    if x % 2 == 1:", "        allpos = False", "print(allpos)"], "a": ["True"], "out": "True", "why": "「전부 ~인가」는 「하나라도 아닌 게 있는가」로 뒤집는다."}, {"n": "6-5", "kind": "out", "code": ["lst = [5, 3, 5, 1, 5]", "cnt = 0", "last = -1", "for i in range(len(lst)):", "    if lst[i] == 5:", "        cnt += 1", "        last = i", "print(cnt, last)"], "a": ["3 4"], "out": "3 4", "why": "개수와 마지막 위치를 따로 기억한다."}, {"n": "6-6", "kind": "out", "code": ["lst = []", "best = 0", "for x in lst:", "    if x > best:", "        best = x", "print(best)"], "a": ["0"], "out": "0", "why": "빈 리스트면 반복이 한 번도 안 돌아 시작값이 그대로 나온다. best=0 이 위험한 까닭."}, {"n": "6-7", "kind": "out", "code": ["lst = [1, 2, 3]", "idx = -1", "for i in range(len(lst)):", "    if lst[i] > 1:", "        idx = i", "        break", "print(idx, lst[idx])"], "a": ["1 2"], "out": "1 2", "why": "찾자마자 break. idx 와 그 자리의 값을 같이 본다."}, {"n": "6-8", "kind": "out", "code": ["lst = [7, 7, 7]", "first = -1", "last = -1", "for i in range(len(lst)):", "    if lst[i] == 7:", "        if first == -1:", "            first = i", "        last = i", "print(first, last)"], "a": ["0 2"], "out": "0 2", "why": "처음과 마지막을 따로 기억한다. first 는 한 번만 적는다."}, {"n": "6-9", "kind": "out", "code": ["m = [[0,1],[1,0]]", "found = False", "for i in range(2):", "    for j in range(2):", "        if m[i][j] == 2:", "            found = True", "print(found, i, j)"], "a": ["False 1 1"], "out": "False 1 1", "why": "못 찾아도 i, j 는 반복이 끝난 뒤의 값으로 남아 있다."}, {"n": "6-10", "kind": "out", "code": ["lst = [3, -1, 4, -1, 5]", "best = 0", "for x in lst:", "    if x > best:", "        best = x", "neg = 0", "for x in lst:", "    if x < 0:", "        neg += 1", "print(best, neg)"], "a": ["5 2"], "out": "5 2", "why": "best=0 으로 시작해도 여기서는 답이 맞다. 음수만 있는 리스트였다면 틀린다."}]}, {"day": 2, "t": 7, "title": "이차원 만들기", "star": true, "paper": false, "lede": "곱셈으로 만든 것과 반복으로 만든 것은 다릅니다.", "trap": "[[0]*3]*3 은 리스트 세 개가 아니라 같은 리스트 하나를 세 번 가리킨 것입니다.", "items": [{"n": "7-1", "kind": "out", "code": ["g = [[0] * 3] * 3", "g[0][0] = 1", "print(g)"], "a": ["[[1, 0, 0], [1, 0, 0], [1, 0, 0]]"], "out": "[[1, 0, 0], [1, 0, 0], [1, 0, 0]]", "why": "리스트 세 개가 아니라 같은 리스트 하나를 세 번 가리킨다."}, {"n": "7-2", "kind": "out", "code": ["g = [[0] * 3 for _ in range(3)]", "g[0][0] = 1", "print(g)"], "a": ["[[1, 0, 0], [0, 0, 0], [0, 0, 0]]"], "out": "[[1, 0, 0], [0, 0, 0], [0, 0, 0]]", "why": "for 로 만들면 매번 새 리스트가 생긴다."}, {"n": "7-3", "kind": "out", "code": ["g = [[0] * 3] * 3", "print(g[0] is g[1])"], "a": ["True"], "out": "True", "why": "g[0] 과 g[1] 이 같은 물건이라는 증거."}, {"n": "7-4", "kind": "out", "code": ["adj = [[]] * 4", "adj[0].append(1)", "print(adj)"], "a": ["[[1], [1], [1], [1]]"], "out": "[[1], [1], [1], [1]]", "why": "간선 하나를 넣었는데 넷 다 들어간다."}, {"n": "7-5", "kind": "out", "code": ["adj = [[] for _ in range(4)]", "adj[0].append(1)", "print(adj)"], "a": ["[[1], [], [], []]"], "out": "[[1], [], [], []]", "why": "이렇게 만들어야 한다."}, {"n": "7-6", "kind": "out", "code": ["g = [[0] * 3 for _ in range(3)]", "for i in range(3):", "    g[i][i] = 1", "print(g)"], "a": ["[[1, 0, 0], [0, 1, 0], [0, 0, 1]]"], "out": "[[1, 0, 0], [0, 1, 0], [0, 0, 1]]", "why": "제대로 만든 격자에 대각선만 1 을 넣었다."}, {"n": "7-7", "kind": "out", "code": ["row = [0] * 3", "g = [row, row]", "g[0][1] = 9", "print(g)"], "a": ["[[0, 9, 0], [0, 9, 0]]"], "out": "[[0, 9, 0], [0, 9, 0]]", "why": "이름 하나를 두 번 넣었으니 두 줄이 같은 물건이다."}, {"n": "7-8", "kind": "out", "code": ["g = [[0] * 2 for _ in range(2)]", "h = g", "h[0][0] = 5", "print(g)"], "a": ["[[5, 0], [0, 0]]"], "out": "[[5, 0], [0, 0]]", "why": "h = g 는 복사가 아니라 같은 것을 가리키는 이름 하나를 더 만든 것."}, {"n": "7-9", "kind": "out", "code": ["g = [[1, 2], [3, 4]]", "h = []", "for row in g:", "    h.append(row)", "h[0][0] = 9", "print(g)"], "a": ["[[9, 2], [3, 4]]"], "out": "[[9, 2], [3, 4]]", "why": "안쪽 리스트를 그대로 담았으니 h 를 고치면 g 도 바뀐다."}, {"n": "7-10", "kind": "out", "code": ["g = [[1, 2], [3, 4]]", "h = []", "for row in g:", "    h.append(row[:])", "h[0][0] = 9", "print(g, h)"], "a": ["[[1, 2], [3, 4]] [[9, 2], [3, 4]]"], "out": "[[1, 2], [3, 4]] [[9, 2], [3, 4]]", "why": "row[:] 로 복사해 담으면 서로 영향을 주지 않는다."}]}, {"day": 2, "t": 8, "paper": true, "title": "순회 중 수정", "star": true, "lede": "돌고 있는 리스트의 길이를 바꾸면 건너뛰는 원소가 생깁니다.", "trap": "값을 바꾸는 것은 안전하지만, 지우거나 넣는 것은 안전하지 않습니다.", "items": [{"n": "8-1", "kind": "out", "code": ["a = [1, 2, 4, 6, 7]", "for x in a:", "    if x % 2 == 0:", "        a.remove(x)", "print(a)"], "a": ["[1, 4, 7]"], "out": "[1, 4, 7]", "why": "2 를 지우면 뒤가 한 칸씩 당겨져 4 를 건너뛴다."}, {"n": "8-2", "kind": "out", "code": ["a = [1, 2, 3, 4, 5, 6]", "b = []", "for x in a:", "    if x % 2 == 1:", "        b.append(x)", "print(b)"], "a": ["[1, 3, 5]"], "out": "[1, 3, 5]", "why": "지우지 말고 새 리스트에 담으면 안전하다."}, {"n": "8-3", "kind": "out", "code": ["a = [2, 4, 6]", "for x in a[:]:", "    a.remove(x)", "print(a)"], "a": ["[]"], "out": "[]", "why": "a[:] 는 복사본이라 원본을 지워도 순회가 흔들리지 않는다."}, {"n": "8-4", "kind": "out", "code": ["a = [1, 2, 3]", "for i in range(len(a)):", "    a[i] = a[i] * 2", "print(a)"], "a": ["[2, 4, 6]"], "out": "[2, 4, 6]", "why": "값을 바꾸는 것은 안전하다. 길이가 변하지 않기 때문."}, {"n": "8-5", "kind": "out", "code": ["a = [1, 2, 3]", "for x in a:", "    a.append(x)", "    if len(a) > 6:", "        break", "print(len(a))"], "a": ["7"], "out": "7", "why": "돌면서 뒤에 붙이면 끝이 계속 밀린다. break 가 없으면 안 멈춘다."}, {"n": "8-6", "kind": "out", "code": ["a = [5, 3, 5]", "b = a", "b.append(1)", "print(a)"], "a": ["[5, 3, 5, 1]"], "out": "[5, 3, 5, 1]", "why": "b = a 는 복사가 아니다. b 에 붙이면 a 도 길어진다."}, {"n": "8-7", "kind": "out", "code": ["a = [1, 2, 3, 4]", "for i in range(len(a) - 1, -1, -1):", "    if a[i] % 2 == 0:", "        a.pop(i)", "print(a)"], "a": ["[1, 3]"], "out": "[1, 3]", "why": "뒤에서부터 지우면 앞쪽 자리가 안 밀려 건너뛰지 않는다."}, {"n": "8-8", "kind": "out", "code": ["a = [[1], [2]]", "b = a[:]", "b[0].append(9)", "print(a)"], "a": ["[[1, 9], [2]]"], "out": "[[1, 9], [2]]", "why": "a[:] 는 겉만 복사한다. 안쪽 리스트는 여전히 같은 물건."}]}, {"day": 2, "t": 9, "paper": true, "title": "오류 찾기", "star": true, "lede": "오류가 나는 줄번호를 숫자로 쓰세요. 시험에서 이렇게 묻습니다.", "trap": "문법 오류만 있는 게 아닙니다. 실행 중에 나는 오류도 줄번호로 답합니다.", "items": [{"n": "9-1", "kind": "line", "code": ["total = 0", "for i in range(1, 6)", "    total += i", "print(total)"], "a": ["2"], "out": "2번 줄 — for 문 끝에 콜론(:)", "why": "for 문 끝에 콜론(:)"}, {"n": "9-2", "kind": "line", "code": ["m = [[1, 2], [3, 4]]", "for i in range(2):", "    for j in range(2):", "    print(m[i][j])"], "a": ["4"], "out": "4번 줄 — print 를 한 단 더 들여쓰기", "why": "print 를 한 단 더 들여쓰기"}, {"n": "9-3", "kind": "line", "code": ["c = 0", "for i in range(3):", "    for j in range(3):", "        c += 1", "print(c[0])"], "a": ["5"], "out": "5번 줄 — c 는 숫자라 [0] 을 붙일 수 없다", "why": "c 는 숫자라 [0] 을 붙일 수 없다"}, {"n": "9-4", "kind": "line", "code": ["g = [[0] * 3 for _ in range(3)]", "for i in range(3):", "    for j in range(3):", "        g[i][j] = i + j", "print(g[3][0])"], "a": ["5"], "out": "5번 줄 — 인덱스가 0~2 뿐이라 g[3] 은 없다", "why": "인덱스가 0~2 뿐이라 g[3] 은 없다"}, {"n": "9-5", "kind": "line", "code": ["s = 0", "for i in range(1, 4):", "    for j in range(1, 4)", "        s += i * j", "print(s)"], "a": ["3"], "out": "3번 줄 — 안쪽 for 문 끝에 콜론(:)", "why": "안쪽 for 문 끝에 콜론(:)"}, {"n": "9-6", "kind": "line", "code": ["a = [1, 2, 3]", "for i in range(4):", "    print(a[i])"], "a": ["3"], "out": "3번 줄 — 인덱스가 0~2 뿐이라 a[3] 은 없다", "why": "인덱스가 0~2 뿐이라 a[3] 은 없다"}, {"n": "9-7", "kind": "line", "code": ["cnt = {}", "for x in [1, 2, 1]:", "    cnt[x] = cnt[x] + 1", "print(cnt)"], "a": ["3"], "out": "3번 줄 — 없는 열쇠를 그냥 꺼냈다. get(x, 0) 이 필요하다", "why": "없는 열쇠를 그냥 꺼냈다. get(x, 0) 이 필요하다"}, {"n": "9-8", "kind": "line", "code": ["m = [[1, 2], [3, 4]]", "s = 0", "for row in m:", "    for x in row", "        s += x", "print(s)"], "a": ["4"], "out": "4번 줄 — 안쪽 for 문 끝에 콜론(:)", "why": "안쪽 for 문 끝에 콜론(:)"}, {"n": "9-9", "kind": "line", "code": ["a = [3, 1, 2]", "a.sort()", "print(a[0] + a[3])"], "a": ["3"], "out": "3번 줄 — 정렬해도 길이는 3이라 a[3] 은 없다", "why": "정렬해도 길이는 3이라 a[3] 은 없다"}, {"n": "9-10", "kind": "line", "code": ["s = 0", "for i in range(3):", "    for j in range(3):", "        s += i * j", "    print(s", "print(s)"], "a": ["5"], "out": "5번 줄 — print 의 괄호가 안 닫혔다", "why": "print 의 괄호가 안 닫혔다"}]}, {"day": 2, "t": 10, "paper": true, "title": "3중 반복", "star": true, "lede": "반복이 셋이면 곱셈이 세 번입니다. 안쪽이 앞의 값에 매여 있으면 곱셈이 아닙니다.", "trap": "가장 안쪽이 range(0) 이면 전체가 0번입니다.", "items": [{"n": "10-1", "kind": "count", "loops": ["range(3)", "range(3)", "range(3)"], "code": ["n = 0", "for i in range(3):", "    for j in range(3):", "        for k in range(3):", "            n += 1", "print(n)"], "a": ["27"], "out": "27", "why": "3 × 3 × 3."}, {"n": "10-2", "kind": "count", "loops": ["range(4)", "range(3)", "range(2)"], "code": ["n = 0", "for i in range(4):", "    for j in range(3):", "        for k in range(2):", "            n += 1", "print(n)"], "a": ["24"], "out": "24", "why": "4 × 3 × 2."}, {"n": "10-3", "kind": "count", "loops": ["range(4)", "range(i)", "range(j)"], "code": ["n = 0", "for i in range(4):", "    for j in range(i):", "        for k in range(j):", "            n += 1", "print(n)"], "a": ["4"], "out": "4", "why": "안쪽이 둘 다 앞의 값에 매여 있다. i<4, j<i, k<j 인 짝의 수."}, {"n": "10-4", "kind": "count", "loops": ["range(5)", "range(i+1, 5)", "range(j+1, 5)"], "code": ["n = 0", "for i in range(5):", "    for j in range(i+1, 5):", "        for k in range(j+1, 5):", "            n += 1", "print(n)"], "a": ["10"], "out": "10", "why": "i < j < k 인 세 칸을 고르는 경우의 수. 5개 중 3개 고르기 = 10."}, {"n": "10-5", "kind": "count", "loops": ["range(3)", "range(3)", "range(0)"], "code": ["n = 0", "for i in range(3):", "    for j in range(3):", "        for k in range(0):", "            n += 1", "print(n)"], "a": ["0"], "out": "0", "why": "가장 안쪽이 range(0) 이라 본문이 한 번도 실행되지 않는다."}, {"n": "10-6", "kind": "count", "loops": ["range(2)", "range(3)", "range(4)"], "code": ["n = 0", "for i in range(2):", "    for j in range(3):", "        for k in range(4):", "            n += 1", "print(n)"], "a": ["24"], "out": "24", "why": "2 × 3 × 4. 10-2 와 답이 같지만 순서가 다르다."}, {"n": "10-7", "kind": "count", "loops": ["range(4)", "range(4)", "range(i)"], "code": ["n = 0", "for i in range(4):", "    for j in range(4):", "        for k in range(i):", "            n += 1", "print(n)"], "a": ["24"], "out": "24", "why": "맨 안쪽이 i 에 매여 있다. 4 × (0+1+2+3) = 24."}, {"n": "10-8", "kind": "count", "loops": ["range(3)", "range(i+1)", "range(j+1)"], "code": ["n = 0", "for i in range(3):", "    for j in range(i+1):", "        for k in range(j+1):", "            n += 1", "print(n)"], "a": ["10"], "out": "10", "why": "안쪽 둘이 앞 값에 매여 있다. 1+3+6 = 10."}, {"n": "10-9", "kind": "count", "loops": ["range(5)", "range(5)", "range(1)"], "code": ["n = 0", "for i in range(5):", "    for j in range(5):", "        for k in range(1):", "            n += 1", "print(n)"], "a": ["25"], "out": "25", "why": "맨 안쪽이 range(1) 이라 사실상 이중 반복과 같다."}, {"n": "10-10", "kind": "count", "loops": ["range(4)", "range(i, 4)", "range(2)"], "code": ["n = 0", "for i in range(4):", "    for j in range(i, 4):", "        for k in range(2):", "            n += 1", "print(n)"], "a": ["20"], "out": "20", "why": "가운데가 range(i,4) — (4+3+2+1) × 2 = 20."}]}, {"day": 2, "t": 92, "label": "도전", "title": "도전", "star": false, "paper": true, "lede": "한 문항에 오 분에서 십 분. 정렬과 이웃 칸까지 나옵니다.", "trap": "변수가 여럿입니다. 어느 줄이 어느 변수를 바꾸는지 먼저 표시하세요.", "items": [{"n": "H-3", "kind": "out", "code": ["a = [4, 7, 2, 9, 7, 1, 9]", "best = a[0]", "second = -1", "pos = 0", "for i in range(len(a)):", "    if a[i] > best:", "        second = best", "        best = a[i]", "        pos = i", "    elif a[i] < best and a[i] > second:", "        second = a[i]", "print(best, second, pos)"], "a": ["9 7 3"], "out": "9 7 3", "why": "9 가 두 번 나오는데 두 번째에서는 pos 가 안 바뀐다 — > 지 >= 가 아니라서.", "title": "최댓값과 두 번째 최댓값"}, {"n": "H-4", "kind": "out", "code": ["m = [[0, 1, 0],", "     [1, 1, 1],", "     [0, 1, 0]]", "", "cnt = 0", "for i in range(3):", "    for j in range(3):", "        if m[i][j] == 0:", "            continue", "        near = 0", "        for di in range(-1, 2):", "            for dj in range(-1, 2):", "                if di == 0 and dj == 0:", "                    continue", "                x = i + di", "                y = j + dj", "                if 0 <= x < 3 and 0 <= y < 3 and m[x][y] == 1:", "                    near += 1", "        if near >= 3:", "            cnt += 1", "print(cnt)"], "a": ["5"], "out": "5", "why": "di, dj 까지 반복이 넷. 경계 검사와 continue 둘이 섞여 있다.", "title": "이웃 칸 세기 — 4중 반복"}, {"n": "H-5", "kind": "out", "code": ["a = [3, 1, 4, 1, 5, 9, 2, 6]", "n = len(a)", "swaps = 0", "for i in range(n - 1):", "    done = True", "    for j in range(n - 1 - i):", "        if a[j] > a[j + 1]:", "            a[j], a[j + 1] = a[j + 1], a[j]", "            swaps += 1", "            done = False", "    if done:", "        break", "print(swaps)", "print(a[0], a[-1])"], "a": ["8 / 1 9"], "out": "8 / 1 9", "why": "교환 횟수는 뒤집힌 쌍의 개수와 같다. done 플래그로 마지막 바퀴에서 일찍 끊긴다.", "title": "버블 정렬의 교환 횟수"}]}, {"day": 3, "t": 11, "title": "같은 답, 다른 횟수", "star": true, "paper": true, "lede": "두 코드가 같은 답을 냅니다. 다른 것은 c 가 몇까지 올라가느냐뿐입니다.", "trap": "시간을 재지 않습니다. 횟수를 세면 그것이 곧 답입니다.", "items": [{"n": "11-1", "kind": "out", "code": ["a = list(range(1, 101))", "c = 0", "for i in range(100):", "    s = 0", "    for j in range(i + 1):", "        s += a[j]", "        c += 1", "print(c)"], "a": ["5050"], "out": "5050", "why": "구간마다 다시 더해서 1+2+...+100 = 5050번."}, {"n": "11-2", "kind": "out", "code": ["a = list(range(1, 101))", "c = 0", "pre = [0] * 101", "for i in range(100):", "    pre[i + 1] = pre[i] + a[i]", "    c += 1", "print(c)"], "a": ["100"], "out": "100", "why": "미리 한 번만 훑어 두면 100번. 같은 값을 쓰는데 횟수가 50배 차이."}, {"n": "11-3", "kind": "out", "code": ["a = list(range(1, 101))", "c = 0", "dup = False", "for i in range(100):", "    for j in range(i + 1, 100):", "        c += 1", "        if a[i] == a[j]:", "            dup = True", "print(c)"], "a": ["4950"], "out": "4950", "why": "모든 짝을 보니 100×99÷2 = 4950번."}, {"n": "11-4", "kind": "out", "code": ["a = list(range(1, 101))", "c = 0", "seen = set()", "dup = False", "for x in a:", "    c += 1", "    if x in seen:", "        dup = True", "    seen.add(x)", "print(c)"], "a": ["100"], "out": "100", "why": "본 것을 집합에 담아 두면 한 번씩만 보면 된다 — 100번."}, {"n": "11-5", "kind": "out", "code": ["a = list(range(1, 101))", "c = 0", "target = 150", "found = 0", "for i in range(100):", "    for j in range(i + 1, 100):", "        c += 1", "        if a[i] + a[j] == target:", "            found += 1", "print(c, found)"], "a": ["4950 25"], "out": "4950 25", "why": "짝을 다 보는 방법. 4950번."}, {"n": "11-6", "kind": "out", "code": ["a = list(range(1, 101))", "c = 0", "target = 150", "need = {}", "found = 0", "for x in a:", "    c += 1", "    if target - x in need:", "        found += need[target - x]", "    need[x] = need.get(x, 0) + 1", "print(c, found)"], "a": ["100 25"], "out": "100 25", "why": "찾는 값을 딕셔너리에 적어 두면 100번. 답은 둘 다 25."}, {"n": "11-7", "kind": "out", "code": ["a = list(range(1, 51))", "c = 0", "for i in range(50):", "    for j in range(50):", "        c += 1", "        if a[j] == a[i] * 2:", "            break", "print(c)"], "a": ["1900"], "out": "1900", "why": "안쪽 반복이 찾는 일이다. 그 반복을 없애는 게 3차시의 전부."}, {"n": "11-8", "kind": "out", "code": ["a = list(range(1, 51))", "c = 0", "pos = {}", "for i in range(50):", "    c += 1", "    pos[a[i]] = i", "for i in range(50):", "    c += 1", "    if a[i] * 2 in pos:", "        pass", "print(c)"], "a": ["100"], "out": "100", "why": "미리 만들어 두는 값이 100개뿐이라 메모리는 거의 안 는다."}]}, {"day": 3, "t": 12, "title": "누적합", "star": true, "paper": true, "lede": "미리 한 번 만들어 두고 꺼내 씁니다. 구간 합이 뺄셈 한 번이 됩니다.", "trap": "pre 앞에 0 을 하나 둡니다. 그래야 pre[j] - pre[i] 의 경계가 맞습니다.", "items": [{"n": "12-1", "kind": "out", "code": ["a = [3, 1, 4, 1, 5]", "pre = [0] * 6", "for i in range(5):", "    pre[i + 1] = pre[i] + a[i]", "print(pre)"], "a": ["[0, 3, 4, 8, 9, 14]"], "out": "[0, 3, 4, 8, 9, 14]", "why": "pre[i+1] = pre[i] + a[i]. 앞에 0 을 하나 두는 것이 요령."}, {"n": "12-2", "kind": "out", "code": ["a = [3, 1, 4, 1, 5]", "pre = [0, 3, 4, 8, 9, 14]", "print(pre[4] - pre[1])"], "a": ["6"], "out": "6", "why": "a[1]+a[2]+a[3] = pre[4] - pre[1]. 경계를 헷갈리면 한 칸씩 밀린다."}, {"n": "12-3", "kind": "out", "code": ["a = [3, 1, 4, 1, 5]", "pre = [0, 3, 4, 8, 9, 14]", "print(pre[5] - pre[0])"], "a": ["14"], "out": "14", "why": "전체 합은 pre[n] - pre[0]."}, {"n": "12-4", "kind": "out", "code": ["a = [2, 2, 2, 2]", "pre = [0] * 5", "for i in range(4):", "    pre[i + 1] = pre[i] + a[i]", "for i in range(4):", "    print(pre[i + 1] - pre[i], end=' ')"], "a": ["2 2 2 2 "], "out": "2 2 2 2 ", "why": "이웃한 두 칸의 차가 원래 값으로 돌아온다."}, {"n": "12-5", "kind": "out", "code": ["a = [3, 1, 4, 1, 5]", "pre = [0, 3, 4, 8, 9, 14]", "best = 0", "for i in range(5):", "    for j in range(i + 1, 6):", "        if pre[j] - pre[i] > best:", "            best = pre[j] - pre[i]", "print(best)"], "a": ["14"], "out": "14", "why": "누적합을 만들어 두고 모든 구간을 본다. 만드는 데 5번, 보는 데 15번."}, {"n": "12-6", "kind": "out", "code": ["a = [2, -5, 3, 1]", "pre = [0] * 5", "for i in range(4):", "    pre[i + 1] = pre[i] + a[i]", "print(pre)", "print(pre[4] - pre[0], pre[4] - pre[2])"], "a": ["[0, 2, -3, 0, 1] / 1 4"], "out": "[0, 2, -3, 0, 1] / 1 4", "why": "음수가 섞이면 전체가 최대가 아닐 수 있다."}, {"n": "12-7", "kind": "out", "code": ["a = [1, 2, 3, 4]", "c = 0", "tot = 0", "for i in range(4):", "    for j in range(i, 4):", "        for k in range(i, j + 1):", "            tot += a[k]", "            c += 1", "print(tot, c)"], "a": ["50 20"], "out": "50 20", "why": "pre 를 안 쓰고 매번 다시 더하면 같은 답에 훨씬 많이 돈다."}]}, {"day": 3, "t": 13, "title": "찾는 반복 없애기", "star": true, "paper": true, "lede": "안쪽 반복이 「찾는 일」이면 딕셔너리나 집합으로 없앨 수 있습니다.", "trap": "딕셔너리에 없는 열쇠를 그냥 꺼내면 오류가 납니다. get 을 쓰세요.", "items": [{"n": "13-1", "kind": "out", "code": ["a = [3, 1, 3, 2, 3, 1]", "cnt = {}", "for x in a:", "    cnt[x] = cnt.get(x, 0) + 1", "print(cnt)"], "a": ["{3: 3, 1: 2, 2: 1}"], "out": "{3: 3, 1: 2, 2: 1}", "why": "값을 열쇠로, 개수를 값으로. get(x, 0) 이 없으면 첫 번째에서 오류가 난다."}, {"n": "13-2", "kind": "out", "code": ["a = [3, 1, 3, 2, 3, 1]", "seen = set()", "dup = []", "for x in a:", "    if x in seen:", "        dup.append(x)", "    seen.add(x)", "print(dup)"], "a": ["[3, 3, 1]"], "out": "[3, 3, 1]", "why": "이미 본 것을 집합에 담아 두면 중복을 한 번에 찾는다."}, {"n": "13-3", "kind": "out", "code": ["a = [1, 5, 7, 2, 8]", "need = set()", "ans = 0", "for x in a:", "    if 9 - x in need:", "        ans += 1", "    need.add(x)", "print(ans)"], "a": ["2"], "out": "2", "why": "9-x 를 찾는다. 찾는 반복이 사라졌다."}, {"n": "13-4", "kind": "out", "code": ["a = [1, 5, 7, 2, 8]", "ans = 0", "for i in range(5):", "    for j in range(i + 1, 5):", "        if a[i] + a[j] == 9:", "            ans += 1", "print(ans)"], "a": ["2"], "out": "2", "why": "13-3 과 답이 같지만 모든 짝을 본다."}, {"n": "13-5", "kind": "out", "code": ["a = ['b', 'a', 'b', 'c', 'a', 'b']", "cnt = {}", "for x in a:", "    cnt[x] = cnt.get(x, 0) + 1", "best = ''", "for k in cnt:", "    if best == '' or cnt[k] > cnt[best]:", "        best = k", "print(best, cnt[best])"], "a": ["b 3"], "out": "b 3", "why": "가장 많이 나온 것 — 세는 것과 고르는 것을 나눠서 한다."}, {"n": "13-6", "kind": "out", "code": ["cnt = {'a': 2}", "print(cnt.get('b', 0))", "print(cnt.get('a', 0))"], "a": ["0 / 2"], "out": "0 / 2", "why": "딕셔너리에 없는 열쇠를 그냥 꺼내면 오류가 난다."}, {"n": "13-7", "kind": "out", "code": ["a = [3, 1, 3, 2]", "s = set()", "for x in a:", "    s.add(x)", "print(len(s), sorted(s))"], "a": ["3 [1, 2, 3]"], "out": "3 [1, 2, 3]", "why": "집합은 순서가 없다. 순서가 필요하면 리스트를 따로 둬야 한다."}]}, {"day": 3, "t": 93, "label": "도전", "title": "도전", "star": false, "paper": true, "lede": "줄이기 전과 뒤가 한 코드 안에 있습니다. 답과 횟수를 따로 쓰세요.", "trap": "답이 같아도 횟수는 다릅니다. 그 차이가 오늘의 결론입니다.", "items": [{"n": "H-6", "kind": "out", "code": ["a = [2, 7, 1, 8, 2, 8]", "target = 9", "", "slow = 0", "cnt1 = 0", "for i in range(6):", "    for j in range(i + 1, 6):", "        slow += 1", "        if a[i] + a[j] == target:", "            cnt1 += 1", "", "fast = 0", "cnt2 = 0", "need = {}", "for x in a:", "    fast += 1", "    if target - x in need:", "        cnt2 += need[target - x]", "    need[x] = need.get(x, 0) + 1", "", "print(cnt1, cnt2)", "print(slow, fast)"], "a": ["4 4 / 15 6"], "out": "4 4 / 15 6", "why": "답은 둘 다 4인데 횟수는 15와 6. 3차시의 한 문장이 여기 다 있다.", "title": "같은 답, 다른 횟수"}, {"n": "H-7", "kind": "out", "code": ["a = [5, 2, 8, 1, 9, 3]", "pre = [0] * 7", "for i in range(6):", "    pre[i + 1] = pre[i] + a[i]", "", "best = -100", "bi = 0", "bj = 0", "for i in range(6):", "    for j in range(i + 1, 7):", "        if pre[j] - pre[i] > best:", "            best = pre[j] - pre[i]", "            bi = i", "            bj = j", "print(pre)", "print(best, bi, bj)"], "a": ["[0, 5, 7, 15, 16, 25, 28] / 28 0 6"], "out": "[0, 5, 7, 15, 16, 25, 28] / 28 0 6", "why": "pre 를 만드는 데 6번, 모든 구간을 보는 데 21번.", "title": "누적합으로 구간 합 최대"}]}]};
+var BANK = DATA.bank, TRI = DATA.triage.items, N = DATA.n;
+var cur = BANK[0].t, mode = "triage";
+var store = {};
+
+function $(id){ return document.getElementById(id); }
+/* 줄 구분은 살린다. 세 줄 출력을 한 줄로 쓰면 틀린 것이다 —
+   print 와 end=' ' 의 차이가 이 유형이 가르치려는 것이기 때문. */
+function norm(s){
+  s = String(s == null ? "" : s).toLowerCase();
+  s = s.replace(/[\u2018\u2019\u201c\u201d'"`]/g, "");
+  s = s.replace(/[\r\n]+/g, "/");
+  s = s.replace(/[\s,·]/g, "");
+  s = s.replace(/\/+/g, "/");
+  s = s.replace(/^\/|\/$/g, "");
+  s = s.replace(/번$|칸$/, "");
+  return s;
+}
+function hit(v, list){
+  var x = norm(v);
+  if (x === "") return false;
+  for (var i=0;i<list.length;i++){ if (norm(list[i]) === x) return true; }
+  return false;
+}
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function hl(lines){
+  return lines.map(function(l){
+    var s = esc(l);
+    s = s.replace(/\b(for|while|if|elif|else|in|range|print|break|continue|not|and|or|len|abs|True|False|end)\b/g,
+                  '<span class="k">$1</span>');
+    s = s.replace(/(&#39;|')([^']*)(&#39;|')/g, '<span class="s">\'$2\'</span>');
+    s = s.replace(/(#.*)$/, '<span class="c">$1</span>');
+    return s;
+  }).join("\n");
+}
+function sec(t){ for (var i=0;i<BANK.length;i++) if (BANK[i].t===t) return BANK[i]; }
+function items(){ return mode === "triage" ? TRI : sec(cur).items; }
+function keyOf(){ return mode === "triage" ? "tri" : "b" + cur; }
+
+function tabs(){
+  var st0 = store["tri"];
+  var h = '<button class="tab' + (mode==="triage"?" on":"") + '" onclick="goTri()" style="border-width:2px">진단' +
+          ((st0 && st0.done) ? '<span class="dot ' + (st0.weak?"r":"g") + '"></span>' : "") + '</button>' +
+          '<span style="width:8px"></span>';
+  var day = 0;
+  for (var i=0;i<BANK.length;i++){
+    var b = BANK[i], st = store["b"+b.t];
+    if (b.day !== day){ day = b.day; h += '<span class="dayl">' + day + '차시</span>'; }
+    h += '<button class="tab' + (b.t===cur && mode==="bank" ? " on":"") + '" onclick="go(' + b.t + ')">' +
+         (b.label || ("유형 " + b.t)) +
+         ((st && st.done) ? '<span class="dot ' + (st.weak?"r":"g") + '"></span>' : "") + '</button>';
+  }
+  $("tabs").innerHTML = h;
+}
+
+/* ── 격자 ────────────────────────────────────────────── */
+function gridHTML(id, on, readonly){
+  var h = '<table class="gr' + (readonly ? " key" : "") + '"><tr><th></th>';
+  for (var j=0;j<N;j++) h += '<th>' + j + '</th>';
+  h += '</tr>';
+  for (var i=0;i<N;i++){
+    h += '<tr><th>' + i + '</th>';
+    for (var j=0;j<N;j++){
+      var k = i * N + j, lit = on.indexOf(k) >= 0;
+      h += '<td id="' + (readonly ? "k" : "g") + id + "-" + k + '"' +
+           (lit ? ' class="on"' : '') +
+           (readonly ? '' : ' onclick="toggle(\'' + id + '\',' + k + ')"') + '></td>';
+    }
+    h += '</tr>';
+  }
+  return h + '</table>';
+}
+function toggle(id, k){
+  var td = $("g" + id + "-" + k);
+  td.className = td.className === "on" ? "" : "on";
+}
+function readGrid(id){
+  var on = [];
+  for (var i=0;i<N;i++) for (var j=0;j<N;j++){
+    var td = $("g" + id + "-" + (i * N + j));
+    if (td && td.className === "on") on.push(i * N + j);
+  }
+  return on;
+}
+function clearGrid(id){
+  for (var i=0;i<N;i++) for (var j=0;j<N;j++){
+    var td = $("g" + id + "-" + (i * N + j));
+    if (td) td.className = "";
+  }
+}
+function sameSet(a, b){
+  if (a.length !== b.length) return false;
+  var s = a.slice().sort(function(x,y){return x-y}).join("|"),
+      t = b.slice().sort(function(x,y){return x-y}).join("|");
+  return s === t;
+}
+
+function render(){
+  var its = items(), key = keyOf(), h;
+  if (mode === "triage"){
+    h = '<div class="head2"><span class="n">DIAGNOSTIC</span><h2>진단</h2></div>' +
+        '<p class="lede">세 문제입니다. 점수는 걷지 않습니다 — 지금 어디가 약한지만 봅니다.</p>';
+  } else {
+    var b = sec(cur);
+    h = '<div class="head2"><span class="n">' + (b.label || ("유형 " + b.t)) + '</span><h2>' +
+        esc(b.title) + '</h2>' +
+        (b.star ? '<span class="tagp star">필수</span>' : '<span class="tagp">도전</span>') +
+        '<span class="tagp">' + (b.paper === false ? "화면에서 바로" : "종이 먼저") + '</span></div>' +
+        '<p class="lede">' + esc(b.lede) + '</p>' +
+        '<div class="trap"><b>함정</b> ' + esc(b.trap) + '</div>';
+  }
+  h += '<p class="note">출력이 <b>두 줄 이상</b>이면 <b>/</b> 로 나눠 쓰세요. 띄어쓰기는 무시합니다.</p><div class="grid">';
+  for (var q=0;q<its.length;q++){
+    var it = its[q], id = key + "-" + q;
+    h += '<div class="q" id="q' + id + '"><div class="qn">' + esc(it.n) + '</div>';
+    if (it.kind === "count"){
+      var lab = ["바깥", "안쪽", "맨 안쪽"];
+      var parts = [];
+      for (var L=0;L<it.loops.length;L++)
+        parts.push(lab[L] + ' <b>' + esc(it.loops[L]) + '</b>');
+      h += '<div class="expr">' + parts.join(' &nbsp;·&nbsp; ') + '</div>';
+    } else if (it.kind === "line"){
+      h += '<pre>' + hl(it.code.map(function(l, x){
+             return (x+1) + "  " + l; })) + '</pre>';
+    } else {
+      h += '<pre>' + hl(it.code) + '</pre>';
+    }
+    if (it.kind === "grid"){
+      h += gridHTML(id, [], false) +
+           '<div style="text-align:center"><button class="gclear" onclick="clearGrid(\'' + id + '\')">이 격자 지우기</button></div>';
+    } else if (it.kind === "count"){
+      h += '<div class="row"><span>총 횟수</span><input id="in' + id + '" autocomplete="off"></div>';
+    } else if (it.kind === "line"){
+      h += '<div class="row"><span>오류 줄번호</span><input id="in' + id + '" autocomplete="off"></div>';
+    } else {
+      h += '<div class="row"><span>출력</span><input id="in' + id + '" autocomplete="off"></div>';
+    }
+    h += '<div class="fb" id="fb' + id + '"></div></div>';
+  }
+  h += '</div>';
+  $("pane").innerHTML = h;
+  var st = store[key];
+  if (st && st.vals) for (var w=0;w<its.length;w++){
+    var id = key + "-" + w, v = st.vals[w];
+    if (its[w].kind === "grid"){
+      clearGrid(id);
+      for (var c=0;c<(v||[]).length;c++){ var td = $("g" + id + "-" + v[c]); if (td) td.className = "on"; }
+    } else {
+      var e = $("in" + id); if (e) e.value = v || "";
+    }
+  }
+  $("hint").textContent = "";
+  window.scrollTo(0,0);
+}
+
+/* 화면에 적힌 것을 store 에 담아 둔다. 탭을 옮겨도 답이 날아가지 않고,
+   전체 채점이 「지금 적힌 값」을 보게 된다. */
+function snap(){
+  var its = items(), key = keyOf(), vals = [];
+  if (!$("q" + key + "-0")) return;
+  for (var q=0;q<its.length;q++){
+    var id = key + "-" + q;
+    vals.push(its[q].kind === "grid" ? readGrid(id) : (($("in"+id) || {}).value || ""));
+  }
+  var st = store[key] || {};
+  st.vals = vals; store[key] = st;
+}
+
+/* 채점은 화면이 아니라 담아 둔 값으로 한다 — 어느 탭에 있든 같은 결과가 나오게. */
+function score(its, vals){
+  var got = 0, done = 0, marks = [];
+  for (var q=0;q<its.length;q++){
+    var it = its[q], v = (vals && vals[q]);
+    var typed, ok;
+    if (it.kind === "grid"){
+      v = v || [];
+      typed = v.length > 0;
+      ok = sameSet(v, it.cells);
+    } else {
+      v = v || "";
+      typed = norm(v) !== "";
+      ok = hit(v, it.a);
+    }
+    if (typed) done++;
+    if (ok) got++;
+    marks.push([ok, typed]);
+  }
+  return {got: got, ans: done, marks: marks};
+}
+
+function go(t){ snap(); cur = t; mode = "bank"; tabs(); render(); }
+function goTri(){ snap(); mode = "triage"; tabs(); render(); }
+
+/* 지금 화면에 보이는 문항에 정오 표시를 칠한다. 채점과 다시 칠하기를 나눠 둔 것은
+   전체 채점 뒤에도 화면이 옛 표시를 그대로 들고 있지 않게 하려는 것이다. */
+function paintMarks(){
+  var its = items(), key = keyOf(), st = store[key];
+  if (!st || !st.vals || !$("q" + key + "-0")) return null;
+  var r = score(its, st.vals);
+  for (var q=0;q<its.length;q++){
+    var it = its[q], id = key + "-" + q, ok = r.marks[q][0], typed = r.marks[q][1];
+    $("q"+id).className = "q " + (ok ? "ok" : (typed ? "no" : ""));
+    var fb = $("fb"+id);
+    fb.className = "fb " + (ok ? "ok" : "no");
+    if (!typed && !ok){ fb.innerHTML = ""; continue; }
+    var body = ok ? "맞음" : "답 · <b>" + esc(it.out) + "</b>";
+    if (!ok && it.kind === "grid")
+      body += '<div class="gwrap">' + gridHTML(id, it.cells, true) + '</div>';
+    if (it.why) body += '<div class="why">' + esc(it.why) + '</div>';
+    fb.innerHTML = body;
+  }
+  return r;
+}
+
+function grade(){
+  snap();
+  var its = items(), key = keyOf(), r = paintMarks();
+  if (!r){ $("hint").textContent = "먼저 답을 적으세요."; return; }
+  var pct = r.ans ? Math.round(r.got/r.ans*100) : 0;
+  var st = store[key];
+  st.done = r.ans > 0; st.got = r.got; st.n = its.length; st.ans = r.ans;
+  st.weak = (r.ans >= 3 && pct < 80);
+  $("hint").textContent = its.length + "문항 중 " + r.got + "개 맞음" +
+    (r.ans < its.length ? " (푼 것 " + r.ans + "개 기준 " + pct + "%)" : "");
+  tabs();
+}
+
+function gradeAll(){
+  snap();
+  var rows = [], weak = [], thin = [];
+  for (var i=0;i<BANK.length;i++){
+    var b = BANK[i], key = "b"+b.t, st = store[key];
+    if (!st || !st.vals) continue;
+    var r = score(b.items, st.vals);
+    if (!r.ans) continue;
+    var pct = Math.round(r.got/r.ans*100);
+    st.done = true; st.got = r.got; st.ans = r.ans; st.n = b.items.length;
+    st.weak = (r.ans >= 3 && pct < 80);
+    rows.push([b.t, b.title, r.got, r.ans, pct, b.label || ("유형 " + b.t)]);
+    if (st.weak) weak.push(b.label || ("유형 " + b.t));
+    else if (r.ans < 3 && r.got < r.ans) thin.push(b.label || ("유형 " + b.t));
+  }
+  var r0 = paintMarks();
+  if (r0){
+    var p0 = r0.ans ? Math.round(r0.got/r0.ans*100) : 0;
+    $("hint").textContent = items().length + "문항 중 " + r0.got + "개 맞음" +
+      (r0.ans < items().length ? " (푼 것 " + r0.ans + "개 기준 " + p0 + "%)" : "");
+  }
+  tabs();
+  if (!rows.length){ $("hint").textContent = "먼저 유형별로 채점하세요."; return; }
+  var h = '<div class="report"><h3>처방</h3>' +
+          '<p class="lede">푼 문항만 셉니다. 안 푼 것은 분모에 넣지 않습니다.</p>';
+  for (var r=0;r<rows.length;r++){
+    var x = rows[r], w = (x[3] >= 3 && x[4] < 80) ? " weak" : "";
+    h += '<div class="mrow' + w + '"><b>' + esc(x[5]) + ' · ' + esc(x[1]) + '</b>' +
+         '<div class="mbar"><i style="width:' + x[4] + '%"></i></div>' +
+         '<span>' + x[2] + '/' + x[3] + '</span></div>';
+  }
+  var tail;
+  if (weak.length)
+    tail = '<b>더 볼 유형</b> — ' + weak.join(" · ") + '. 학습지에서 그 유형을 다시 펴세요.';
+  else if (thin.length)
+    tail = '아직 <b>판단할 문항이 부족합니다</b> — ' + thin.join(" · ") +
+           '. 세 문항 이상 풀어야 약한 유형인지 알 수 있습니다.';
+  else
+    tail = '약한 유형이 없습니다. 다음 차시로 넘어가도 됩니다.';
+  h += '<div class="rx">' + tail + '</div></div>';
+  $("report").innerHTML = h;
+  $("report").scrollIntoView({behavior:"smooth"});
+}
+
+function clearAll(){
+  store = {}; $("report").innerHTML = ""; tabs(); render();
+}
+
+/* 주소 끝의 #d / #t7 로 바로 그 탭을 연다. 허브에서 유형을 지목해 보낼 수 있게. */
+function fromHash(){
+  var h = (location.hash || "").replace("#", "");
+  if (h === "d" || h === "tri"){ mode = "triage"; return; }
+  var m = /^t(\d+)$/.exec(h);
+  if (m && sec(+m[1])){ mode = "bank"; cur = +m[1]; }
+}
+fromHash();
+window.addEventListener("hashchange", function(){ snap(); fromHash(); tabs(); render(); });
+tabs(); render();
+</script>
+
+</body>
+</html>
